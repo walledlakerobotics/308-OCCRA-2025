@@ -71,9 +71,9 @@ public class FHXController extends GenericHID {
         
         kThrottle(2),
         
-        kStickRotation(5),
+        kRudder(5),
 
-        kThrottleTilt(6),
+        kRocker(6),
 
         /*no no touch */
         kPOV(9);
@@ -105,24 +105,44 @@ public class FHXController extends GenericHID {
 
 
     // getters  
-    public double getStickXAxis() {
+    public double getStickX() {
         return getRawAxis(Axis.kStickX.value);
     }
 
-    public double getStickYAxis() {
+    public double getStickY() {
         return getRawAxis(Axis.kStickY.value);
     }
 
-    public double getThrottleAxis() {
+    public double getThrottle() {
         return getRawAxis(Axis.kThrottle.value);
     }
 
-    public double getStickRotationAxis() {
-        return getRawAxis(Axis.kStickRotation.value);
+    public double getRudder() {
+        return getRawAxis(Axis.kRudder.value);
     }
 
-    public double getThrottleTiltAxis() {
-        return getRawAxis(Axis.kThrottleTilt.value);
+    public double getRockerAxis() {
+        return getRawAxis(Axis.kRocker.value);
+    }
+
+    public BooleanEvent getLeftRockerTrigger(double threshold, EventLoop loop) {
+        return axisLessThan(Axis.kRocker.value, -threshold, loop);
+    }
+
+    public BooleanEvent getLeftRockerTrigger(EventLoop loop) {
+        return getLeftRockerTrigger(0.5, loop);
+    }
+
+    public BooleanEvent getRightRockerTrigger(double threshold, EventLoop loop) {
+        return axisGreaterThan(Axis.kRocker.value, threshold, loop);
+    }
+
+    public BooleanEvent getRightRockerTrigger(EventLoop loop) {
+        return getLeftRockerTrigger(0.5, loop);
+    }
+
+    public boolean getR1Button() {
+        return getRawButton(Button.kR1.value);
     }
 
     public boolean getR1ButtonPressed() {
@@ -130,59 +150,188 @@ public class FHXController extends GenericHID {
     }
 
     public boolean getR1ButtonReleased() {
-        return getRawButtonPressed(Button.kR1.value);
+        return getRawButtonReleased(Button.kR1.value);
     }
 
-    //buttons
     public BooleanEvent r1(EventLoop event) {
         return button(Button.kR1.value, event);
+    }
+
+    public boolean getR2Button() {
+        return getRawButton(Button.kR2.value);
+    }
+
+    public boolean getR2ButtonPressed() {
+        return getRawButtonPressed(Button.kR2.value);
+    }
+
+    public boolean getR2ButtonReleased() {
+        return getRawButtonReleased(Button.kR2.value);
     }
 
     public BooleanEvent r2(EventLoop event) {
         return button(Button.kR2.value, event);
     }
 
+    public boolean getR3Button() {
+        return getRawButton(Button.kR3.value);
+    }
+
+    public boolean getR3ButtonPressed() {
+        return getRawButtonPressed(Button.kR3.value);
+    }
+
+    public boolean getR3ButtonReleased() {
+        return getRawButtonReleased(Button.kR3.value);
+    }
+
     public BooleanEvent r3(EventLoop event) {
         return button(Button.kR3.value, event);
+    }
+
+    public boolean getL1Button() {
+        return getRawButton(Button.kL1.value);
+    }
+
+    public boolean getL1ButtonPressed() {
+        return getRawButtonPressed(Button.kL1.value);
+    }
+
+    public boolean getL1ButtonReleased() {
+        return getRawButtonReleased(Button.kL1.value);
     }
 
     public BooleanEvent l1(EventLoop event) {
         return button(Button.kL1.value, event);
     }
 
+    public boolean getL2Button() {
+        return getRawButton(Button.kL2.value);
+    }
+
+    public boolean getL2ButtonPressed() {
+        return getRawButtonPressed(Button.kL2.value);
+    }
+
+    public boolean getL2ButtonReleased() {
+        return getRawButtonReleased(Button.kL2.value);
+    }
+
     public BooleanEvent l2(EventLoop event) {
         return button(Button.kL2.value, event);
+    }
+
+    public boolean getL3Button() {
+        return getRawButton(Button.kL3.value);
+    }
+    
+    public boolean getL3ButtonPressed() {
+        return getRawButtonPressed(Button.kL3.value);
+    }
+
+    public boolean getL3ButtonReleased() {
+        return getRawButtonReleased(Button.kL3.value);
     }
 
     public BooleanEvent l3(EventLoop event) {
         return button(Button.kL3.value, event);
     }
 
-    public BooleanEvent select(EventLoop event) {
-        return button(Button.kSelect.value, event);
+    public boolean getButton5() {
+        return getRawButton(Button.k5.value);
     }
 
-    public BooleanEvent start(EventLoop event) {
-        return button(Button.kStart.value, event);
+    public boolean getButton5Pressed() {
+        return getRawButtonPressed(Button.k5.value);
+    }
+
+    public boolean getButton5Released() {
+        return getRawButtonReleased(Button.k5.value);
     }
 
     public BooleanEvent b5(EventLoop event) {
         return button(Button.k5.value, event);
     }
 
+    public boolean getButton6() {
+        return getRawButton(Button.k6.value);
+    }
+
+    public boolean getButton6Pressed() {
+        return getRawButtonPressed(Button.k6.value);
+    }
+
+    public boolean getButton6Released() {
+        return getRawButtonReleased(Button.k6.value);
+    }
+
     public BooleanEvent b6(EventLoop event) {
         return button(Button.k6.value, event);
+    }
+
+    public boolean getButton7() {
+        return getRawButton(Button.k7.value);
+    }
+    
+    public boolean getButton7Pressed() {
+        return getRawButtonPressed(Button.k7.value);
+    }
+
+    public boolean getButton7Released() {
+        return getRawButtonReleased(Button.k7.value);
     }
 
     public BooleanEvent b7(EventLoop event) {
         return button(Button.k7.value, event);
     }
 
+    public boolean getButton8() {
+        return getRawButton(Button.k8.value);
+    }
+    
+    public boolean getButton8Pressed() {
+        return getRawButtonPressed(Button.k8.value);
+    }
+
+    public boolean getButton8Released() {
+        return getRawButtonReleased(Button.k8.value);
+    }
+
     public BooleanEvent b8(EventLoop event) {
         return button(Button.k8.value, event);
     }
 
-    //triggers
+    public boolean getSelectButton() {
+        return getRawButton(Button.kSelect.value);
+    }
+
+    public boolean getSelectButtonPressed() {
+        return getRawButtonPressed(Button.kSelect.value);
+    }
+
+    public boolean getSelectButtonReleased() {
+        return getRawButtonReleased(Button.kSelect.value);
+    }
+
+    public BooleanEvent select(EventLoop event) {
+        return button(Button.kSelect.value, event);
+    }
+
+    public boolean getStartButton() {
+        return getRawButton(Button.kStart.value);
+    }
+
+    public boolean getStartButtonPressed() {
+        return getRawButtonPressed(Button.kStart.value);
+    }
+
+    public boolean getStartButtonReleased() {
+        return getRawButtonReleased(Button.kStart.value);
+    }
+
+    public BooleanEvent start(EventLoop event) {
+        return button(Button.kStart.value, event);
+    }
     
 
 
