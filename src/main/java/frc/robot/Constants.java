@@ -62,6 +62,8 @@ public final class Constants {
 
     public static final double kMaxForwardSpeed = 0;
     public static final double kMaxRotationSpeed = 0;
+
+    public static final double kDriveKinematics = 0;
     
   }
 }
