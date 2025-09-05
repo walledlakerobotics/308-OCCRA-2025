@@ -6,7 +6,12 @@ package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.utils.CommandFHXController;
 import frc.robot.utils.FHXController;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -55,6 +60,28 @@ public class RobotContainer {
   private void configureBindings(String driverPath, String coDriverPath, int driverSetting, int coDriverSetting) {
     File mainDriverBindsJson = new File(driverPath);
     File coDriverBindsJson = new File(coDriverPath);
+
+    ShuffleboardTab test = Shuffleboard.getTab("Test");
+
+    test.addBoolean("L1", m_driverController::getL1Button);
+    test.addBoolean("L2", m_driverController::getL2Button);
+    test.addBoolean("L3", m_driverController::getL3Button);
+    test.addBoolean("R1", m_driverController::getR1Button);    
+    test.addBoolean("R2", m_driverController::getR2Button);
+    test.addBoolean("R3", m_driverController::getR3Button);
+    test.addBoolean("5", m_driverController::getButton5);
+    test.addBoolean("6", m_driverController::getButton6);
+    test.addBoolean("7", m_driverController::getButton7);
+    test.addBoolean("8", m_driverController::getButton8);
+    test.addBoolean("Start", m_driverController::getStartButton);
+    test.addBoolean("Select", m_driverController::getSelectButton);
+
+    test.addDouble("Stick X", m_driverController::getStickX);
+    test.addDouble("Stick Y", m_driverController::getStickY);
+    test.addDouble("Throttle", m_driverController::getThrottle);
+    test.addDouble("Rudder", m_driverController::getRudder);
+    test.addDouble("Rocker", m_driverController::getRockerAxis);
+    test.addDouble("POV", m_driverController::getPOV);
 
     try {
       JSONObject driverFileData = (JSONObject) parser.parse(new FileReader(mainDriverBindsJson));

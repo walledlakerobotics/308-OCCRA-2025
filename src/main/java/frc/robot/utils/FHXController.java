@@ -15,29 +15,18 @@ public class FHXController extends GenericHID {
     }
 
     public enum Button {
-        kR1(0),
-
-        kL1(1),
-
-        kR3(2),
-        
-        kL3(3),
-        
-        k5(4),
-        
-        k6(5),
-        
-        k7(6),
-        
-        k8(7),
-        
-        kR2(8),
-        
-        kL2(9),
-
-        kSelect(10),
-
-        kStart(11);
+        kR1(1),
+        kR2(9),
+        kR3(3),
+        kL1(2),
+        kL2(10),
+        kL3(4),
+        k5(5),
+        k6(6),
+        k7(7),
+        k8(8),
+        kStart(12),
+        kSelect(11);
 
 
         /** Button value. */
@@ -64,19 +53,17 @@ public class FHXController extends GenericHID {
 
   /** Represents an axis on an XboxController. */
     public enum Axis {
-        /** Y axis. */
-        kStickY(0),
         /** X axis. */
         kStickX(1),
+
+        /** Y axis. */
+        kStickY(0),
         
         kThrottle(2),
         
-        kRudder(5),
+        kRudder(3),
 
-        kRocker(6),
-
-        /*no no touch */
-        kPOV(9);
+        kRocker(4);
 
         /** Axis value. */
         public final int value;
@@ -106,7 +93,7 @@ public class FHXController extends GenericHID {
 
     // getters  
     public double getStickX() {
-        return getRawAxis(Axis.kStickX.value);
+        return -getRawAxis(Axis.kStickX.value);
     }
 
     public double getStickY() {
@@ -114,7 +101,7 @@ public class FHXController extends GenericHID {
     }
 
     public double getThrottle() {
-        return getRawAxis(Axis.kThrottle.value);
+        return -getRawAxis(Axis.kThrottle.value);
     }
 
     public double getRudder() {
@@ -301,22 +288,6 @@ public class FHXController extends GenericHID {
         return button(Button.k8.value, event);
     }
 
-    public boolean getSelectButton() {
-        return getRawButton(Button.kSelect.value);
-    }
-
-    public boolean getSelectButtonPressed() {
-        return getRawButtonPressed(Button.kSelect.value);
-    }
-
-    public boolean getSelectButtonReleased() {
-        return getRawButtonReleased(Button.kSelect.value);
-    }
-
-    public BooleanEvent select(EventLoop event) {
-        return button(Button.kSelect.value, event);
-    }
-
     public boolean getStartButton() {
         return getRawButton(Button.kStart.value);
     }
@@ -331,6 +302,22 @@ public class FHXController extends GenericHID {
 
     public BooleanEvent start(EventLoop event) {
         return button(Button.kStart.value, event);
+    }
+
+    public boolean getSelectButton() {
+        return getRawButton(Button.kSelect.value);
+    }
+
+    public boolean getSelectButtonPressed() {
+        return getRawButtonPressed(Button.kSelect.value);
+    }
+
+    public boolean getSelectButtonReleased() {
+        return getRawButtonReleased(Button.kSelect.value);
+    }
+
+    public BooleanEvent select(EventLoop event) {
+        return button(Button.kSelect.value, event);
     }
     
 
