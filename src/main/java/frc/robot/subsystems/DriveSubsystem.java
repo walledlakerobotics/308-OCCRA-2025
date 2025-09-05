@@ -9,6 +9,7 @@ import java.util.function.Consumer;
 
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
@@ -20,6 +21,7 @@ import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 import frc.robot.Constants.DriveConstants;
 
 /*
@@ -89,7 +91,10 @@ public class DriveSubsystem extends SubsystemBase {
       -speeds.omegaRadiansPerSecond
     );
 
-    DifferentialDriveWheelSpeeds wheelSpeeds ;
+    DifferentialDriveWheelSpeeds wheelSpeeds;
+
+    // write speeds to motors
+    // setConfig(Constants.DriveConstants.kFrontRightMotorId, config -> config.);
   }
 
   /**
