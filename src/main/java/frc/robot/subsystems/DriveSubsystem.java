@@ -4,6 +4,8 @@
 
 package frc.robot.subsystems;
 
+import java.util.function.DoubleSupplier;
+
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkMax;
@@ -24,6 +26,7 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.utils.ControllerUtils;
@@ -50,6 +53,7 @@ public class DriveSubsystem extends SubsystemBase {
     private final AHRS m_gyro = new AHRS(NavXComType.kMXP_SPI);
 
     private final DifferentialDrive m_drive = new DifferentialDrive(this::setLeftSpeed, this::setRightSpeed);
+
     private final DifferentialDriveOdometry m_odometry = new DifferentialDriveOdometry(
             m_gyro.getRotation2d(), getLeftPosition(), getRightPosition());
 
@@ -111,19 +115,33 @@ public class DriveSubsystem extends SubsystemBase {
 
     /**
      * 
-     * @param forwardSpeed
-     * @param turningSpeed
+     * @param forward
+     * @param turning
      */
-    public void drive(double forwardSpeed, double turningSpeed) {
-        forwardSpeed *= DriveConstants.kMaxForwardSpeed;
-        turningSpeed *= DriveConstants.kMaxTurningSpeed;
+    public void drive(double forward, double turning) {
+        m_drive.arcadeDrive(forward, turning, false);
+    }
 
-        forwardSpeed = ControllerUtils.sensitivity(forwardSpeed, DriveConstants.kForwardSensitvity,
-                DriveConstants.kDeadBand);
-        turningSpeed = ControllerUtils.sensitivity(turningSpeed, DriveConstants.kRotatonSenitvity,
-                DriveConstants.kDeadBand);
+    /**
+     * 
+     * @param forwardSupplier
+     * @param turningSupplier
+     */
+    public Command driveJoysticks(DoubleSupplier forwardSupplier, DoubleSupplier turningSupplier) {
+        return run(() -> {
+            double forward = forwardSupplier.getAsDouble();
+            double turning = turningSupplier.getAsDouble();
 
-        m_drive.arcadeDrive(forwardSpeed, turningSpeed, false);
+            forward *= DriveConstants.kMaxForwardPercent;
+            turning *= DriveConstants.kMaxTurningPercent;
+
+            forward = ControllerUtils.sensitivity(forward, DriveConstants.kForwardSensitvity,
+                    DriveConstants.kDeadBand);
+            turning = ControllerUtils.sensitivity(turning, DriveConstants.kRotatonSenitvity,
+                    DriveConstants.kDeadBand);
+
+            drive(forward, turning);
+        });
     }
 
     // stops all the motors
