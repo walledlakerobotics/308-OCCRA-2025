@@ -50,16 +50,14 @@ public final class Constants {
     public static final int kBackRightMotorId = 4;
 
     // sets if an motor is inverted
-    public static final boolean kFrontLeftMotorInverted = false;
-    public static final boolean kFrontRightMotorInverted = true;
-    public static final boolean kBackLeftMotorInverted = false;
-    public static final boolean kBackRightMotorInverted = true;
+    public static final boolean kLeftMotorsInverted = false;
+    public static final boolean kRightMotorsInverted = true;
 
     // idle mode
     public static final IdleMode kMotorIdleMode = IdleMode.kBrake;
 
     // smartLimit
-    public static final int kSmartLimit = 30;
+    public static final int kSmartCurrentLimit = 30;
 
     // public static final double kMaxSpeedMetersPerSecond =
     // ((MotorConstants.kNeoMotorMaxRPM / 60.0) / kGearRatio) * kWheelCircumference;
