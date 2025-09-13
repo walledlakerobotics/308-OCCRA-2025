@@ -89,8 +89,8 @@ public final class Constants {
     public static final double kForwardSensitvity = 0.4;
     public static final double kRotatonSenitvity = 0.4;
 
-    public static final double kMaxForwardSpeed = 1;
-    public static final double kMaxTurningSpeed = 0.7;
+    public static final double kMaxForwardPercent = 1;
+    public static final double kMaxTurningPercent = 0.7;
 
   }
 
