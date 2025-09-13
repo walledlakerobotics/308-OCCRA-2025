@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems;
 
+import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
 import com.revrobotics.RelativeEncoder;
@@ -118,8 +119,8 @@ public class DriveSubsystem extends SubsystemBase {
      * @param forward
      * @param turning
      */
-    public void drive(double forward, double turning) {
-        m_drive.arcadeDrive(forward, turning, false);
+    public void drive(double forward, double turning, boolean allowTurnInPlace) {
+        m_drive.curvatureDrive(forward, turning, false);
     }
 
     /**
@@ -127,7 +128,7 @@ public class DriveSubsystem extends SubsystemBase {
      * @param forwardSupplier
      * @param turningSupplier
      */
-    public Command driveJoysticks(DoubleSupplier forwardSupplier, DoubleSupplier turningSupplier) {
+    public Command driveJoysticks(DoubleSupplier forwardSupplier, DoubleSupplier turningSupplier, BooleanSupplier turnInPlaceSupplier) {
         return run(() -> {
             double forward = forwardSupplier.getAsDouble();
             double turning = turningSupplier.getAsDouble();
@@ -140,7 +141,7 @@ public class DriveSubsystem extends SubsystemBase {
             turning = ControllerUtils.sensitivity(turning, DriveConstants.kRotatonSenitvity,
                     DriveConstants.kDeadBand);
 
-            drive(forward, turning);
+            drive(forward, turning, turnInPlaceSupplier.getAsBoolean());
         });
     }
 
