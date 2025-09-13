@@ -17,8 +17,8 @@ import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
-// import com.studica.frc.AHRS;
-// import com.studica.frc.AHRS.NavXComType;
+import com.studica.frc.AHRS;
+import com.studica.frc.AHRS.NavXComType;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -31,6 +31,7 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DriveConstants;
+import frc.robot.utils.ControllerUtils;
 
 /*
  * This is still a WIP
@@ -47,15 +48,15 @@ public class DriveSubsystem extends SubsystemBase {
 
     private final RelativeEncoder m_leftEncoder;
     private final RelativeEncoder m_rightEncoder;
-    
+
     private final SparkClosedLoopController m_leftClosedLoop;
     private final SparkClosedLoopController m_rightClosedLoop;
 
-    // private final AHRS m_gyro = new AHRS(NavXComType.kMXP_SPI);
+    private final AHRS m_gyro = new AHRS(NavXComType.kMXP_SPI);
 
-    // private final DifferentialDriveOdometry m_odometry = new
-    // DifferentialDriveOdometry(
-    // m_gyro.getRotation2d(), getLeftPosition(), getRightPosition());
+    private final DifferentialDrive m_drive = new DifferentialDrive(this::setLeftSpeed, this::setRightSpeed);
+    private final DifferentialDriveOdometry m_odometry = new DifferentialDriveOdometry(
+            m_gyro.getRotation2d(), getLeftPosition(), getRightPosition());
 
     private ShuffleboardTab m_driveTab = Shuffleboard.getTab(getName());
 
@@ -97,6 +98,9 @@ public class DriveSubsystem extends SubsystemBase {
 
         m_leftClosedLoop = m_leftLeader.getClosedLoopController();
         m_rightClosedLoop = m_rightLeader.getClosedLoopController();
+
+        m_drive.setDeadband(0);
+        m_drive.setMaxOutput(DriveConstants.kHardwareMaxSpeedMetersPerSecond);
     }
 
     /**
@@ -107,8 +111,7 @@ public class DriveSubsystem extends SubsystemBase {
         DifferentialDriveWheelSpeeds wheelSpeeds = DriveConstants.kDriveKinematics.toWheelSpeeds(speeds);
 
         // write speeds to motors
-        m_leftClosedLoop.setReference(wheelSpeeds.leftMetersPerSecond, ControlType.kVelocity);
-        m_rightClosedLoop.setReference(wheelSpeeds.rightMetersPerSecond, ControlType.kVelocity);
+        m_drive.tankDrive(wheelSpeeds.leftMetersPerSecond, wheelSpeeds.rightMetersPerSecond, false);
     }
 
     /**
@@ -118,25 +121,19 @@ public class DriveSubsystem extends SubsystemBase {
      */
     public void drive(double forwardSpeed, double turningSpeed) {
         forwardSpeed *= DriveConstants.kMaxForwardSpeed;
-        turningSpeed *= DriveConstants.kMaxRotationSpeed;
+        turningSpeed *= DriveConstants.kMaxTurningSpeed;
 
-        double leftSpeed = forwardSpeed + turningSpeed;
-        double rightSpeed = forwardSpeed - turningSpeed;
-        double max = Math.max(Math.abs(leftSpeed), Math.abs(rightSpeed));
+        forwardSpeed = ControllerUtils.sensitivity(forwardSpeed, DriveConstants.kForwardSensitvity,
+                DriveConstants.kDeadBand);
+        turningSpeed = ControllerUtils.sensitivity(turningSpeed, DriveConstants.kRotatonSenitvity,
+                DriveConstants.kDeadBand);
 
-        if (max > 1) {
-            leftSpeed /= max;
-            rightSpeed /= max;
-        }
-
-        m_leftClosedLoop.setReference(leftSpeed, ControlType.kVelocity);
-        m_rightClosedLoop.setReference(rightSpeed, ControlType.kVelocity);
+        m_drive.arcadeDrive(forwardSpeed, turningSpeed, false);
     }
 
     // stops all the motors
     public void stopDrive() {
-        m_leftLeader.set(0);
-        m_rightLeader.set(0);
+        m_drive.stopMotor();
     }
 
     // sets all idle modes
@@ -144,7 +141,7 @@ public class DriveSubsystem extends SubsystemBase {
         SparkMaxConfig config = new SparkMaxConfig();
         config.idleMode(mode);
 
-        for (SparkMax motor: new SparkMax[] {m_leftLeader, m_leftFollower, m_rightLeader, m_rightFollower}) {
+        for (SparkMax motor : new SparkMax[] { m_leftLeader, m_leftFollower, m_rightLeader, m_rightFollower }) {
             motor.configure(config, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
         }
     }
@@ -152,7 +149,7 @@ public class DriveSubsystem extends SubsystemBase {
     private ChassisSpeeds getChassisSpeeds() {
         DifferentialDriveWheelSpeeds wheelSpeeds = new DifferentialDriveWheelSpeeds(getLeftSpeed(), getRightSpeed());
         ChassisSpeeds speeds = DriveConstants.kDriveKinematics.toChassisSpeeds(wheelSpeeds);
-        // speeds.omegaRadiansPerSecond = Units.degreesToRadians(m_gyro.getRate());
+        speeds.omegaRadiansPerSecond = Units.degreesToRadians(m_gyro.getRate());
 
         return speeds;
     }
@@ -177,6 +174,14 @@ public class DriveSubsystem extends SubsystemBase {
      * 
      * @return
      */
+    public void setLeftSpeed(double speed) {
+        m_leftClosedLoop.setReference(speed, ControlType.kVelocity);
+    }
+
+    /**
+     * 
+     * @return
+     */
     public double getRightPosition() {
         return m_rightEncoder.getPosition();
     }
@@ -189,14 +194,22 @@ public class DriveSubsystem extends SubsystemBase {
         return m_rightEncoder.getVelocity();
     }
 
+    /**
+     * 
+     * @return
+     */
+    public void setRightSpeed(double speed) {
+        m_rightClosedLoop.setReference(speed, ControlType.kVelocity);
+    }
+
     public void resetOdometry(Pose2d pose) {
-        // m_odometry.resetPosition(m_gyro.getRotation2d(), getLeftPosition(),
-        // getRightPosition(), pose);
+        m_odometry.resetPosition(m_gyro.getRotation2d(), getLeftPosition(),
+                getRightPosition(), pose);
     }
 
     @Override
     public void periodic() {
-        // m_odometry.update(m_gyro.getRotation2d(), getLeftPosition(),
-        // getRightPosition());
+        m_odometry.update(m_gyro.getRotation2d(), getLeftPosition(),
+                getRightPosition());
     }
 }
