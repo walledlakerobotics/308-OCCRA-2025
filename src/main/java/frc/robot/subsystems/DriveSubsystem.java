@@ -37,53 +37,19 @@ import frc.robot.Constants.DriveConstants;
  */
 
 public class DriveSubsystem extends SubsystemBase {
-
-    public enum DriveMotorPose {
-        kFrontLeft, kFrontRight, kBackRight, kBackLeft;
-
-        public int getId() {
-            return switch (this) {
-                case kFrontLeft -> DriveConstants.kFrontLeftMotorId;
-                case kFrontRight -> DriveConstants.kFrontRightMotorId;
-                case kBackRight -> DriveConstants.kBackRightMotorId;
-                case kBackLeft -> DriveConstants.kBackLeftMotorId;
-            };
-        }
-
-        public int getIndex() {
-            return switch (this) {
-                case kFrontLeft -> 0;
-                case kFrontRight -> 1;
-                case kBackRight -> 2;
-                case kBackLeft -> 3;
-            };
-        }
-
-        public boolean getInverted() {
-            return switch (this) {
-                case kFrontLeft -> DriveConstants.kFrontLeftMotorInverted;
-                case kFrontRight -> DriveConstants.kFrontRightMotorInverted;
-                case kBackRight -> DriveConstants.kBackRightMotorInverted;
-                case kBackLeft -> DriveConstants.kBackLeftMotorInverted;
-            };
-        }
-
-        public static DriveMotorPose fromIndex(int index) {
-            return switch (index) {
-                case 0 -> DriveMotorPose.kFrontLeft;
-                case 1 -> DriveMotorPose.kFrontRight;
-                case 2 -> DriveMotorPose.kBackRight;
-                case 3 -> DriveMotorPose.kBackLeft;
-                default -> null;
-            };
-        }
-    }
-
     // this is where I make the lists of devices like motors and encoders, and
     // configs for the motors
-    private final SparkMax[] m_motors = new SparkMax[4];
-    private final RelativeEncoder[] m_encoders = new RelativeEncoder[4];
-    private final SparkClosedLoopController[] m_closesLoopControllers = new SparkClosedLoopController[4];
+    private final SparkMax m_leftLeader = new SparkMax(DriveConstants.kFrontLeftMotorId, MotorType.kBrushless);
+    private final SparkMax m_leftFollower = new SparkMax(DriveConstants.kBackLeftMotorId, MotorType.kBrushless);
+
+    private final SparkMax m_rightLeader = new SparkMax(DriveConstants.kFrontRightMotorId, MotorType.kBrushless);
+    private final SparkMax m_rightFollower = new SparkMax(DriveConstants.kBackRightMotorId, MotorType.kBrushless);
+
+    private final RelativeEncoder m_leftEncoder;
+    private final RelativeEncoder m_rightEncoder;
+    
+    private final SparkClosedLoopController m_leftClosedLoop;
+    private final SparkClosedLoopController m_rightClosedLoop;
 
     // private final AHRS m_gyro = new AHRS(NavXComType.kMXP_SPI);
 
@@ -94,37 +60,43 @@ public class DriveSubsystem extends SubsystemBase {
     private ShuffleboardTab m_driveTab = Shuffleboard.getTab(getName());
 
     public DriveSubsystem() {
-        // this creates the objects and stores them in array
-        for (int i = 0; i < 4; i++) {
-            DriveMotorPose motorPose = DriveMotorPose.fromIndex(i);
+        SparkMaxConfig config = new SparkMaxConfig();
 
-            m_motors[i] = new SparkMax(motorPose.getId(), MotorType.kBrushless);
+        // sets the idle mode, the smart current limit, and the inversion
+        config.smartCurrentLimit(DriveConstants.kSmartCurrentLimit);
+        config.idleMode(DriveConstants.kMotorIdleMode);
 
-            SparkMaxConfig config = new SparkMaxConfig();
+        // sets the PID
+        config.closedLoop.pid(DriveConstants.kVelocityP, DriveConstants.kVelocityI, DriveConstants.kVelocityD);
+        config.closedLoop.velocityFF(DriveConstants.kVelocityFF);
 
-            // sets the idle mode, the smart current limit, and the inversion
-            config.smartCurrentLimit(DriveConstants.kSmartLimit);
-            config.idleMode(DriveConstants.kMotorIdleMode);
-            config.inverted(motorPose.getInverted());
+        // sets encoder conversion factors
+        config.encoder.positionConversionFactor(DriveConstants.kRotationsToMeters);
+        config.encoder.velocityConversionFactor(DriveConstants.KRotationsPerMinuteToMetersPerSecond);
 
-            // sets the PID
-            config.closedLoop.pid(DriveConstants.kVelocityP, DriveConstants.kVelocityI, DriveConstants.kVelocityD);
-            config.closedLoop.velocityFF(DriveConstants.kVelocityFF);
+        // left side motors
+        config.inverted(DriveConstants.kLeftMotorsInverted);
 
-            // sets encoder conversion factors
-            config.encoder.positionConversionFactor(DriveConstants.kRotationsToMeters);
-            config.encoder.velocityConversionFactor(DriveConstants.KRotationsPerMinuteToMetersPerSecond);
+        m_leftLeader.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
-            // applies the config to the motor
-            m_motors[i].configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+        config.follow(m_leftLeader.getDeviceId(), false);
+        m_leftFollower.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
-            m_encoders[i] = m_motors[i].getEncoder();
-            m_closesLoopControllers[i] = m_motors[i].getClosedLoopController();
+        config.disableFollowerMode();
 
-            // AutoBuilder.configure(m_odometry::getPoseMeters, this::resetOdometry,
-            // this::getChassisSpeeds, this::drive, new DifferentialDrive(ZZ, null),
-            // null, null, null);
-        }
+        // right side motors
+        config.inverted(DriveConstants.kRightMotorsInverted);
+
+        m_rightLeader.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+
+        config.follow(m_rightLeader.getDeviceId(), false);
+        m_rightFollower.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+
+        m_leftEncoder = m_leftLeader.getEncoder();
+        m_rightEncoder = m_rightLeader.getEncoder();
+
+        m_leftClosedLoop = m_leftLeader.getClosedLoopController();
+        m_rightClosedLoop = m_rightLeader.getClosedLoopController();
     }
 
     /**
@@ -135,10 +107,8 @@ public class DriveSubsystem extends SubsystemBase {
         DifferentialDriveWheelSpeeds wheelSpeeds = DriveConstants.kDriveKinematics.toWheelSpeeds(speeds);
 
         // write speeds to motors
-        getClosedLoop(DriveMotorPose.kFrontLeft).setReference(wheelSpeeds.leftMetersPerSecond, ControlType.kVelocity);
-        getClosedLoop(DriveMotorPose.kBackLeft).setReference(wheelSpeeds.leftMetersPerSecond, ControlType.kVelocity);
-        getClosedLoop(DriveMotorPose.kFrontRight).setReference(wheelSpeeds.rightMetersPerSecond, ControlType.kVelocity);
-        getClosedLoop(DriveMotorPose.kBackRight).setReference(wheelSpeeds.rightMetersPerSecond, ControlType.kVelocity);
+        m_leftClosedLoop.setReference(wheelSpeeds.leftMetersPerSecond, ControlType.kVelocity);
+        m_rightClosedLoop.setReference(wheelSpeeds.rightMetersPerSecond, ControlType.kVelocity);
     }
 
     /**
@@ -159,72 +129,24 @@ public class DriveSubsystem extends SubsystemBase {
             rightSpeed /= max;
         }
 
-        getClosedLoop(DriveMotorPose.kFrontLeft)
-                .setReference(DriveConstants.kMaxPhysicalSpeedMetersPerSecond * leftSpeed, ControlType.kVelocity);
-        getClosedLoop(DriveMotorPose.kBackLeft)
-                .setReference(DriveConstants.kMaxPhysicalSpeedMetersPerSecond * leftSpeed, ControlType.kVelocity);
-        getClosedLoop(DriveMotorPose.kFrontRight)
-                .setReference(DriveConstants.kMaxPhysicalSpeedMetersPerSecond * rightSpeed, ControlType.kVelocity);
-        getClosedLoop(DriveMotorPose.kBackRight)
-                .setReference(DriveConstants.kMaxPhysicalSpeedMetersPerSecond * rightSpeed, ControlType.kVelocity);
+        m_leftClosedLoop.setReference(leftSpeed, ControlType.kVelocity);
+        m_rightClosedLoop.setReference(rightSpeed, ControlType.kVelocity);
     }
 
     // stops all the motors
     public void stopDrive() {
-        applyAllMotors(motor -> motor.set(0));
+        m_leftLeader.set(0);
+        m_rightLeader.set(0);
     }
 
-    // sets all idlemodes to be brake
-    public void setBrakeMode() {
-        configureAllMotors(config -> config.idleMode(IdleMode.kBrake), ResetMode.kNoResetSafeParameters,
-                PersistMode.kPersistParameters);
-    }
+    // sets all idle modes
+    public void setAllIdleMode(IdleMode mode) {
+        SparkMaxConfig config = new SparkMaxConfig();
+        config.idleMode(mode);
 
-    // sets all idlemodes to be coast
-    public void setCoastMode() {
-        configureAllMotors(config -> config.idleMode(IdleMode.kCoast), ResetMode.kNoResetSafeParameters,
-                PersistMode.kPersistParameters);
-    }
-
-    /**
-     * This will take the speed param and set all the motor's to that speed
-     * 
-     * @param speed
-     */
-    public void setAllMotorSpeeds(double speed) {
-        applyAllMotors(motor -> motor.set(speed));
-    }
-
-    /**
-     * 
-     * @param motorPose
-     * @param function
-     */
-    private SparkMax getMotor(DriveMotorPose motorPose) {
-        return m_motors[motorPose.getIndex()];
-    }
-
-    /**
-     * 
-     * @param function
-     */
-    private void applyAllMotors(Consumer<SparkMax> function) {
-        for (SparkMax motor : m_motors) {
-            function.accept(motor);
+        for (SparkMax motor: new SparkMax[] {m_leftLeader, m_leftFollower, m_rightLeader, m_rightFollower}) {
+            motor.configure(config, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
         }
-    }
-
-    /**
-     * 
-     * @param configure
-     */
-    private void configureAllMotors(Consumer<SparkMaxConfig> configure, ResetMode resetMode, PersistMode persist) {
-        applyAllMotors(motor -> {
-            SparkMaxConfig config = new SparkMaxConfig();
-            configure.accept(config);
-
-            motor.configure(config, resetMode, persist);
-        });
     }
 
     private ChassisSpeeds getChassisSpeeds() {
@@ -240,8 +162,7 @@ public class DriveSubsystem extends SubsystemBase {
      * @return
      */
     public double getLeftPosition() {
-        return getEncoder(DriveMotorPose.kFrontLeft).getPosition()
-                + getEncoder(DriveMotorPose.kBackLeft).getPosition() / 2;
+        return m_leftEncoder.getPosition();
     }
 
     /**
@@ -249,8 +170,7 @@ public class DriveSubsystem extends SubsystemBase {
      * @return
      */
     public double getLeftSpeed() {
-        return getEncoder(DriveMotorPose.kFrontLeft).getVelocity()
-                + getEncoder(DriveMotorPose.kBackLeft).getVelocity() / 2;
+        return m_leftEncoder.getVelocity();
     }
 
     /**
@@ -258,8 +178,7 @@ public class DriveSubsystem extends SubsystemBase {
      * @return
      */
     public double getRightPosition() {
-        return getEncoder(DriveMotorPose.kFrontRight).getPosition()
-                + getEncoder(DriveMotorPose.kBackRight).getPosition();
+        return m_rightEncoder.getPosition();
     }
 
     /**
@@ -267,26 +186,7 @@ public class DriveSubsystem extends SubsystemBase {
      * @return
      */
     public double getRightSpeed() {
-        return getEncoder(DriveMotorPose.kFrontRight).getVelocity()
-                + getEncoder(DriveMotorPose.kBackRight).getVelocity() / 2;
-    }
-
-    /**
-     * 
-     * @param motorPose
-     * @return
-     */
-    private RelativeEncoder getEncoder(DriveMotorPose motorPose) {
-        return m_encoders[motorPose.getIndex()];
-    }
-
-    /**
-     * 
-     * @param motorPose
-     * @return
-     */
-    private SparkClosedLoopController getClosedLoop(DriveMotorPose motorPose) {
-        return m_closesLoopControllers[motorPose.getIndex()];
+        return m_rightEncoder.getVelocity();
     }
 
     public void resetOdometry(Pose2d pose) {
