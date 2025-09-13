@@ -59,15 +59,14 @@ public final class Constants {
     // smartLimit
     public static final int kSmartCurrentLimit = 30;
 
-    // public static final double kMaxSpeedMetersPerSecond =
-    // ((MotorConstants.kNeoMotorMaxRPM / 60.0) / kGearRatio) * kWheelCircumference;
-    public static final double kMaxPhysicalSpeedMetersPerSecond = 5.6;
+    public static final double kHardwareMaxSpeedMetersPerSecond = MotorConstants.kNeoMotorMaxRPM
+        * DriveConstants.KRotationsPerMinuteToMetersPerSecond;
 
     // PID constants for controlling wheel velocity
     public static final double kVelocityP = 0.1;
     public static final double kVelocityI = 0.0;
     public static final double kVelocityD = 0.0;
-    public static final double kVelocityFF = 1 / kMaxPhysicalSpeedMetersPerSecond;
+    public static final double kVelocityFF = 1 / kHardwareMaxSpeedMetersPerSecond;
 
     // physical constants
     public static final double kWheelDiameter = Units.inchesToMeters(6);
@@ -87,11 +86,19 @@ public final class Constants {
     // to the stick drift
     public static final double kDeadBand = 0.01;
 
-    public static final double kDriverSensitvity = 0.4;
+    public static final double kForwardSensitvity = 0.4;
     public static final double kRotatonSenitvity = 0.4;
 
     public static final double kMaxForwardSpeed = 1;
-    public static final double kMaxRotationSpeed = 0.7;
+    public static final double kMaxTurningSpeed = 0.7;
 
+  }
+
+  public static class MotorConstants {
+    private MotorConstants() {
+      throw new UnsupportedOperationException("This is a utility class!");
+    }
+
+    public static final int kNeoMotorMaxRPM = 5676;
   }
 }
