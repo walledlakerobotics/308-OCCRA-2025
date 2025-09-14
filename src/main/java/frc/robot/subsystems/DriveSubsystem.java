@@ -99,7 +99,10 @@ public class DriveSubsystem extends SubsystemBase {
         m_leftClosedLoop = m_leftLeader.getClosedLoopController();
         m_rightClosedLoop = m_rightLeader.getClosedLoopController();
 
+        // we handle the deadband ourselves
         m_drive.setDeadband(0);
+
+        // we want the speeds passed into the set speed functions to be in meters per second
         m_drive.setMaxOutput(DriveConstants.kHardwareMaxSpeedMetersPerSecond);
     }
 
