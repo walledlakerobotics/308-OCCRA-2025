@@ -4,9 +4,14 @@
 
 package frc.robot;
 
+import com.pathplanner.lib.config.ModuleConfig;
+import com.pathplanner.lib.config.RobotConfig;
+import com.pathplanner.lib.controllers.PPLTVController;
+import com.pathplanner.lib.controllers.PathFollowingController;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
+import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
 
 /**
@@ -68,7 +73,8 @@ public final class Constants {
     public static final double kVelocityFF = 1 / 473;
 
     // physical constants
-    public static final double kWheelDiameter = Units.inchesToMeters(6);
+    public static final double kWheelRadius = Units.inchesToMeters(3);
+    public static final double kWheelDiameter = 2 * kWheelRadius;
     public static final double kWheelCircumference = kWheelDiameter * Math.PI;
     public static final double kGearRatio = 8.45865;
 
@@ -90,6 +96,28 @@ public final class Constants {
 
     public static final double kForwardAxisMultiplier = 1;
     public static final double kTurningAxisMultiplier = 0.7;
+  }
 
+  public static class AutoConstants {
+    private AutoConstants() {
+      throw new UnsupportedOperationException("This is a utility class!");
+    }
+
+    public static final double kMassKG = 50;
+    public static final double kRobotMOI = 50;
+
+    public static final double kWheelCOF = 1;
+
+    public static final DCMotor kDriveMotor = DCMotor.getNEO(2);
+
+    public static final double kDescretizationTime = 0.01;
+
+    public static final RobotConfig kRobotConfig = new RobotConfig(kMassKG, kRobotMOI,
+        new ModuleConfig(DriveConstants.kWheelDiameter / 2, DriveConstants.kMaxSpeedMetersPerSecond,
+            kWheelCOF, kDriveMotor, DriveConstants.kSmartCurrentLimit, 2),
+        DriveConstants.kTrackWidth);
+
+    public static final PathFollowingController kAutoController = new PPLTVController(kDescretizationTime,
+        DriveConstants.kMaxSpeedMetersPerSecond);
   }
 }
