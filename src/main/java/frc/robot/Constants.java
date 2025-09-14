@@ -85,11 +85,11 @@ public final class Constants {
     // to the stick drift
     public static final double kDeadBand = 0.01;
 
-    public static final double kForwardSensitvity = 0.4;
-    public static final double kRotatonSenitvity = 0.4;
+    public static final double kForwardAxisSensitvity = 0.4;
+    public static final double kRotatonAxisSenitvity = 0.4;
 
-    public static final double kMaxForwardPercent = 1;
-    public static final double kMaxTurningPercent = 0.7;
+    public static final double kForwardAxisMultiplier = 1;
+    public static final double kTurningAxisMultiplier = 0.7;
 
   }
 }
