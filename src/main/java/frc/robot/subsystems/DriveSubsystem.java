@@ -120,7 +120,7 @@ public class DriveSubsystem extends SubsystemBase {
      * @param turning
      */
     public void drive(double forward, double turning, boolean allowTurnInPlace) {
-        m_drive.curvatureDrive(forward, turning, false);
+        m_drive.curvatureDrive(forward, turning, allowTurnInPlace);
     }
 
     /**
