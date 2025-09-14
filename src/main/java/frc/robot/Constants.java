@@ -92,12 +92,4 @@ public final class Constants {
     public static final double kMaxTurningPercent = 0.7;
 
   }
-
-  public static class MotorConstants {
-    private MotorConstants() {
-      throw new UnsupportedOperationException("This is a utility class!");
-    }
-
-    public static final int kNeoMotorMaxRPM = 5676;
-  }
 }
