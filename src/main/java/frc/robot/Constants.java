@@ -59,8 +59,7 @@ public final class Constants {
     // smartLimit
     public static final int kSmartCurrentLimit = 30;
 
-    public static final double kHardwareMaxSpeedMetersPerSecond = MotorConstants.kNeoMotorMaxRPM
-        * DriveConstants.KRotationsPerMinuteToMetersPerSecond;
+    public static final double kMaxSpeedMetersPerSecond = 5.6;
 
     // PID constants for controlling wheel velocity
     public static final double kVelocityP = 0.1;
