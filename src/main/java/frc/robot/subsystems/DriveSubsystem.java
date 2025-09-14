@@ -102,8 +102,9 @@ public class DriveSubsystem extends SubsystemBase {
         // we handle the deadband ourselves
         m_drive.setDeadband(0);
 
-        // we want the speeds passed into the set speed functions to be in meters per second
-        m_drive.setMaxOutput(DriveConstants.kHardwareMaxSpeedMetersPerSecond);
+        // we want the speeds passed into the set speed functions to be in meters per
+        // second
+        m_drive.setMaxOutput(DriveConstants.kMaxSpeedMetersPerSecond);
     }
 
     /**
@@ -132,17 +133,18 @@ public class DriveSubsystem extends SubsystemBase {
      * @param forwardSupplier
      * @param turningSupplier
      */
-    public Command driveJoysticks(DoubleSupplier forwardSupplier, DoubleSupplier turningSupplier, BooleanSupplier turnInPlaceSupplier) {
+    public Command driveJoysticks(DoubleSupplier forwardSupplier, DoubleSupplier turningSupplier,
+            BooleanSupplier turnInPlaceSupplier) {
         return run(() -> {
             double forward = forwardSupplier.getAsDouble();
             double turning = turningSupplier.getAsDouble();
 
-            forward *= DriveConstants.kMaxForwardPercent;
-            turning *= DriveConstants.kMaxTurningPercent;
+            forward *= DriveConstants.kForwardAxisMultiplier;
+            turning *= DriveConstants.kTurningAxisMultiplier;
 
-            forward = ControllerUtils.sensitivity(forward, DriveConstants.kForwardSensitvity,
+            forward = ControllerUtils.sensitivity(forward, DriveConstants.kForwardAxisSensitvity,
                     DriveConstants.kDeadBand);
-            turning = ControllerUtils.sensitivity(turning, DriveConstants.kRotatonSenitvity,
+            turning = ControllerUtils.sensitivity(turning, DriveConstants.kRotatonAxisSenitvity,
                     DriveConstants.kDeadBand);
 
             drive(forward, turning, turnInPlaceSupplier.getAsBoolean());
