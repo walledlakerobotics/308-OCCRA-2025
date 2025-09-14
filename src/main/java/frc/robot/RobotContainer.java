@@ -31,77 +31,77 @@ import org.json.simple.parser.ParseException;;
  */
 public class RobotContainer {
 
-  // Json defined parser
-  private final JSONParser parser = new JSONParser();
+    // Json defined parser
+    private final JSONParser parser = new JSONParser();
 
-  // The robot's subsystem defined here
-  private final DriveSubsystem m_driveSubsystem = new DriveSubsystem();
+    // The robot's subsystem defined here
+    private final DriveSubsystem m_driveSubsystem = new DriveSubsystem();
 
-  // controllers
-  private final CommandFHXController m_driverController = new CommandFHXController(0);
-  private final CommandXboxController m_coDriverController = new CommandXboxController(1);
+    // controllers
+    private final CommandFHXController m_driverController = new CommandFHXController(0);
+    private final CommandXboxController m_coDriverController = new CommandXboxController(1);
 
-  /**
-   * The container for the robot. Contains subsystems, OI devices, and commands.
-   */
-  public RobotContainer() {
-    m_driveSubsystem.setDefaultCommand(
-        m_driveSubsystem.driveJoysticks(m_driverController::getThrottle, m_driverController::getStickY,
-            m_driverController.getHID()::getL1Button));
+    /**
+     * The container for the robot. Contains subsystems, OI devices, and commands.
+     */
+    public RobotContainer() {
+        m_driveSubsystem.setDefaultCommand(
+                m_driveSubsystem.driveJoysticks(m_driverController::getThrottle, m_driverController::getStickY,
+                        m_driverController.getHID()::getL1Button));
 
-    configureBindings(OperatorConstants.kDriverJsonPath, OperatorConstants.kCoDriverJsonPath, 1, 1);
-  }
-
-  /**
-   * Use this method to define your trigger->command mappings. Triggers can be
-   * created via the
-   * {@link Trigger#Trigger(java.util.function.BooleanSupplier)} constructor with
-   * an arbitrary
-   * predicate, or via the named factories in {@link
-   * edu.wpi.first.wpilibj2.command.button.CommandGenericHID}'s subclasses for
-   * {@link
-   * CommandXboxController
-   * Xbox}/{@link edu.wpi.first.wpilibj2.command.button.CommandPS4Controller
-   * PS4} controllers or
-   * {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
-   * joysticks}.
-   */
-  private void configureBindings(String driverPath, String coDriverPath, int driverSetting, int coDriverSetting) {
-    File mainDriverBindsJson = new File(driverPath);
-    File coDriverBindsJson = new File(coDriverPath);
-
-    ShuffleboardTab test = Shuffleboard.getTab("Test");
-
-    test.addBoolean("L1", m_driverController.getHID()::getL1Button);
-    test.addBoolean("L2", m_driverController.getHID()::getL2Button);
-    test.addBoolean("L3", m_driverController.getHID()::getL3Button);
-    test.addBoolean("R1", m_driverController.getHID()::getR1Button);
-    test.addBoolean("R2", m_driverController.getHID()::getR2Button);
-    test.addBoolean("R3", m_driverController.getHID()::getR3Button);
-    test.addBoolean("5", m_driverController.getHID()::getButton5);
-    test.addBoolean("6", m_driverController.getHID()::getButton6);
-    test.addBoolean("7", m_driverController.getHID()::getButton7);
-    test.addBoolean("8", m_driverController.getHID()::getButton8);
-    test.addBoolean("Start", m_driverController.getHID()::getStartButton);
-    test.addBoolean("Select", m_driverController.getHID()::getSelectButton);
-
-    test.addDouble("Stick X", m_driverController::getStickX);
-    test.addDouble("Stick Y", m_driverController::getStickY);
-    test.addDouble("Throttle", m_driverController::getThrottle);
-    test.addDouble("Rudder", m_driverController::getRudder);
-    test.addDouble("Rocker", m_driverController::getRockerAxis);
-    test.addDouble("POV", m_driverController.getHID()::getPOV);
-
-    try {
-      JSONObject driverFileData = (JSONObject) parser.parse(new FileReader(mainDriverBindsJson));
-      JSONObject coDriverFileData = (JSONObject) parser.parse(new FileReader(coDriverBindsJson));
-
-      JSONObject driverData = (JSONObject) driverFileData.get("mainDriver " + driverSetting);
-      JSONObject coDriverData = (JSONObject) coDriverFileData.get("coDriver " + coDriverSetting);
-
-    } catch (IOException | ParseException e) {
-
+        configureBindings(OperatorConstants.kDriverJsonPath, OperatorConstants.kCoDriverJsonPath, 1, 1);
     }
 
-  }
+    /**
+     * Use this method to define your trigger->command mappings. Triggers can be
+     * created via the
+     * {@link Trigger#Trigger(java.util.function.BooleanSupplier)} constructor with
+     * an arbitrary
+     * predicate, or via the named factories in {@link
+     * edu.wpi.first.wpilibj2.command.button.CommandGenericHID}'s subclasses for
+     * {@link
+     * CommandXboxController
+     * Xbox}/{@link edu.wpi.first.wpilibj2.command.button.CommandPS4Controller
+     * PS4} controllers or
+     * {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
+     * joysticks}.
+     */
+    private void configureBindings(String driverPath, String coDriverPath, int driverSetting, int coDriverSetting) {
+        File mainDriverBindsJson = new File(driverPath);
+        File coDriverBindsJson = new File(coDriverPath);
+
+        ShuffleboardTab test = Shuffleboard.getTab("Test");
+
+        test.addBoolean("L1", m_driverController.getHID()::getL1Button);
+        test.addBoolean("L2", m_driverController.getHID()::getL2Button);
+        test.addBoolean("L3", m_driverController.getHID()::getL3Button);
+        test.addBoolean("R1", m_driverController.getHID()::getR1Button);
+        test.addBoolean("R2", m_driverController.getHID()::getR2Button);
+        test.addBoolean("R3", m_driverController.getHID()::getR3Button);
+        test.addBoolean("5", m_driverController.getHID()::getButton5);
+        test.addBoolean("6", m_driverController.getHID()::getButton6);
+        test.addBoolean("7", m_driverController.getHID()::getButton7);
+        test.addBoolean("8", m_driverController.getHID()::getButton8);
+        test.addBoolean("Start", m_driverController.getHID()::getStartButton);
+        test.addBoolean("Select", m_driverController.getHID()::getSelectButton);
+
+        test.addDouble("Stick X", m_driverController::getStickX);
+        test.addDouble("Stick Y", m_driverController::getStickY);
+        test.addDouble("Throttle", m_driverController::getThrottle);
+        test.addDouble("Rudder", m_driverController::getRudder);
+        test.addDouble("Rocker", m_driverController::getRockerAxis);
+        test.addDouble("POV", m_driverController.getHID()::getPOV);
+
+        try {
+            JSONObject driverFileData = (JSONObject) parser.parse(new FileReader(mainDriverBindsJson));
+            JSONObject coDriverFileData = (JSONObject) parser.parse(new FileReader(coDriverBindsJson));
+
+            JSONObject driverData = (JSONObject) driverFileData.get("mainDriver " + driverSetting);
+            JSONObject coDriverData = (JSONObject) coDriverFileData.get("coDriver " + coDriverSetting);
+
+        } catch (IOException | ParseException e) {
+
+        }
+
+    }
 }

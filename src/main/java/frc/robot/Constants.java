@@ -27,97 +27,97 @@ import edu.wpi.first.math.util.Units;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
-  private Constants() {
-    throw new UnsupportedOperationException("This is a utility class!");
-  }
-
-  public static class OperatorConstants {
-    private OperatorConstants() {
-      throw new UnsupportedOperationException("This is a utility class!");
+    private Constants() {
+        throw new UnsupportedOperationException("This is a utility class!");
     }
 
-    // Ports for the controllers, and json file relative path
-    public static final int kDriverControllerPort = 0;
-    public static final int kCoDriverControllerPort = 1;
-    public static final String kDriverJsonPath = "src/main/java/frc/robot/assets/data/mainDriverBinds/mainDriver.json";
-    public static final String kCoDriverJsonPath = "src/main/java/frc/robot/assets/data/coDriverBinds/coDriver.json";
-  }
+    public static class OperatorConstants {
+        private OperatorConstants() {
+            throw new UnsupportedOperationException("This is a utility class!");
+        }
 
-  public static class DriveConstants {
-    private DriveConstants() {
-      throw new UnsupportedOperationException("This is a utility class!");
+        // Ports for the controllers, and json file relative path
+        public static final int kDriverControllerPort = 0;
+        public static final int kCoDriverControllerPort = 1;
+        public static final String kDriverJsonPath = "src/main/java/frc/robot/assets/data/mainDriverBinds/mainDriver.json";
+        public static final String kCoDriverJsonPath = "src/main/java/frc/robot/assets/data/coDriverBinds/coDriver.json";
     }
 
-    // ids for the motors
-    public static final int kFrontLeftMotorId = 3;
-    public static final int kFrontRightMotorId = 5;
-    public static final int kBackLeftMotorId = 2;
-    public static final int kBackRightMotorId = 4;
+    public static class DriveConstants {
+        private DriveConstants() {
+            throw new UnsupportedOperationException("This is a utility class!");
+        }
 
-    // sets if an motor is inverted
-    public static final boolean kLeftMotorsInverted = false;
-    public static final boolean kRightMotorsInverted = true;
+        // ids for the motors
+        public static final int kFrontLeftMotorId = 3;
+        public static final int kFrontRightMotorId = 5;
+        public static final int kBackLeftMotorId = 2;
+        public static final int kBackRightMotorId = 4;
 
-    // idle mode
-    public static final IdleMode kMotorIdleMode = IdleMode.kBrake;
+        // sets if an motor is inverted
+        public static final boolean kLeftMotorsInverted = false;
+        public static final boolean kRightMotorsInverted = true;
 
-    // smartLimit
-    public static final int kSmartCurrentLimit = 30;
+        // idle mode
+        public static final IdleMode kMotorIdleMode = IdleMode.kBrake;
 
-    public static final double kMaxSpeedMetersPerSecond = 5.6;
+        // smartLimit
+        public static final int kSmartCurrentLimit = 30;
 
-    // PID constants for controlling wheel velocity
-    public static final double kVelocityP = 0.1;
-    public static final double kVelocityI = 0.0;
-    public static final double kVelocityD = 0.0;
-    public static final double kVelocityFF = 1 / 473;
+        public static final double kMaxSpeedMetersPerSecond = 5.6;
 
-    // physical constants
-    public static final double kWheelRadius = Units.inchesToMeters(3);
-    public static final double kWheelDiameter = 2 * kWheelRadius;
-    public static final double kWheelCircumference = kWheelDiameter * Math.PI;
-    public static final double kGearRatio = 8.45865;
+        // PID constants for controlling wheel velocity
+        public static final double kVelocityP = 0.1;
+        public static final double kVelocityI = 0.0;
+        public static final double kVelocityD = 0.0;
+        public static final double kVelocityFF = 1 / 473;
 
-    public static final double kTrackWidth = 0.5;
+        // physical constants
+        public static final double kWheelRadius = Units.inchesToMeters(3);
+        public static final double kWheelDiameter = 2 * kWheelRadius;
+        public static final double kWheelCircumference = kWheelDiameter * Math.PI;
+        public static final double kGearRatio = 8.45865;
 
-    // encoder conversion factors
-    public static final double kRotationsToMeters = kWheelCircumference / kGearRatio;
-    public static final double KRotationsPerMinuteToMetersPerSecond = kRotationsToMeters / 60;
+        public static final double kTrackWidth = 0.5;
 
-    // kinematics
-    public static final DifferentialDriveKinematics kDriveKinematics = new DifferentialDriveKinematics(kTrackWidth);
+        // encoder conversion factors
+        public static final double kRotationsToMeters = kWheelCircumference / kGearRatio;
+        public static final double KRotationsPerMinuteToMetersPerSecond = kRotationsToMeters / 60;
 
-    // this makes it so if there any stick drift it prevents the robot from move due
-    // to the stick drift
-    public static final double kDeadBand = 0.01;
+        // kinematics
+        public static final DifferentialDriveKinematics kDriveKinematics = new DifferentialDriveKinematics(kTrackWidth);
 
-    public static final double kForwardAxisSensitvity = 0.4;
-    public static final double kRotatonAxisSenitvity = 0.4;
+        // this makes it so if there any stick drift it prevents the robot from move due
+        // to the stick drift
+        public static final double kDeadBand = 0.01;
 
-    public static final double kForwardAxisMultiplier = 1;
-    public static final double kTurningAxisMultiplier = 0.7;
-  }
+        public static final double kForwardAxisSensitvity = 0.4;
+        public static final double kRotatonAxisSenitvity = 0.4;
 
-  public static class AutoConstants {
-    private AutoConstants() {
-      throw new UnsupportedOperationException("This is a utility class!");
+        public static final double kForwardAxisMultiplier = 1;
+        public static final double kTurningAxisMultiplier = 0.7;
     }
 
-    public static final double kMassKG = 50;
-    public static final double kRobotMOI = 50;
+    public static class AutoConstants {
+        private AutoConstants() {
+            throw new UnsupportedOperationException("This is a utility class!");
+        }
 
-    public static final double kWheelCOF = 1;
+        public static final double kMassKG = 50;
+        public static final double kRobotMOI = 50;
 
-    public static final DCMotor kDriveMotor = DCMotor.getNEO(2);
+        public static final double kWheelCOF = 1;
 
-    public static final double kDescretizationTime = 0.01;
+        public static final DCMotor kDriveMotor = DCMotor.getNEO(2);
 
-    public static final RobotConfig kRobotConfig = new RobotConfig(kMassKG, kRobotMOI,
-        new ModuleConfig(DriveConstants.kWheelDiameter / 2, DriveConstants.kMaxSpeedMetersPerSecond,
-            kWheelCOF, kDriveMotor, DriveConstants.kSmartCurrentLimit, 2),
-        DriveConstants.kTrackWidth);
+        public static final double kDescretizationTime = 0.01;
 
-    public static final PathFollowingController kAutoController = new PPLTVController(kDescretizationTime,
-        DriveConstants.kMaxSpeedMetersPerSecond);
-  }
+        public static final RobotConfig kRobotConfig = new RobotConfig(kMassKG, kRobotMOI,
+                new ModuleConfig(DriveConstants.kWheelDiameter / 2, DriveConstants.kMaxSpeedMetersPerSecond,
+                        kWheelCOF, kDriveMotor, DriveConstants.kSmartCurrentLimit, 2),
+                DriveConstants.kTrackWidth);
+
+        public static final PathFollowingController kAutoController = new PPLTVController(kDescretizationTime,
+                DriveConstants.kMaxSpeedMetersPerSecond);
+    }
 }
