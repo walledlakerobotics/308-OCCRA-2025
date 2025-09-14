@@ -114,7 +114,8 @@ public class DriveSubsystem extends SubsystemBase {
         DifferentialDriveWheelSpeeds wheelSpeeds = DriveConstants.kDriveKinematics.toWheelSpeeds(speeds);
 
         // write speeds to motors
-        m_drive.tankDrive(wheelSpeeds.leftMetersPerSecond, wheelSpeeds.rightMetersPerSecond, false);
+        setLeftSpeed(wheelSpeeds.leftMetersPerSecond);
+        setRightSpeed(wheelSpeeds.rightMetersPerSecond);
     }
 
     /**
