@@ -7,6 +7,7 @@ package frc.robot.subsystems;
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
+import com.pathplanner.lib.auto.AutoBuilder;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkMax;
@@ -29,6 +30,7 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.utils.ControllerUtils;
 
@@ -105,6 +107,10 @@ public class DriveSubsystem extends SubsystemBase {
         // we want the speeds passed into the set speed functions to be in meters per
         // second
         m_drive.setMaxOutput(DriveConstants.kMaxSpeedMetersPerSecond);
+
+        AutoBuilder.configure(m_odometry::getPoseMeters, this::resetOdometry, this::getChassisSpeeds, this::drive,
+                AutoConstants.kAutoController, AutoConstants.kRobotConfig,
+                () -> false, this);
     }
 
     /**
@@ -169,7 +175,6 @@ public class DriveSubsystem extends SubsystemBase {
     private ChassisSpeeds getChassisSpeeds() {
         DifferentialDriveWheelSpeeds wheelSpeeds = new DifferentialDriveWheelSpeeds(getLeftSpeed(), getRightSpeed());
         ChassisSpeeds speeds = DriveConstants.kDriveKinematics.toChassisSpeeds(wheelSpeeds);
-        speeds.omegaRadiansPerSecond = Units.degreesToRadians(m_gyro.getRate());
 
         return speeds;
     }
