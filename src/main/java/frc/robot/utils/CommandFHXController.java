@@ -24,83 +24,83 @@ public class CommandFHXController extends CommandGenericHID {
         return m_hid;
     }
 
-    public Trigger r1() {
-        return r1(CommandScheduler.getInstance().getDefaultButtonLoop());
+    public Trigger R1() {
+        return R1(CommandScheduler.getInstance().getDefaultButtonLoop());
     }
 
-    public Trigger r1(EventLoop loop) {
+    public Trigger R1(EventLoop loop) {
         return button(FHXController.Button.kR1.value, loop);
     }
 
-    public Trigger r2() {
-        return r2(CommandScheduler.getInstance().getDefaultButtonLoop());
+    public Trigger R2() {
+        return R2(CommandScheduler.getInstance().getDefaultButtonLoop());
     }
 
-    public Trigger r2(EventLoop loop) {
+    public Trigger R2(EventLoop loop) {
         return button(FHXController.Button.kR2.value, loop);
     }
 
-    public Trigger r3() {
-        return r3(CommandScheduler.getInstance().getDefaultButtonLoop());
+    public Trigger R3() {
+        return R3(CommandScheduler.getInstance().getDefaultButtonLoop());
     }
 
-    public Trigger r3(EventLoop loop) {
+    public Trigger R3(EventLoop loop) {
         return button(FHXController.Button.kR3.value, loop);
     }
 
-    public Trigger l1() {
-        return l1(CommandScheduler.getInstance().getDefaultButtonLoop());
+    public Trigger L1() {
+        return L1(CommandScheduler.getInstance().getDefaultButtonLoop());
     }
 
-    public Trigger l1(EventLoop loop) {
+    public Trigger L1(EventLoop loop) {
         return button(FHXController.Button.kL1.value, loop);
     }
 
-    public Trigger l2() {
-        return l2(CommandScheduler.getInstance().getDefaultButtonLoop());
+    public Trigger L2() {
+        return L2(CommandScheduler.getInstance().getDefaultButtonLoop());
     }
 
-    public Trigger l2(EventLoop loop) {
+    public Trigger L2(EventLoop loop) {
         return button(FHXController.Button.kL2.value, loop);
     }
 
-    public Trigger l3() {
-        return l3(CommandScheduler.getInstance().getDefaultButtonLoop());
+    public Trigger L3() {
+        return L3(CommandScheduler.getInstance().getDefaultButtonLoop());
     }
 
-    public Trigger l3(EventLoop loop) {
+    public Trigger L3(EventLoop loop) {
         return button(FHXController.Button.kL3.value, loop);
     }
 
-    public Trigger b5() {
-        return b5(CommandScheduler.getInstance().getDefaultButtonLoop());
+    public Trigger B5() {
+        return B5(CommandScheduler.getInstance().getDefaultButtonLoop());
     }
 
-    public Trigger b5(EventLoop loop) {
+    public Trigger B5(EventLoop loop) {
         return button(FHXController.Button.k5.value, loop);
     }
 
-    public Trigger b6() {
-        return b6(CommandScheduler.getInstance().getDefaultButtonLoop());
+    public Trigger B6() {
+        return B6(CommandScheduler.getInstance().getDefaultButtonLoop());
     }
 
-    public Trigger b6(EventLoop loop) {
+    public Trigger B6(EventLoop loop) {
         return button(FHXController.Button.k6.value, loop);
     }
 
-    public Trigger b7() {
-        return b7(CommandScheduler.getInstance().getDefaultButtonLoop());
+    public Trigger B7() {
+        return B7(CommandScheduler.getInstance().getDefaultButtonLoop());
     }
 
-    public Trigger b7(EventLoop loop) {
+    public Trigger B7(EventLoop loop) {
         return button(FHXController.Button.k7.value, loop);
     }
 
-    public Trigger b8() {
-        return b8(CommandScheduler.getInstance().getDefaultButtonLoop());
+    public Trigger B8() {
+        return B8(CommandScheduler.getInstance().getDefaultButtonLoop());
     }
 
-    public Trigger b8(EventLoop loop) {
+    public Trigger B8(EventLoop loop) {
         return button(FHXController.Button.k8.value, loop);
     }
 

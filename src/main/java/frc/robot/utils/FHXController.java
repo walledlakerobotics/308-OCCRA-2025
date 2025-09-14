@@ -140,7 +140,7 @@ public class FHXController extends GenericHID {
         return getRawButtonReleased(Button.kR1.value);
     }
 
-    public BooleanEvent r1(EventLoop event) {
+    public BooleanEvent R1(EventLoop event) {
         return button(Button.kR1.value, event);
     }
 
@@ -156,7 +156,7 @@ public class FHXController extends GenericHID {
         return getRawButtonReleased(Button.kR2.value);
     }
 
-    public BooleanEvent r2(EventLoop event) {
+    public BooleanEvent R2(EventLoop event) {
         return button(Button.kR2.value, event);
     }
 
@@ -172,7 +172,7 @@ public class FHXController extends GenericHID {
         return getRawButtonReleased(Button.kR3.value);
     }
 
-    public BooleanEvent r3(EventLoop event) {
+    public BooleanEvent R3(EventLoop event) {
         return button(Button.kR3.value, event);
     }
 
@@ -188,7 +188,7 @@ public class FHXController extends GenericHID {
         return getRawButtonReleased(Button.kL1.value);
     }
 
-    public BooleanEvent l1(EventLoop event) {
+    public BooleanEvent L1(EventLoop event) {
         return button(Button.kL1.value, event);
     }
 
@@ -204,7 +204,7 @@ public class FHXController extends GenericHID {
         return getRawButtonReleased(Button.kL2.value);
     }
 
-    public BooleanEvent l2(EventLoop event) {
+    public BooleanEvent L2(EventLoop event) {
         return button(Button.kL2.value, event);
     }
 
@@ -220,7 +220,7 @@ public class FHXController extends GenericHID {
         return getRawButtonReleased(Button.kL3.value);
     }
 
-    public BooleanEvent l3(EventLoop event) {
+    public BooleanEvent L3(EventLoop event) {
         return button(Button.kL3.value, event);
     }
 
@@ -236,7 +236,7 @@ public class FHXController extends GenericHID {
         return getRawButtonReleased(Button.k5.value);
     }
 
-    public BooleanEvent b5(EventLoop event) {
+    public BooleanEvent B5(EventLoop event) {
         return button(Button.k5.value, event);
     }
 
@@ -252,7 +252,7 @@ public class FHXController extends GenericHID {
         return getRawButtonReleased(Button.k6.value);
     }
 
-    public BooleanEvent b6(EventLoop event) {
+    public BooleanEvent B6(EventLoop event) {
         return button(Button.k6.value, event);
     }
 
@@ -268,7 +268,7 @@ public class FHXController extends GenericHID {
         return getRawButtonReleased(Button.k7.value);
     }
 
-    public BooleanEvent b7(EventLoop event) {
+    public BooleanEvent B7(EventLoop event) {
         return button(Button.k7.value, event);
     }
 
@@ -284,7 +284,7 @@ public class FHXController extends GenericHID {
         return getRawButtonReleased(Button.k8.value);
     }
 
-    public BooleanEvent b8(EventLoop event) {
+    public BooleanEvent B8(EventLoop event) {
         return button(Button.k8.value, event);
     }
 
@@ -319,8 +319,4 @@ public class FHXController extends GenericHID {
     public BooleanEvent select(EventLoop event) {
         return button(Button.kSelect.value, event);
     }
-    
-
-
-
 }
