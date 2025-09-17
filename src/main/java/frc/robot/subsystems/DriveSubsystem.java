@@ -144,13 +144,10 @@ public class DriveSubsystem extends SubsystemBase {
             double forward = forwardSupplier.getAsDouble();
             double turning = turningSupplier.getAsDouble();
 
-            forward *= DriveConstants.kForwardAxisMultiplier;
-            turning *= DriveConstants.kTurningAxisMultiplier;
-
-            forward = ControllerUtils.sensitivity(forward, DriveConstants.kForwardAxisSensitvity,
-                    DriveConstants.kDeadBand);
-            turning = ControllerUtils.sensitivity(turning, DriveConstants.kRotatonAxisSenitvity,
-                    DriveConstants.kDeadBand);
+            forward = ControllerUtils.joystickTransform(forward, DriveConstants.kForwardAxisSensitvity,
+                    DriveConstants.kDeadBand, DriveConstants.kForwardAxisMultiplier);
+            turning = ControllerUtils.joystickTransform(turning, DriveConstants.kRotatonAxisSenitvity,
+                    DriveConstants.kDeadBand, DriveConstants.kTurningAxisMultiplier);
 
             drive(forward, turning, turnInPlaceSupplier.getAsBoolean());
         });
