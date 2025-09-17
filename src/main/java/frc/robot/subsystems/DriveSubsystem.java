@@ -33,34 +33,41 @@ import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.utils.ControllerUtils;
 
-/*
- * This is still a WIP
+/**
+ * A subsystem that controls the robot's drivetrain.
  */
-
 public class DriveSubsystem extends SubsystemBase {
-    // this is where I make the lists of devices like motors and encoders, and
-    // configs for the motors
+    // left motors
     private final SparkMax m_leftLeader = new SparkMax(DriveConstants.kFrontLeftMotorId, MotorType.kBrushless);
     private final SparkMax m_leftFollower = new SparkMax(DriveConstants.kBackLeftMotorId, MotorType.kBrushless);
 
+    // right motors
     private final SparkMax m_rightLeader = new SparkMax(DriveConstants.kFrontRightMotorId, MotorType.kBrushless);
     private final SparkMax m_rightFollower = new SparkMax(DriveConstants.kBackRightMotorId, MotorType.kBrushless);
 
+    // encoders
     private final RelativeEncoder m_leftEncoder;
     private final RelativeEncoder m_rightEncoder;
 
+    // closed loop (pid) controllers
     private final SparkClosedLoopController m_leftClosedLoop;
     private final SparkClosedLoopController m_rightClosedLoop;
 
+    // gyro
     private final AHRS m_gyro = new AHRS(NavXComType.kMXP_SPI);
 
-    private final DifferentialDrive m_drive = new DifferentialDrive(this::setLeftSpeed, this::setRightSpeed);
+    // calculates the wheel speeds based on the inputs
+    private final DifferentialDrive m_drive = new DifferentialDrive(this::setLeftVelocity, this::setRightVelocity);
 
+    // calculates odometry
     private final DifferentialDriveOdometry m_odometry = new DifferentialDriveOdometry(
             m_gyro.getRotation2d(), getLeftPosition(), getRightPosition());
 
     private ShuffleboardTab m_driveTab = Shuffleboard.getTab(getName());
 
+    /**
+     * Constructs a {@link DriveSubsystem}.
+     */
     public DriveSubsystem() {
         SparkMaxConfig config = new SparkMaxConfig();
 
@@ -107,42 +114,62 @@ public class DriveSubsystem extends SubsystemBase {
         // second
         m_drive.setMaxOutput(DriveConstants.kMaxSpeedMetersPerSecond);
 
-        AutoBuilder.configure(m_odometry::getPoseMeters, this::resetOdometry, this::getChassisSpeeds, this::drive,
+        AutoBuilder.configure(m_odometry::getPoseMeters, this::resetOdometry, this::getChassisSpeeds,
+                this::driveRobotRelative,
                 AutoConstants.kAutoController, AutoConstants.kRobotConfig,
                 () -> false, this);
     }
 
     /**
+     * Drives the robot using curvature drive.
+     * 
+     * @param xSpeed           The robot's speed along the X axis [-1.0..1.0].
+     *                         Forward is positive.
+     * @param zRotation        The normalized curvature [-1.0..1.0].
+     *                         Counterclockwise is positive.
+     * @param allowTurnInPlace If set, overrides constant-curvature turning for
+     *                         turn-in-place maneuvers. zRotation will control
+     *                         turning rate instead of curvature.
+     */
+    public void drive(double forward, double curvature, boolean allowTurnInPlace) {
+        m_drive.curvatureDrive(forward, curvature, allowTurnInPlace);
+    }
+
+    /**
+     * Drives the robot based on raw robot relative {@link ChassisSpeeds}.
      * 
      * @param speeds
      */
-    public void drive(ChassisSpeeds speeds) {
+    public void driveRobotRelative(ChassisSpeeds speeds) {
         DifferentialDriveWheelSpeeds wheelSpeeds = DriveConstants.kDriveKinematics.toWheelSpeeds(speeds);
 
-        // write speeds to motors
-        setLeftSpeed(wheelSpeeds.leftMetersPerSecond);
-        setRightSpeed(wheelSpeeds.rightMetersPerSecond);
+        setLeftVelocity(wheelSpeeds.leftMetersPerSecond);
+        setRightVelocity(wheelSpeeds.rightMetersPerSecond);
     }
 
     /**
+     * Creates a {@link Command} that drives the robot based on joystick or axis
+     * inputs.
      * 
-     * @param forward
-     * @param turning
-     */
-    public void drive(double forward, double turning, boolean allowTurnInPlace) {
-        m_drive.curvatureDrive(forward, turning, allowTurnInPlace);
-    }
-
-    /**
+     * @param xSpeedSupplier      Supplies the axis value for forward/backward
+     *                            movement in the range [-1, 1]. Forward is
+     *                            positive.
+     *                            It will be transformed based on the sensitivity,
+     *                            deadband, and multiplier values.
+     * @param zRotationSupplier   Supplies the axis value for rotation in the range
+     *                            [-1, 1]. Counterclockwise is positive. It will be
+     *                            transformed based on the sensitivity,
+     *                            deadband, and multiplier values.
+     * @param turnInPlaceSupplier Supplies whether to override curvature drive to
+     *                            all for turn in place maneuvers.
      * 
-     * @param forwardSupplier
-     * @param turningSupplier
+     * @return A Command that drives the robot based on joystick inputs.
      */
-    public Command driveJoysticks(DoubleSupplier forwardSupplier, DoubleSupplier turningSupplier,
+    public Command driveJoysticks(DoubleSupplier xSpeedSupplier, DoubleSupplier zRotationSupplier,
             BooleanSupplier turnInPlaceSupplier) {
         return run(() -> {
-            double forward = forwardSupplier.getAsDouble();
-            double turning = turningSupplier.getAsDouble();
+            double forward = xSpeedSupplier.getAsDouble();
+            double turning = zRotationSupplier.getAsDouble();
 
             forward = ControllerUtils.joystickTransform(forward, DriveConstants.kForwardAxisSensitvity,
                     DriveConstants.kDeadBand, DriveConstants.kForwardAxisMultiplier);
@@ -153,79 +180,105 @@ public class DriveSubsystem extends SubsystemBase {
         });
     }
 
-    // stops all the motors
+    /**
+     * Stops the robot.
+     */
     public void stopDrive() {
         m_drive.stopMotor();
     }
 
-    // sets all idle modes
-    public void setAllIdleMode(IdleMode mode) {
-        SparkMaxConfig config = new SparkMaxConfig();
-        config.idleMode(mode);
-
-        for (SparkMax motor : new SparkMax[] { m_leftLeader, m_leftFollower, m_rightLeader, m_rightFollower }) {
-            motor.configure(config, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
-        }
-    }
-
+    /**
+     * Gets the current robot relative {@link ChassisSpeeds}.
+     * 
+     * @return The current robot relative chassis speeds.
+     */
     private ChassisSpeeds getChassisSpeeds() {
-        DifferentialDriveWheelSpeeds wheelSpeeds = new DifferentialDriveWheelSpeeds(getLeftSpeed(), getRightSpeed());
+        DifferentialDriveWheelSpeeds wheelSpeeds = new DifferentialDriveWheelSpeeds(getLeftVelocity(),
+                getRightVelocity());
         ChassisSpeeds speeds = DriveConstants.kDriveKinematics.toChassisSpeeds(wheelSpeeds);
 
         return speeds;
     }
 
     /**
+     * Gets the distance traveled by the left side of the drivetrain in meters.
      * 
-     * @return
+     * @return The left position in meters. Forward is positive.
      */
     public double getLeftPosition() {
         return m_leftEncoder.getPosition();
     }
 
     /**
+     * Gets the current velocity of the left side of the drivetrain in meters per
+     * second.
      * 
-     * @return
+     * @return The left velocity in meters per second. Forward is positive.
      */
-    public double getLeftSpeed() {
+    public double getLeftVelocity() {
         return m_leftEncoder.getVelocity();
     }
 
     /**
+     * Sets the velocity on the left side of the drivetrain in meters per second.
      * 
-     * @return
+     * @speed The velocity to set in meters per second. Forward is positive.
      */
-    public void setLeftSpeed(double speed) {
+    public void setLeftVelocity(double speed) {
         m_leftClosedLoop.setReference(speed, ControlType.kVelocity);
     }
 
     /**
+     * Gets the distance traveled by the right side of the drivetrain in meters.
      * 
-     * @return
+     * @return The right position in meters. Forward is positive.
      */
     public double getRightPosition() {
         return m_rightEncoder.getPosition();
     }
 
     /**
+     * Gets the current velocity of the right side of the drivetrain in meters per
+     * second.
      * 
-     * @return
+     * @return The right velocity in meters per second. Forward is positive.
      */
-    public double getRightSpeed() {
+    public double getRightVelocity() {
         return m_rightEncoder.getVelocity();
     }
 
     /**
+     * Sets the velocity on the right side of the drivetrain in meters per second.
      * 
-     * @return
+     * @speed The velocity to set in meters per second. Forward is positive.
      */
-    public void setRightSpeed(double speed) {
+    public void setRightVelocity(double speed) {
         m_rightClosedLoop.setReference(speed, ControlType.kVelocity);
     }
 
+    /**
+     * Resets the current tracked robot position to the specified pose.
+     * 
+     * @param pose The {@link Pose2d} to reset the position to.
+     */
     public void resetOdometry(Pose2d pose) {
         m_odometry.resetPosition(m_gyro.getRotation2d(), getLeftPosition(),
                 getRightPosition(), pose);
+    }
+
+    /**
+     * Sets the {@link IdleMode} for all drivetrain motors. This will not persist
+     * through power cycles.
+     * 
+     * @param mode The mode to set.
+     */
+    public void setIdleMode(IdleMode mode) {
+        SparkMaxConfig config = new SparkMaxConfig();
+        config.idleMode(mode);
+
+        for (SparkMax motor : new SparkMax[] { m_leftLeader, m_leftFollower, m_rightLeader, m_rightFollower }) {
+            motor.configure(config, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
+        }
     }
 
     @Override
