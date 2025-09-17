@@ -6,10 +6,10 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.event.BooleanEvent;
 import edu.wpi.first.wpilibj.event.EventLoop;
 
-public class FHXController extends GenericHID {
+public class FlightHotasX extends GenericHID {
 /** Represents a digital button on a XboxController. */
 
-    public FHXController(int port) {
+    public FlightHotasX(int port) {
         super(port);
         HAL.report(tResourceType.kResourceType_Controller, port + 1);
     }

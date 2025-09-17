@@ -5,13 +5,13 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
-public class CommandFHXController extends CommandGenericHID {
+public class CommandFlightHotasX extends CommandGenericHID {
 
-    private final FHXController m_hid;
+    private final FlightHotasX m_hid;
 
-    public CommandFHXController(int port) {
+    public CommandFlightHotasX(int port) {
         super(port);
-        m_hid = new FHXController(port);
+        m_hid = new FlightHotasX(port);
     }
     
     /**
@@ -20,7 +20,7 @@ public class CommandFHXController extends CommandGenericHID {
    * @return the wrapped GenericHID object
    */
     @Override
-    public FHXController getHID() {
+    public FlightHotasX getHID() {
         return m_hid;
     }
 
@@ -29,7 +29,7 @@ public class CommandFHXController extends CommandGenericHID {
     }
 
     public Trigger R1(EventLoop loop) {
-        return button(FHXController.Button.kR1.value, loop);
+        return button(FlightHotasX.Button.kR1.value, loop);
     }
 
     public Trigger R2() {
@@ -37,7 +37,7 @@ public class CommandFHXController extends CommandGenericHID {
     }
 
     public Trigger R2(EventLoop loop) {
-        return button(FHXController.Button.kR2.value, loop);
+        return button(FlightHotasX.Button.kR2.value, loop);
     }
 
     public Trigger R3() {
@@ -45,7 +45,7 @@ public class CommandFHXController extends CommandGenericHID {
     }
 
     public Trigger R3(EventLoop loop) {
-        return button(FHXController.Button.kR3.value, loop);
+        return button(FlightHotasX.Button.kR3.value, loop);
     }
 
     public Trigger L1() {
@@ -53,7 +53,7 @@ public class CommandFHXController extends CommandGenericHID {
     }
 
     public Trigger L1(EventLoop loop) {
-        return button(FHXController.Button.kL1.value, loop);
+        return button(FlightHotasX.Button.kL1.value, loop);
     }
 
     public Trigger L2() {
@@ -61,7 +61,7 @@ public class CommandFHXController extends CommandGenericHID {
     }
 
     public Trigger L2(EventLoop loop) {
-        return button(FHXController.Button.kL2.value, loop);
+        return button(FlightHotasX.Button.kL2.value, loop);
     }
 
     public Trigger L3() {
@@ -69,7 +69,7 @@ public class CommandFHXController extends CommandGenericHID {
     }
 
     public Trigger L3(EventLoop loop) {
-        return button(FHXController.Button.kL3.value, loop);
+        return button(FlightHotasX.Button.kL3.value, loop);
     }
 
     public Trigger B5() {
@@ -77,7 +77,7 @@ public class CommandFHXController extends CommandGenericHID {
     }
 
     public Trigger B5(EventLoop loop) {
-        return button(FHXController.Button.k5.value, loop);
+        return button(FlightHotasX.Button.k5.value, loop);
     }
 
     public Trigger B6() {
@@ -85,7 +85,7 @@ public class CommandFHXController extends CommandGenericHID {
     }
 
     public Trigger B6(EventLoop loop) {
-        return button(FHXController.Button.k6.value, loop);
+        return button(FlightHotasX.Button.k6.value, loop);
     }
 
     public Trigger B7() {
@@ -93,7 +93,7 @@ public class CommandFHXController extends CommandGenericHID {
     }
 
     public Trigger B7(EventLoop loop) {
-        return button(FHXController.Button.k7.value, loop);
+        return button(FlightHotasX.Button.k7.value, loop);
     }
 
     public Trigger B8() {
@@ -101,7 +101,7 @@ public class CommandFHXController extends CommandGenericHID {
     }
 
     public Trigger B8(EventLoop loop) {
-        return button(FHXController.Button.k8.value, loop);
+        return button(FlightHotasX.Button.k8.value, loop);
     }
 
     public Trigger select() {
@@ -109,7 +109,7 @@ public class CommandFHXController extends CommandGenericHID {
     }
 
     public Trigger select(EventLoop loop) {
-        return button(FHXController.Button.kSelect.value, loop);
+        return button(FlightHotasX.Button.kSelect.value, loop);
     }
 
     public Trigger start() {
@@ -117,11 +117,11 @@ public class CommandFHXController extends CommandGenericHID {
     }
 
     public Trigger start(EventLoop loop) {
-        return button(FHXController.Button.kStart.value, loop);
+        return button(FlightHotasX.Button.kStart.value, loop);
     }
 
     public Trigger getLeftRockerTrigger(double threshold, EventLoop loop) {
-        return axisLessThan(FHXController.Axis.kRocker.value, -threshold, loop);
+        return axisLessThan(FlightHotasX.Axis.kRocker.value, -threshold, loop);
     }
 
     public Trigger getLeftRockerTrigger(double threshold) {
@@ -133,7 +133,7 @@ public class CommandFHXController extends CommandGenericHID {
     }
 
     public Trigger getRightRockerTrigger(double threshold, EventLoop loop) {
-        return axisGreaterThan(FHXController.Axis.kRocker.value, threshold, loop);
+        return axisGreaterThan(FlightHotasX.Axis.kRocker.value, threshold, loop);
     }
 
     public Trigger getRightRockerTrigger(double threshold) {

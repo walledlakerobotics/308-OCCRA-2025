@@ -6,7 +6,7 @@ package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.subsystems.DriveSubsystem;
-import frc.robot.utils.CommandFHXController;
+import frc.robot.utils.CommandFlightHotasX;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -38,7 +38,7 @@ public class RobotContainer {
     private final DriveSubsystem m_driveSubsystem = new DriveSubsystem();
 
     // controllers
-    private final CommandFHXController m_driverController = new CommandFHXController(0);
+    private final CommandFlightHotasX m_driverController = new CommandFlightHotasX(0);
     private final CommandXboxController m_coDriverController = new CommandXboxController(1);
 
     /**
