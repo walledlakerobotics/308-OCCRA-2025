@@ -46,7 +46,7 @@ public class RobotContainer {
      */
     public RobotContainer() {
         m_driveSubsystem.setDefaultCommand(
-                m_driveSubsystem.driveJoysticks(m_driverController::getThrottle, m_driverController::getStickY,
+                m_driveSubsystem.driveJoysticks(m_driverController::getThrottle, m_driverController::getStickX,
                         m_driverController.getHID()::getL1Button));
 
         configureBindings(OperatorConstants.kDriverJsonPath, OperatorConstants.kCoDriverJsonPath, 1, 1);
