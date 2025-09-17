@@ -24,7 +24,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 public class RobotContainer {
 
     // The robot's subsystem defined here
-    private final DriveTrain m_driveSubsystem = new DriveTrain();
+    private final DriveTrain m_driveTrain = new DriveTrain();
 
     // controllers
     private final CommandFlightHotasX m_driverController = new CommandFlightHotasX(OperatorConstants.kDriverControllerPort);
@@ -52,8 +52,8 @@ public class RobotContainer {
      * joysticks}.
      */
     private void configureBindings() {
-        m_driveSubsystem.setDefaultCommand(
-                m_driveSubsystem.driveJoysticks(m_driverController::getThrottle, m_driverController::getStickX,
+        m_driveTrain.setDefaultCommand(
+                m_driveTrain.driveJoysticks(m_driverController::getThrottle, m_driverController::getStickX,
                         m_driverController.getHID()::getL1Button));
 
         ShuffleboardTab operatorTab = Shuffleboard.getTab("Operator");
