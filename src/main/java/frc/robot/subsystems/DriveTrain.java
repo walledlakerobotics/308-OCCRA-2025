@@ -115,9 +115,7 @@ public class DriveTrain extends SubsystemBase {
         m_drive.setMaxOutput(DriveConstants.kMaxSpeedMetersPerSecond);
 
         AutoBuilder.configure(m_odometry::getPoseMeters, this::resetOdometry, this::getChassisSpeeds,
-                this::driveRobotRelative,
-                AutoConstants.kAutoController, AutoConstants.kRobotConfig,
-                () -> false, this);
+                this::driveRobotRelative, AutoConstants.kAutoController, AutoConstants.kRobotConfig, () -> false, this);
     }
 
     /**
