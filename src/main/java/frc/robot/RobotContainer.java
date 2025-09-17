@@ -5,7 +5,7 @@
 package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
-import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.DriveTrain;
 import frc.robot.utils.CommandFlightHotasX;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -35,7 +35,7 @@ public class RobotContainer {
     private final JSONParser parser = new JSONParser();
 
     // The robot's subsystem defined here
-    private final DriveSubsystem m_driveSubsystem = new DriveSubsystem();
+    private final DriveTrain m_driveSubsystem = new DriveTrain();
 
     // controllers
     private final CommandFlightHotasX m_driverController = new CommandFlightHotasX(0);

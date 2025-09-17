@@ -36,7 +36,7 @@ import frc.robot.utils.ControllerUtils;
 /**
  * A subsystem that controls the robot's drivetrain.
  */
-public class DriveSubsystem extends SubsystemBase {
+public class DriveTrain extends SubsystemBase {
     // left motors
     private final SparkMax m_leftLeader = new SparkMax(DriveConstants.kFrontLeftMotorId, MotorType.kBrushless);
     private final SparkMax m_leftFollower = new SparkMax(DriveConstants.kBackLeftMotorId, MotorType.kBrushless);
@@ -66,9 +66,9 @@ public class DriveSubsystem extends SubsystemBase {
     private ShuffleboardTab m_driveTab = Shuffleboard.getTab(getName());
 
     /**
-     * Constructs a {@link DriveSubsystem}.
+     * Constructs a {@link DriveTrain}.
      */
-    public DriveSubsystem() {
+    public DriveTrain() {
         SparkMaxConfig config = new SparkMaxConfig();
 
         // sets the idle mode, the smart current limit, and the inversion
