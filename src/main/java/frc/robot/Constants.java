@@ -28,12 +28,12 @@ import edu.wpi.first.math.util.Units;
  */
 public final class Constants {
     private Constants() {
-        throw new UnsupportedOperationException("This is a utility class!");
+        throw new UnsupportedOperationException("This is a constants class!");
     }
 
     public static class OperatorConstants {
         private OperatorConstants() {
-            throw new UnsupportedOperationException("This is a utility class!");
+            throw new UnsupportedOperationException("This is a constants class!");
         }
 
         // Ports for the controllers, and json file relative path
@@ -45,7 +45,7 @@ public final class Constants {
 
     public static class DriveConstants {
         private DriveConstants() {
-            throw new UnsupportedOperationException("This is a utility class!");
+            throw new UnsupportedOperationException("This is a constants class!");
         }
 
         // ids for the motors
@@ -100,7 +100,7 @@ public final class Constants {
 
     public static class AutoConstants {
         private AutoConstants() {
-            throw new UnsupportedOperationException("This is a utility class!");
+            throw new UnsupportedOperationException("This is a constants class!");
         }
 
         public static final double kMassKG = 50;
