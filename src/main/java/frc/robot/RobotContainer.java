@@ -12,14 +12,6 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;;
-
 /**
  * This class is where the bulk of the robot should be declared. Since
  * Command-based is a
@@ -31,25 +23,18 @@ import org.json.simple.parser.ParseException;;
  */
 public class RobotContainer {
 
-    // Json defined parser
-    private final JSONParser parser = new JSONParser();
-
     // The robot's subsystem defined here
     private final DriveTrain m_driveSubsystem = new DriveTrain();
 
     // controllers
-    private final CommandFlightHotasX m_driverController = new CommandFlightHotasX(0);
-    private final CommandXboxController m_coDriverController = new CommandXboxController(1);
+    private final CommandFlightHotasX m_driverController = new CommandFlightHotasX(OperatorConstants.kDriverControllerPort);
+    private final CommandXboxController m_coDriverController = new CommandXboxController(OperatorConstants.kCoDriverControllerPort);
 
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
      */
     public RobotContainer() {
-        m_driveSubsystem.setDefaultCommand(
-                m_driveSubsystem.driveJoysticks(m_driverController::getThrottle, m_driverController::getStickX,
-                        m_driverController.getHID()::getL1Button));
-
-        configureBindings(OperatorConstants.kDriverJsonPath, OperatorConstants.kCoDriverJsonPath, 1, 1);
+        configureBindings();
     }
 
     /**
@@ -66,42 +51,31 @@ public class RobotContainer {
      * {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
      * joysticks}.
      */
-    private void configureBindings(String driverPath, String coDriverPath, int driverSetting, int coDriverSetting) {
-        File mainDriverBindsJson = new File(driverPath);
-        File coDriverBindsJson = new File(coDriverPath);
+    private void configureBindings() {
+        m_driveSubsystem.setDefaultCommand(
+                m_driveSubsystem.driveJoysticks(m_driverController::getThrottle, m_driverController::getStickX,
+                        m_driverController.getHID()::getL1Button));
 
-        ShuffleboardTab test = Shuffleboard.getTab("Test");
+        ShuffleboardTab operatorTab = Shuffleboard.getTab("Operator");
 
-        test.addBoolean("L1", m_driverController.getHID()::getL1Button);
-        test.addBoolean("L2", m_driverController.getHID()::getL2Button);
-        test.addBoolean("L3", m_driverController.getHID()::getL3Button);
-        test.addBoolean("R1", m_driverController.getHID()::getR1Button);
-        test.addBoolean("R2", m_driverController.getHID()::getR2Button);
-        test.addBoolean("R3", m_driverController.getHID()::getR3Button);
-        test.addBoolean("5", m_driverController.getHID()::get5Button);
-        test.addBoolean("6", m_driverController.getHID()::get6Button);
-        test.addBoolean("7", m_driverController.getHID()::get7Button);
-        test.addBoolean("8", m_driverController.getHID()::get8Button);
-        test.addBoolean("Start", m_driverController.getHID()::getStartButton);
-        test.addBoolean("Select", m_driverController.getHID()::getSelectButton);
+        operatorTab.addBoolean("L1", m_driverController.getHID()::getL1Button);
+        operatorTab.addBoolean("L2", m_driverController.getHID()::getL2Button);
+        operatorTab.addBoolean("L3", m_driverController.getHID()::getL3Button);
+        operatorTab.addBoolean("R1", m_driverController.getHID()::getR1Button);
+        operatorTab.addBoolean("R2", m_driverController.getHID()::getR2Button);
+        operatorTab.addBoolean("R3", m_driverController.getHID()::getR3Button);
+        operatorTab.addBoolean("5", m_driverController.getHID()::get5Button);
+        operatorTab.addBoolean("6", m_driverController.getHID()::get6Button);
+        operatorTab.addBoolean("7", m_driverController.getHID()::get7Button);
+        operatorTab.addBoolean("8", m_driverController.getHID()::get8Button);
+        operatorTab.addBoolean("Start", m_driverController.getHID()::getStartButton);
+        operatorTab.addBoolean("Select", m_driverController.getHID()::getSelectButton);
 
-        test.addDouble("Stick X", m_driverController::getStickX);
-        test.addDouble("Stick Y", m_driverController::getStickY);
-        test.addDouble("Throttle", m_driverController::getThrottle);
-        test.addDouble("Rudder", m_driverController::getRudder);
-        test.addDouble("Rocker", m_driverController::getRockerAxis);
-        test.addDouble("POV", m_driverController.getHID()::getPOV);
-
-        try {
-            JSONObject driverFileData = (JSONObject) parser.parse(new FileReader(mainDriverBindsJson));
-            JSONObject coDriverFileData = (JSONObject) parser.parse(new FileReader(coDriverBindsJson));
-
-            JSONObject driverData = (JSONObject) driverFileData.get("mainDriver " + driverSetting);
-            JSONObject coDriverData = (JSONObject) coDriverFileData.get("coDriver " + coDriverSetting);
-
-        } catch (IOException | ParseException e) {
-
-        }
-
+        operatorTab.addDouble("Stick X", m_driverController::getStickX);
+        operatorTab.addDouble("Stick Y", m_driverController::getStickY);
+        operatorTab.addDouble("Throttle", m_driverController::getThrottle);
+        operatorTab.addDouble("Rudder", m_driverController::getRudder);
+        operatorTab.addDouble("Rocker", m_driverController::getRockerAxis);
+        operatorTab.addDouble("POV", m_driverController.getHID()::getPOV);
     }
 }

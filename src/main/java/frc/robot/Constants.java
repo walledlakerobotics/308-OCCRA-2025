@@ -36,11 +36,9 @@ public final class Constants {
             throw new UnsupportedOperationException("This is a constants class!");
         }
 
-        // Ports for the controllers, and json file relative path
+        // ports for the controllers
         public static final int kDriverControllerPort = 0;
         public static final int kCoDriverControllerPort = 1;
-        public static final String kDriverJsonPath = "src/main/java/frc/robot/assets/data/mainDriverBinds/mainDriver.json";
-        public static final String kCoDriverJsonPath = "src/main/java/frc/robot/assets/data/coDriverBinds/coDriver.json";
     }
 
     public static class DriveConstants {
