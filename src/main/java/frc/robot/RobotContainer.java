@@ -78,10 +78,10 @@ public class RobotContainer {
         test.addBoolean("R1", m_driverController.getHID()::getR1Button);
         test.addBoolean("R2", m_driverController.getHID()::getR2Button);
         test.addBoolean("R3", m_driverController.getHID()::getR3Button);
-        test.addBoolean("5", m_driverController.getHID()::getButton5);
-        test.addBoolean("6", m_driverController.getHID()::getButton6);
-        test.addBoolean("7", m_driverController.getHID()::getButton7);
-        test.addBoolean("8", m_driverController.getHID()::getButton8);
+        test.addBoolean("5", m_driverController.getHID()::get5Button);
+        test.addBoolean("6", m_driverController.getHID()::get6Button);
+        test.addBoolean("7", m_driverController.getHID()::get7Button);
+        test.addBoolean("8", m_driverController.getHID()::get8Button);
         test.addBoolean("Start", m_driverController.getHID()::getStartButton);
         test.addBoolean("Select", m_driverController.getHID()::getSelectButton);
 
