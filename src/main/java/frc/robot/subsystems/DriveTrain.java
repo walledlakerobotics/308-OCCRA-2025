@@ -34,7 +34,7 @@ import frc.robot.Constants.DriveConstants;
 import frc.robot.utils.ControllerUtils;
 
 /**
- * A subsystem that controls the robot's drivetrain.
+ * A subsystem that controls the robot's drive train.
  */
 public class DriveTrain extends SubsystemBase {
     // left motors
@@ -285,5 +285,10 @@ public class DriveTrain extends SubsystemBase {
     public void periodic() {
         m_odometry.update(m_gyro.getRotation2d(), getLeftPosition(),
                 getRightPosition());
+    }
+
+    @Override
+    public String getName() {
+        return "Drive Train";
     }
 }
