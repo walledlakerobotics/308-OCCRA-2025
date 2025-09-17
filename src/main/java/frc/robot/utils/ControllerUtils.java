@@ -1,10 +1,26 @@
 package frc.robot.utils;
 
+/**
+ * A utility class for controller inputs.
+ */
 public class ControllerUtils {
     private ControllerUtils() {
         throw new UnsupportedOperationException("This is a utility class!");
     }
 
+    /**
+     * Transforms a raw joystick input based on a sensitivity, deadband, and
+     * multiplier.
+     * 
+     * @param raw         The raw value from the joystick axis in the range [-1, 1].
+     * @param sensitivity The sensitivity factor. 1 does nothing, less than 1 makes
+     *                    it less sensitive, greater than 1 makes it more sensitive.
+     * @param deadband    The deadband threshold in the range [0, 1]. When the raw
+     *                    value is less than this, the output will be 0.
+     * @param multiplier  The raw value will be multiplied by this before applying
+     *                    deadband and sensitivity.
+     * @return The transformed joystick value in the range [-1, 1].
+     */
     public static double joystickTransform(double raw, double sensitivity, double deadband, double multiplier) {
         raw *= multiplier;
         return Math.signum(raw) * Math.pow(Math.max(0, (Math.abs(raw) - deadband) / (1 - deadband)), 1 / sensitivity);
