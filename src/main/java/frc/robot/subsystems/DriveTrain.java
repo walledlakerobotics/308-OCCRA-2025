@@ -27,6 +27,7 @@ import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.AutoConstants;
@@ -62,6 +63,9 @@ public class DriveTrain extends SubsystemBase {
     // calculates odometry
     private final DifferentialDriveOdometry m_odometry = new DifferentialDriveOdometry(
             m_gyro.getRotation2d(), getLeftPosition(), getRightPosition());
+
+    // displays robot position on field
+    private final Field2d m_field = new Field2d();
 
     private ShuffleboardTab m_driveTab = Shuffleboard.getTab(getName());
 
@@ -113,6 +117,17 @@ public class DriveTrain extends SubsystemBase {
         // we want the speeds passed into the set speed functions to be in meters per
         // second
         m_drive.setMaxOutput(DriveConstants.kMaxSpeedMetersPerSecond);
+
+        m_driveTab.addNumber("Left Position (m)", this::getLeftPosition);
+        m_driveTab.addNumber("Left Velocity (m/s)", this::getLeftVelocity);
+        m_driveTab.addNumber("Right Position (m)", this::getRightPosition);
+        m_driveTab.addNumber("Right Velocity (m/s)", this::getRightVelocity);
+
+        m_driveTab.addNumber("Robot X (m)", () -> m_odometry.getPoseMeters().getX());
+        m_driveTab.addNumber("Robot Y (m)", () -> m_odometry.getPoseMeters().getY());
+        m_driveTab.addNumber("Robot Heading (deg)", () -> m_odometry.getPoseMeters().getRotation().getDegrees());
+
+        m_driveTab.add("Field", m_field);
 
         AutoBuilder.configure(m_odometry::getPoseMeters, this::resetOdometry, this::getChassisSpeeds,
                 this::driveRobotRelative, AutoConstants.kAutoController, AutoConstants.kRobotConfig, () -> false, this);
@@ -283,6 +298,8 @@ public class DriveTrain extends SubsystemBase {
     public void periodic() {
         m_odometry.update(m_gyro.getRotation2d(), getLeftPosition(),
                 getRightPosition());
+
+        m_field.setRobotPose(m_odometry.getPoseMeters());
     }
 
     @Override
