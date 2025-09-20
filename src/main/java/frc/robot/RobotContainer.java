@@ -54,7 +54,7 @@ public class RobotContainer {
     private void configureBindings() {
         m_driveTrain.setDefaultCommand(
                 m_driveTrain.driveJoysticks(m_driverController::getThrottle, m_driverController::getStickX,
-                        m_driverController.getHID()::getL1Button));
+                        m_driverController.getHID()::getR1Button));
 
         ShuffleboardTab operatorTab = Shuffleboard.getTab("Operator");
 
