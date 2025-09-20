@@ -61,8 +61,7 @@ public class DriveTrain extends SubsystemBase {
     private final DifferentialDrive m_drive = new DifferentialDrive(this::setLeftVelocity, this::setRightVelocity);
 
     // calculates odometry
-    private final DifferentialDriveOdometry m_odometry = new DifferentialDriveOdometry(
-            m_gyro.getRotation2d(), getLeftPosition(), getRightPosition());
+    private final DifferentialDriveOdometry m_odometry;
 
     // displays robot position on field
     private final Field2d m_field = new Field2d();
@@ -111,6 +110,9 @@ public class DriveTrain extends SubsystemBase {
         m_leftClosedLoop = m_leftLeader.getClosedLoopController();
         m_rightClosedLoop = m_rightLeader.getClosedLoopController();
 
+        m_odometry = new DifferentialDriveOdometry(
+            m_gyro.getRotation2d(), getLeftPosition(), getRightPosition());
+
         // we handle the deadband ourselves
         m_drive.setDeadband(0);
 
@@ -145,7 +147,7 @@ public class DriveTrain extends SubsystemBase {
      *                         turning rate instead of curvature.
      */
     public void drive(double forward, double curvature, boolean allowTurnInPlace) {
-        m_drive.curvatureDrive(forward, curvature, allowTurnInPlace);
+        m_drive.curvatureDrive(forward, -curvature, allowTurnInPlace);
     }
 
     /**
@@ -182,7 +184,8 @@ public class DriveTrain extends SubsystemBase {
             BooleanSupplier turnInPlaceSupplier) {
         return run(() -> {
             double forward = xSpeedSupplier.getAsDouble();
-            double turning = zRotationSupplier.getAsDouble();
+            // Negate this because right corresponds with clockwise rotation, so it should be negative
+            double turning = -zRotationSupplier.getAsDouble();
 
             forward = ControllerUtils.joystickTransform(forward, DriveConstants.kForwardAxisSensitvity,
                     DriveConstants.kDeadBand, DriveConstants.kForwardAxisMultiplier);
