@@ -97,4 +97,11 @@ public class RobotContainer {
     public void setDriveIdleMode(IdleMode mode) {
         m_driveTrain.setIdleMode(mode);
     }
+
+    /**
+     * Gets the {@link Command} to run in autonomous.
+     */
+    public Command getAutonomousCommand() {
+        return m_autoChooser.getSelected();
+    }
 }
