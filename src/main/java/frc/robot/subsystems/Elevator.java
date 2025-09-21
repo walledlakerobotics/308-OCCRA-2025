@@ -18,20 +18,19 @@ import frc.robot.Constants.ElevatorConstants;
 
 public class Elevator extends SubsystemBase {
     
-    private SparkMax elevatorMotor;
-    private RelativeEncoder encoder;
-    private ProfiledPIDController elevatorPidController;
-    private DigitalInput bottomInput, topInput;
+    private SparkMax m_elevatorMotor;
+    private RelativeEncoder m_encoder;
+    private ProfiledPIDController m_elevatorPidController;
+    private DigitalInput m_bottomInput, m_topInput;
 
-    // this might need to be added to other functions or commands
-    private boolean isPIDMode = false;
+    // TODO: this might need to be added to other functions or commands
+    private boolean m_isPIDMode = false;
 
     public Elevator() {
-
         // sets motor
-        elevatorMotor = new SparkMax(ElevatorConstants.kElevatorMotorid, MotorType.kBrushless);
+        m_elevatorMotor = new SparkMax(ElevatorConstants.kElevatorMotorid, MotorType.kBrushless);
         //sets PID controller
-        elevatorPidController = new ProfiledPIDController(
+        m_elevatorPidController = new ProfiledPIDController(
             ElevatorConstants.kElevatorP, 
             ElevatorConstants.kElevatorI, 
             ElevatorConstants.kElevatorD, 
@@ -40,8 +39,8 @@ public class Elevator extends SubsystemBase {
                 ElevatorConstants.kElevatorMaxAccelerationInchesPerSecondSquared));
 
         // limit switches 
-        bottomInput = new DigitalInput(ElevatorConstants.kBottomInputChannel);
-        topInput = new DigitalInput(ElevatorConstants.kTopInputChannel);
+        m_bottomInput = new DigitalInput(ElevatorConstants.kBottomInputChannel);
+        m_topInput = new DigitalInput(ElevatorConstants.kTopInputChannel);
 
         //configure
         SparkMaxConfig masterConfig = new SparkMaxConfig();
@@ -60,20 +59,24 @@ public class Elevator extends SubsystemBase {
         .forwardLimitSwitchEnabled(false);
 
         
-        elevatorMotor.configure(masterConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+        m_elevatorMotor.configure(masterConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
         // gets encoder
-        encoder = elevatorMotor.getEncoder();
+        m_encoder = m_elevatorMotor.getEncoder();
 
 
     }
 
+    /**
+     * Gets the current height of the elevator in meters.
+     * @return The height of the elevator.
+     */
     public void setElevatorHeight(double height) {
         height = MathUtil.clamp(height, 0, ElevatorConstants.kElevatorMaxHeight);
-        elevatorPidController.reset(getHeight(), getVelocity()); // idk if this is the same thing as set 
-        elevatorPidController.setGoal(height);
+        m_elevatorPidController.reset(getHeight(), getVelocity()); // idk if this is the same thing as set 
+        m_elevatorPidController.setGoal(height);
 
-        isPIDMode = true;
+        m_isPIDMode = true;
     }
 
     /** 
@@ -83,10 +86,14 @@ public class Elevator extends SubsystemBase {
     public void setElevatorLevel(int index) {
         setElevatorHeight(ElevatorConstants.kElevatorLevelHeights[index]);
     }
-
+    
+    /**
+     * Sets the velocity of the elevator.
+     * @param velocity The velocity to set the motor to from <code>-1</code> to <code>1</code>.
+     */
     public void setVelocity(double velocity) {
 
-        isPIDMode = false;
+        m_isPIDMode = false;
         
         velocity += ElevatorConstants.kElevatorG;
 
@@ -100,7 +107,7 @@ public class Elevator extends SubsystemBase {
             velocity = Math.min(0, velocity);
         }
 
-        elevatorMotor.set(velocity);
+        m_elevatorMotor.set(velocity);
 
     }
 
@@ -113,14 +120,14 @@ public class Elevator extends SubsystemBase {
     public Command goToHeight(double height, boolean endImmediately) {
         if (height == 0) {
             return runOnce(() -> setElevatorHeight(height))
-            .andThen(new WaitUntilCommand(() -> elevatorPidController.atGoal() | endImmediately))
+            .andThen(new WaitUntilCommand(() -> m_elevatorPidController.atGoal() | endImmediately))
             .andThen(zeroElevator())
             .withName("Go");
         }
         
         return runOnce(() -> setElevatorHeight(height))
             .andThen(new WaitUntilCommand(() -> 
-                elevatorPidController.atGoal() || endImmediately
+                m_elevatorPidController.atGoal() || endImmediately
             ))
             .withName("Go");
     }
@@ -181,18 +188,27 @@ public class Elevator extends SubsystemBase {
      * @return The runnable <code>Command</code>.
      */
     public Command zeroEncoder() {
-        return runOnce(() -> encoder.setPosition(0)).ignoringDisable(true);
+        return runOnce(() -> m_encoder.setPosition(0)).ignoringDisable(true);
     }
 
-
+    /**
+     * returns the encoder's velocity.
+     * @return
+     */
     public double getVelocity() {
-        return encoder.getVelocity();
+        return m_encoder.getVelocity();
     }
-
+    /**
+     * returns the encoders position -> which is the current height of the elevator.
+     * @return
+     */
     public double getHeight() {
-        return encoder.getPosition();
+        return m_encoder.getPosition();
     }
-
+    /**
+     * returns the current preset levels in the elevator constants
+     * @return
+     */
     public int getCurrentLevel() {
         double height = getHeight();
         Double smallestDifference = null;
@@ -209,28 +225,36 @@ public class Elevator extends SubsystemBase {
 
         return index;
     }
-
+    /*
+     * stops the elevator
+     */
     public void stopElevator() {
         setElevatorHeight(getHeight());
     }
-
+    /**
+     * returns if the limit switchs are triggered 
+     * @return returns if its false or true
+     */
     public boolean isAtBottom() {
-        return bottomInput.get();
+        return m_bottomInput.get();
     }
 
+    /**
+     * returns if the limit switchs are triggered 
+     * @return returns if its false or true
+     */
     public boolean isAtTop() {
-        return topInput.get();
+        return m_topInput.get();
     }
 
     @Override
     public void periodic() {
         final double currentHeight = getHeight();
 
-        if (isPIDMode) {
+        if (m_isPIDMode) {
             // double velocitySetpoint = m_elevatorPIDController.getSetpoint().velocity;
-            
-            elevatorMotor.set(
-                elevatorPidController.calculate(currentHeight) + ElevatorConstants.kElevatorG
+                m_elevatorMotor.set(
+                m_elevatorPidController.calculate(currentHeight) + ElevatorConstants.kElevatorG
                 // m_elevatorFeedforward.calculateWithVelocities(getElevatorVelocity(), velocitySetpoint)
             );
         }
@@ -242,12 +266,12 @@ public class Elevator extends SubsystemBase {
         if (isAtBottom()) {
             // Prevent the elevator from going down when it reaches the bottom
             // by preventing the speed from being negative
-            elevatorMotor.set(Math.max(ElevatorConstants.kElevatorG, elevatorMotor.get()));
-            encoder.setPosition(0);
+            m_elevatorMotor.set(Math.max(ElevatorConstants.kElevatorG, m_elevatorMotor.get()));
+            m_encoder.setPosition(0);
         } else if (isAtTop() || currentHeight >= ElevatorConstants.kElevatorMaxHeight) {
             // Prevent the elevator from going up when it reaches the top
             // by preventing the speed from being positive
-            elevatorMotor.set(Math.min(ElevatorConstants.kElevatorG, elevatorMotor.get()));
+            m_elevatorMotor.set(Math.min(ElevatorConstants.kElevatorG, m_elevatorMotor.get()));
         }
     }
 }  
