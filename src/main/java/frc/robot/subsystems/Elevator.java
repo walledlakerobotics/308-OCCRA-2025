@@ -19,7 +19,7 @@ import frc.robot.Constants.ElevatorConstants;
 public class Elevator extends SubsystemBase {
 
     private SparkMax m_elevatorLeader, m_followerMotor;
-    private RelativeEncoder m_elevatprEncoder;
+    private RelativeEncoder m_elevatorEncoder;
     private ProfiledPIDController m_elevatorPIDController;
     private DigitalInput m_bottomLimit, m_topLimit;
 
@@ -68,7 +68,7 @@ public class Elevator extends SubsystemBase {
         m_followerMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
         // gets encoder
-        m_elevatprEncoder = m_elevatorLeader.getEncoder();
+        m_elevatorEncoder = m_elevatorLeader.getEncoder();
     }
 
     /**
@@ -204,7 +204,7 @@ public class Elevator extends SubsystemBase {
      * @return The runnable <code>Command</code>.
      */
     public Command zeroEncoder() {
-        return runOnce(() -> m_elevatprEncoder.setPosition(0)).ignoringDisable(true);
+        return runOnce(() -> m_elevatorEncoder.setPosition(0)).ignoringDisable(true);
     }
 
     /**
@@ -213,7 +213,7 @@ public class Elevator extends SubsystemBase {
      * @return
      */
     public double getVelocity() {
-        return m_elevatprEncoder.getVelocity();
+        return m_elevatorEncoder.getVelocity();
     }
 
     /**
@@ -222,7 +222,7 @@ public class Elevator extends SubsystemBase {
      * @return
      */
     public double getHeight() {
-        return m_elevatprEncoder.getPosition();
+        return m_elevatorEncoder.getPosition();
     }
 
     /**
@@ -289,7 +289,7 @@ public class Elevator extends SubsystemBase {
             // Prevent the elevator from going down when it reaches the bottom
             // by preventing the speed from being negative
             m_elevatorLeader.set(Math.max(ElevatorConstants.kElevatorG, m_elevatorLeader.get()));
-            m_elevatprEncoder.setPosition(0);
+            m_elevatorEncoder.setPosition(0);
         } else if (isAtTop() || currentHeight >= ElevatorConstants.kElevatorMaxHeight) {
             // Prevent the elevator from going up when it reaches the top
             // by preventing the speed from being positive
