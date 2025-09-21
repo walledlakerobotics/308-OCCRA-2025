@@ -75,16 +75,19 @@ public class DriveTrain extends SubsystemBase {
         SparkMaxConfig config = new SparkMaxConfig();
 
         // sets the idle mode, the smart current limit, and the inversion
-        config.smartCurrentLimit(DriveConstants.kSmartCurrentLimit);
-        config.idleMode(DriveConstants.kMotorIdleMode);
+        config
+                .smartCurrentLimit(DriveConstants.kSmartCurrentLimit)
+                .idleMode(DriveConstants.kMotorIdleMode);
 
         // sets the PID
-        config.closedLoop.pid(DriveConstants.kVelocityP, DriveConstants.kVelocityI, DriveConstants.kVelocityD);
-        config.closedLoop.velocityFF(DriveConstants.kVelocityFF);
+        config.closedLoop
+                .pid(DriveConstants.kVelocityP, DriveConstants.kVelocityI, DriveConstants.kVelocityD)
+                .velocityFF(DriveConstants.kVelocityFF);
 
         // sets encoder conversion factors
-        config.encoder.positionConversionFactor(DriveConstants.kRotationsToMeters);
-        config.encoder.velocityConversionFactor(DriveConstants.KRotationsPerMinuteToMetersPerSecond);
+        config.encoder
+                .positionConversionFactor(DriveConstants.kRotationsToMeters)
+                .velocityConversionFactor(DriveConstants.KRotationsPerMinuteToMetersPerSecond);
 
         // left side motors
         config.inverted(DriveConstants.kLeftMotorsInverted);
@@ -111,7 +114,7 @@ public class DriveTrain extends SubsystemBase {
         m_rightClosedLoop = m_rightLeader.getClosedLoopController();
 
         m_odometry = new DifferentialDriveOdometry(
-            m_gyro.getRotation2d(), getLeftPosition(), getRightPosition());
+                m_gyro.getRotation2d(), getLeftPosition(), getRightPosition());
 
         // we handle the deadband ourselves
         m_drive.setDeadband(0);
@@ -184,7 +187,8 @@ public class DriveTrain extends SubsystemBase {
             BooleanSupplier turnInPlaceSupplier) {
         return run(() -> {
             double forward = xSpeedSupplier.getAsDouble();
-            // Negate this because right corresponds with clockwise rotation, so it should be negative
+            // Negate this because right corresponds with clockwise rotation, so it should
+            // be negative
             double turning = -zRotationSupplier.getAsDouble();
 
             forward = ControllerUtils.joystickTransform(forward, DriveConstants.kForwardAxisSensitvity,
