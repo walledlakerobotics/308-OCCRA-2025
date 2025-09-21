@@ -7,6 +7,9 @@ package frc.robot;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.utils.CommandFlightHotasX;
+
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
+
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -75,5 +78,14 @@ public class RobotContainer {
         operatorTab.addDouble("Rudder", m_driverController::getRudder);
         operatorTab.addDouble("Rocker", m_driverController::getRockerAxis);
         operatorTab.addDouble("POV", m_driverController.getHID()::getPOV);
+    }
+
+    /**
+     * Sets the idle mode of the drive motors.
+     * 
+     * @param mode The idle mode to set.
+     */
+    public void setDriveIdleMode(IdleMode mode) {
+        m_driveTrain.setIdleMode(mode);
     }
 }
