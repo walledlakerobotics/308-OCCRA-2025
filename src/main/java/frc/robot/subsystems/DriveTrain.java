@@ -91,7 +91,7 @@ public class DriveTrain extends SubsystemBase {
 
         m_leftLeader.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
-        config.follow(m_leftLeader.getDeviceId(), false);
+        config.follow(m_leftLeader);
         m_leftFollower.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
         config.disableFollowerMode();
@@ -101,7 +101,7 @@ public class DriveTrain extends SubsystemBase {
 
         m_rightLeader.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
-        config.follow(m_rightLeader.getDeviceId(), false);
+        config.follow(m_rightLeader);
         m_rightFollower.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
         m_leftEncoder = m_leftLeader.getEncoder();
