@@ -10,7 +10,7 @@ import com.pathplanner.lib.controllers.PPLTVController;
 import com.pathplanner.lib.controllers.PathFollowingController;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
-import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
+import edu.wpi.first.math.kinematics.MecanumDriveKinematics;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
 
@@ -77,23 +77,34 @@ public final class Constants {
         public static final double kGearRatio = 8.45865;
 
         public static final double kTrackWidth = 0.5;
+        public static final double kWheelBase = 0.5;
 
         // encoder conversion factors
         public static final double kRotationsToMeters = kWheelCircumference / kGearRatio;
         public static final double KRotationsPerMinuteToMetersPerSecond = kRotationsToMeters / 60;
 
         // kinematics
-        public static final DifferentialDriveKinematics kDriveKinematics = new DifferentialDriveKinematics(kTrackWidth);
+        public static final MecanumDriveKinematics kDriveKinematics = new MecanumDriveKinematics(
+                // Front left
+                new edu.wpi.first.math.geometry.Translation2d(kWheelBase / 2, kTrackWidth / 2),
+                // Front right
+                new edu.wpi.first.math.geometry.Translation2d(kWheelBase / 2, -kTrackWidth / 2),
+                // Back left
+                new edu.wpi.first.math.geometry.Translation2d(-kWheelBase / 2, kTrackWidth / 2),
+                // Back right
+                new edu.wpi.first.math.geometry.Translation2d(-kWheelBase / 2, -kTrackWidth / 2));
 
         // this makes it so if there any stick drift it prevents the robot from move due
         // to the stick drift
         public static final double kDeadBand = 0.01;
 
-        public static final double kForwardAxisSensitvity = 0.4;
-        public static final double kRotatonAxisSenitvity = 0.4;
+        public static final double kXAxisSensitvity = 0.4;
+        public static final double kYAxisSensitvity = 0.4;
+        public static final double kRotationAxisSensitivity = 0.4;
 
-        public static final double kForwardAxisMultiplier = 1;
-        public static final double kTurningAxisMultiplier = 0.7;
+        public static final double kXAxisMultiplier = 1;
+        public static final double kYAxisMultiplier = 1;
+        public static final double kRotationAxisMultiplier = 0.7;
     }
 
     public static class AutoConstants {

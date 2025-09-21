@@ -27,8 +27,10 @@ public class RobotContainer {
     private final DriveTrain m_driveTrain = new DriveTrain();
 
     // controllers
-    private final CommandFlightHotasX m_driverController = new CommandFlightHotasX(OperatorConstants.kDriverControllerPort);
-    private final CommandXboxController m_coDriverController = new CommandXboxController(OperatorConstants.kCoDriverControllerPort);
+    private final CommandFlightHotasX m_driverController = new CommandFlightHotasX(
+            OperatorConstants.kDriverControllerPort);
+    private final CommandXboxController m_coDriverController = new CommandXboxController(
+            OperatorConstants.kCoDriverControllerPort);
 
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -39,22 +41,18 @@ public class RobotContainer {
 
     /**
      * Use this method to define your trigger->command mappings. Triggers can be
-     * created via the
-     * {@link Trigger#Trigger(java.util.function.BooleanSupplier)} constructor with
-     * an arbitrary
-     * predicate, or via the named factories in {@link
-     * edu.wpi.first.wpilibj2.command.button.CommandGenericHID}'s subclasses for
-     * {@link
-     * CommandXboxController
-     * Xbox}/{@link edu.wpi.first.wpilibj2.command.button.CommandPS4Controller
-     * PS4} controllers or
-     * {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
-     * joysticks}.
+     * created via the {@link Trigger#Trigger(java.util.function.BooleanSupplier)}
+     * constructor with an arbitrary predicate, or via the named factories in
+     * {@link edu.wpi.first.wpilibj2.command.button.CommandGenericHID}'s subclasses
+     * for {@link CommandXboxController
+     * Xbox}/{@link edu.wpi.first.wpilibj2.command.button.CommandPS4Controller PS4}
+     * controllers or {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick
+     * Flight joysticks}.
      */
     private void configureBindings() {
         m_driveTrain.setDefaultCommand(
-                m_driveTrain.driveJoysticks(m_driverController::getThrottle, m_driverController::getStickX,
-                        m_driverController.getHID()::getR1Button));
+                m_driveTrain.driveJoysticks(m_driverController::getStickY, m_driverController::getStickX,
+                        m_driverController::getRudder));
 
         ShuffleboardTab operatorTab = Shuffleboard.getTab("Operator");
 
