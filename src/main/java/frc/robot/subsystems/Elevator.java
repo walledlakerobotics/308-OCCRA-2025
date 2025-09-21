@@ -55,10 +55,6 @@ public class Elevator extends SubsystemBase {
                 .positionConversionFactor(ElevatorConstants.kElevatorEncoderPositionFactor)
                 .velocityConversionFactor(ElevatorConstants.kElevatorEncoderVelocityFactor);
 
-        config.limitSwitch
-                .reverseLimitSwitchEnabled(false)
-                .forwardLimitSwitchEnabled(false);
-
         m_elevatorLeader.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
         config
