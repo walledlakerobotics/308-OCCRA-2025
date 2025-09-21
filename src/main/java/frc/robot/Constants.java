@@ -126,7 +126,7 @@ public final class Constants {
         public static final int kRightElevatorMotorid = 0;
 
         // sets if motor is inverted
-        public static final boolean kInverted = false;
+        public static final boolean kMasterMotorInverted = false, kSubMotor = false;
         // level heights this will change
         public static final double[] kElevatorLevelHeights = { 0, 7.5, 14.5, 23.55 };
         //idlemode

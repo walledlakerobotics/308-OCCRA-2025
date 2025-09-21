@@ -18,8 +18,8 @@ import frc.robot.Constants.ElevatorConstants;
 
 public class Elevator extends SubsystemBase {
     
-    private SparkMax m_leftElevatorMotor, m_rightElevatorMotor;
-    private RelativeEncoder m_leftEncoder, m_rightEncoder;
+    private SparkMax m_leaderMotor, m_elevatorMotor;
+    private RelativeEncoder m_leftEncoder;
     private ProfiledPIDController m_elevatorPidController;
     private DigitalInput m_bottomInput, m_topInput;
 
@@ -28,8 +28,8 @@ public class Elevator extends SubsystemBase {
 
     public Elevator() {
         // sets motor's
-        m_leftElevatorMotor = new SparkMax(ElevatorConstants.kLeftElevatorMotorid, MotorType.kBrushless);
-        m_rightElevatorMotor = new SparkMax(ElevatorConstants.kRightElevatorMotorid, MotorType.kBrushless);
+        m_leaderMotor = new SparkMax(ElevatorConstants.kLeftElevatorMotorid, MotorType.kBrushless);
+        m_elevatorMotor = new SparkMax(ElevatorConstants.kRightElevatorMotorid, MotorType.kBrushless);
 
         //sets PID controller
         m_elevatorPidController = new ProfiledPIDController(
@@ -50,7 +50,7 @@ public class Elevator extends SubsystemBase {
         config
         .idleMode(ElevatorConstants.kElevatorIdleMode)
         .smartCurrentLimit(ElevatorConstants.kSmartCurrentLimit)
-        .inverted(ElevatorConstants.kInverted);
+        .inverted(ElevatorConstants.kMasterMotorInverted);
         
         config.encoder
         .positionConversionFactor(ElevatorConstants.kElevatorEncoderPositionFactor)
@@ -59,18 +59,17 @@ public class Elevator extends SubsystemBase {
         config.limitSwitch
         .reverseLimitSwitchEnabled(false)
         .forwardLimitSwitchEnabled(false);
-
         
-        m_leftElevatorMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+        m_leaderMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
-        config.follow(m_leftElevatorMotor);
+        config
+        .follow(m_leaderMotor)
+        .inverted(ElevatorConstants.kSubMotor);
 
-        m_rightElevatorMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-
+        m_elevatorMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+        
         // gets encoder
-        m_leftEncoder = m_leftElevatorMotor.getEncoder();
-        m_rightEncoder = m_rightElevatorMotor.getEncoder();
-        m_rightEncoder.setPosition(m_leftEncoder.getPosition());
+        m_leftEncoder = m_leaderMotor.getEncoder();
     }
 
     /**
@@ -113,7 +112,7 @@ public class Elevator extends SubsystemBase {
             velocity = Math.min(0, velocity);
         }
 
-        m_leftElevatorMotor.set(velocity);
+        m_leaderMotor.set(velocity);
 
     }
 
@@ -255,17 +254,11 @@ public class Elevator extends SubsystemBase {
 
     @Override
     public void periodic() {
-
-        /*
-         * TODO: idk if we need to make another encoder, but I made it follow the left encoder 
-         */
-        m_rightEncoder.setPosition(m_leftEncoder.getPosition());
-
         final double currentHeight = getHeight();
 
         if (m_isPIDMode) {
             // double velocitySetpoint = m_elevatorPIDController.getSetpoint().velocity;
-                m_leftElevatorMotor.set(
+                m_leaderMotor.set(
                 m_elevatorPidController.calculate(currentHeight) + ElevatorConstants.kElevatorG
                 // m_elevatorFeedforward.calculateWithVelocities(getElevatorVelocity(), velocitySetpoint)
             );
@@ -278,12 +271,12 @@ public class Elevator extends SubsystemBase {
         if (isAtBottom()) {
             // Prevent the elevator from going down when it reaches the bottom
             // by preventing the speed from being negative
-            m_leftElevatorMotor.set(Math.max(ElevatorConstants.kElevatorG, m_leftElevatorMotor.get()));
+            m_leaderMotor.set(Math.max(ElevatorConstants.kElevatorG, m_leaderMotor.get()));
             m_leftEncoder.setPosition(0);
         } else if (isAtTop() || currentHeight >= ElevatorConstants.kElevatorMaxHeight) {
             // Prevent the elevator from going up when it reaches the top
             // by preventing the speed from being positive
-            m_leftElevatorMotor.set(Math.min(ElevatorConstants.kElevatorG, m_leftElevatorMotor.get()));
+            m_leaderMotor.set(Math.min(ElevatorConstants.kElevatorG, m_leaderMotor.get()));
         }
     }
 }  
