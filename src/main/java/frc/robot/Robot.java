@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
+
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -47,10 +49,17 @@ public class Robot extends TimedRobot {
 
     /** This function is called once each time the robot enters Disabled mode. */
     @Override
-    public void disabledInit() {}
+    public void disabledInit() {
+        m_robotContainer.setDriveIdleMode(IdleMode.kCoast);
+    }
 
     @Override
     public void disabledPeriodic() {}
+
+    @Override
+    public void disabledExit() {
+        m_robotContainer.setDriveIdleMode(IdleMode.kBrake);
+    }
 
     /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
     @Override
