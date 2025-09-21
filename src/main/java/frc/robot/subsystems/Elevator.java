@@ -74,7 +74,7 @@ public class Elevator extends SubsystemBase {
      */
     public void setElevatorHeight(double height) {
         height = MathUtil.clamp(height, 0, ElevatorConstants.kElevatorMaxHeight);
-        m_elevatorPIDController.reset(getHeight(), getVelocity()); // idk if this is the same thing as set
+        m_elevatorPIDController.reset(getHeight(), getVelocity());
         m_elevatorPIDController.setGoal(height);
 
         m_isPIDMode = true;
