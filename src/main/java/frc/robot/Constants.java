@@ -122,7 +122,9 @@ public final class Constants {
     public static class ElevatorConstants {
 
         //( UwU ) its the id of the elevator motor
-        public static final int kElevatorMotorid = 0;
+        public static final int kLeftElevatorMotorid = 0;
+        public static final int kRightElevatorMotorid = 0;
+
         // sets if motor is inverted
         public static final boolean kInverted = false;
         // level heights this will change
