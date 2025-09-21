@@ -121,15 +121,16 @@ public final class Constants {
 
     public static class ElevatorConstants {
 
-        //( UwU ) its the id of the elevator motor
-        public static final int kLeftElevatorMotorid = 0;
-        public static final int kRightElevatorMotorid = 0;
+        // ( UwU ) its the id of the elevator motor
+        public static final int kElevatorLeaderMotorId = 0;
+        public static final int kElevatorFollowerMotorId = 0;
 
         // sets if motor is inverted
-        public static final boolean kMasterMotorInverted = false, kSubMotor = false;
+        public static final boolean kLeaderMotorInverted = false;
+        public static final boolean kFollowerMotorInverted = false;
         // level heights this will change
         public static final double[] kElevatorLevelHeights = { 0, 7.5, 14.5, 23.55 };
-        //idlemode
+        // idlemode
         public static final IdleMode kElevatorIdleMode = IdleMode.kBrake;
         // max height of elevator
         public static final double kElevatorMaxHeight = 25;
@@ -141,7 +142,7 @@ public final class Constants {
         public static final double kElevatorD = 0;
         // sets the velocity speed
         public static final double kElevatorG = 0;
-        //current limit 
+        // current limit
         public static final int kSmartCurrentLimit = 60;
 
         /** The reduction in distance calculated by endcoders due to gear ratio. */
@@ -150,13 +151,19 @@ public final class Constants {
         public static final double kGearDiameter = 1;
         /** The circumference of the gear/wheel that moves the elevator. */
         public static final double kGearCircumference = kGearDiameter * Math.PI;
-        /** The conversion factor that converts from motor rotations to inches travelled. */
+        /**
+         * The conversion factor that converts from motor rotations to inches travelled.
+         */
         public static final double kElevatorEncoderPositionFactor = kGearCircumference / kElevatorReduction;
-        /** The conversion factor that converts from motor rotations per minute to inches travelled per second. */
+        /**
+         * The conversion factor that converts from motor rotations per minute to inches
+         * travelled per second.
+         */
         public static final double kElevatorEncoderVelocityFactor = (kGearCircumference / kElevatorReduction) / 60;
 
         /** The maximum speed the elevator can move at with full power. */
-        public static final double kElevatorFreeSpeedMetersPerSecond = NEOMotorConstants.kFreeSpeedRpm * kElevatorEncoderVelocityFactor;
+        public static final double kElevatorFreeSpeedMetersPerSecond = NEOMotorConstants.kFreeSpeedRpm
+                * kElevatorEncoderVelocityFactor;
 
         /** The maximum allowed speed the elevator should move at. */
         public static final double kElevatorMaxSpeedInchesPerSecond = kElevatorFreeSpeedMetersPerSecond;
@@ -173,7 +180,8 @@ public final class Constants {
     }
 
     public static final class NEOMotorConstants {
-        private NEOMotorConstants() {}
+        private NEOMotorConstants() {
+        }
 
         /** The maximum speed the motors go run at in revolutions per minute. */
         public static final double kFreeSpeedRpm = 5676;
