@@ -219,7 +219,7 @@ public class DriveTrain extends SubsystemBase {
      * 
      * @return The current robot relative chassis speeds.
      */
-    private ChassisSpeeds getChassisSpeeds() {
+    public ChassisSpeeds getChassisSpeeds() {
         MecanumDriveWheelSpeeds wheelSpeeds = new MecanumDriveWheelSpeeds(
                 m_frontLeftEncoder.getVelocity(),
                 m_frontRightEncoder.getVelocity(),
