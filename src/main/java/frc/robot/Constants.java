@@ -8,11 +8,9 @@ import com.pathplanner.lib.config.ModuleConfig;
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
-import com.pathplanner.lib.controllers.PPLTVController;
 import com.pathplanner.lib.controllers.PathFollowingController;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
-import edu.wpi.first.math.controller.HolonomicDriveController;
 import edu.wpi.first.math.kinematics.MecanumDriveKinematics;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
