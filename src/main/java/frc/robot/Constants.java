@@ -5,11 +5,14 @@
 package frc.robot;
 
 import com.pathplanner.lib.config.ModuleConfig;
+import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
+import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.controllers.PPLTVController;
 import com.pathplanner.lib.controllers.PathFollowingController;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
+import edu.wpi.first.math.controller.HolonomicDriveController;
 import edu.wpi.first.math.kinematics.MecanumDriveKinematics;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
@@ -112,22 +115,23 @@ public final class Constants {
             throw new UnsupportedOperationException("This is a constants class!");
         }
 
+        public static final PIDConstants kTranslationConstants = new PIDConstants(1, 0, 0);
+        public static final PIDConstants kRotationConstants = new PIDConstants(1, 0, 0);
+
         public static final double kMassKG = 50;
         public static final double kRobotMOI = 50;
 
         public static final double kWheelCOF = 1;
 
-        public static final DCMotor kDriveMotor = DCMotor.getNEO(2);
-
-        public static final double kDescretizationTime = 0.01;
+        public static final DCMotor kDriveMotor = DCMotor.getNEO(1);
 
         public static final RobotConfig kRobotConfig = new RobotConfig(kMassKG, kRobotMOI,
                 new ModuleConfig(DriveConstants.kWheelDiameter / 2, DriveConstants.kMaxSpeedMetersPerSecond,
-                        kWheelCOF, kDriveMotor, DriveConstants.kSmartCurrentLimit, 2),
+                        kWheelCOF, kDriveMotor, DriveConstants.kSmartCurrentLimit, 1),
                 DriveConstants.kTrackWidth);
 
-        public static final PathFollowingController kAutoController = new PPLTVController(kDescretizationTime,
-                DriveConstants.kMaxSpeedMetersPerSecond);
+        public static final PathFollowingController kAutoController = new PPHolonomicDriveController(
+                kTranslationConstants, kRotationConstants);
     }
 
     public static class ElevatorConstants {
