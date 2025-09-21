@@ -23,7 +23,6 @@ public class Elevator extends SubsystemBase {
     private ProfiledPIDController m_elevatorPidController;
     private DigitalInput m_bottomInput, m_topInput;
 
-    // TODO: this might need to be added to other functions or commands
     private boolean m_isPIDMode = false;
 
     public Elevator() {
@@ -263,10 +262,6 @@ public class Elevator extends SubsystemBase {
                 // m_elevatorFeedforward.calculateWithVelocities(getElevatorVelocity(), velocitySetpoint)
             );
         }
-        
-        /*
-         * TODO: this might not work since I changed it to an encoder to set the postition 
-         */
 
         if (isAtBottom()) {
             // Prevent the elevator from going down when it reaches the bottom
