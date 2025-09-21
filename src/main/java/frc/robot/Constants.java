@@ -140,7 +140,7 @@ public final class Constants {
         public static final double kElevatorI = 0;
         /** The D for the elevator PID. */
         public static final double kElevatorD = 0;
-        // sets the velocity speed
+        /** The gravity feed forward for the elevator. */
         public static final double kElevatorG = 0;
         // current limit
         public static final int kSmartCurrentLimit = 60;
@@ -174,7 +174,7 @@ public final class Constants {
         /** The manual movement speed of the elevator. */
         public static final double kElevatorManualSpeed = 0.5;
 
-        // input channels
+        // limit switch channels
         public static final int kTopInputChannel = 0;
         public static final int kBottomInputChannel = 0;
     }
