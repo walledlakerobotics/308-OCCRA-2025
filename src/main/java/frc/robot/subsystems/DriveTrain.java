@@ -144,11 +144,11 @@ public class DriveTrain extends SubsystemBase {
     /**
      * Drives the robot using curvature drive.
      * 
-     * @param xSpeed    The robot's speed along the X axis [-1.0, 1.0].
+     * @param xSpeed    The robot's speed along the X axis [-1, 1].
      *                  Forward is positive.
-     * @param ySpeed    The robot's speed along the Y axis [-1.0, 1.0].
+     * @param ySpeed    The robot's speed along the Y axis [-1, 1].
      *                  Left is positive.
-     * @param zRotation The normalized curvature [-1.0, 1.0].
+     * @param zRotation The normalized curvature [-1, 1].
      *                  Counterclockwise is positive.
      */
     public void drive(double xSpeed, double ySpeed, double zRotation) {
