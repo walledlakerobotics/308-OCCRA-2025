@@ -18,7 +18,7 @@ import frc.robot.Constants.ElevatorConstants;
 
 public class Elevator extends SubsystemBase {
 
-    private SparkMax m_elevatorLeader, m_followerMotor;
+    private SparkMax m_elevatorLeader, m_elevatorFollower;
     private RelativeEncoder m_elevatorEncoder;
     private ProfiledPIDController m_elevatorPIDController;
     private DigitalInput m_bottomLimit, m_topLimit;
@@ -28,7 +28,7 @@ public class Elevator extends SubsystemBase {
     public Elevator() {
         // sets motor's
         m_elevatorLeader = new SparkMax(ElevatorConstants.kElevatorLeaderMotorId, MotorType.kBrushless);
-        m_followerMotor = new SparkMax(ElevatorConstants.kElevatorFollowerMotorId, MotorType.kBrushless);
+        m_elevatorFollower = new SparkMax(ElevatorConstants.kElevatorFollowerMotorId, MotorType.kBrushless);
 
         // sets PID controller
         m_elevatorPIDController = new ProfiledPIDController(
@@ -61,7 +61,7 @@ public class Elevator extends SubsystemBase {
                 .follow(m_elevatorLeader)
                 .inverted(ElevatorConstants.kFollowerMotorInverted);
 
-        m_followerMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+        m_elevatorFollower.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
         // gets encoder
         m_elevatorEncoder = m_elevatorLeader.getEncoder();
