@@ -11,6 +11,7 @@ import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.controllers.PathFollowingController;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.MecanumDriveKinematics;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
@@ -200,5 +201,62 @@ public final class Constants {
         public static final double kFreeSpeedRpm = 5676;
         /** The maximum speed the motors go run at in revolutions per second. */
         public static final double kFreeSpeedRps = kFreeSpeedRpm / 60;
+    }
+
+    /**
+     * Describe how the {@link ArmSubsystem} should rotate the coral arm.
+     */
+    public static final class ArmConstants {
+        private ArmConstants() {}
+
+        /** The CAN ID of the arm motor. */
+        public static final int kArmMotorCanId = 22;
+        /** The smart current limit for the motor */
+        public static final int kSmartCurrentLimit = 30;
+        /** The idle mode of the motor. */
+        public static final IdleMode kIdleMode = IdleMode.kBrake;
+        /** Whether to invert the direction of the arm motor. */
+        public static final boolean kArmMotorInverted = false;
+
+        /** The reduction causes by the gear ratio of the motor. */
+        public static final double kGearReduction = 1;
+        /** The position conversion factor of the arm encoder. */
+        public static final double kPositionEncoderConversionFactor = 1 / kGearReduction;
+        /** The velocity conversion factor of the arm encoder. */
+        public static final double kVelocityEncoderConversionFactor = 1 / kGearReduction / 60;
+        /** The maximum speed of the arm in rotations per second. */
+        public static final double kArmMaxSpeedRPS = 0.5;
+        /** The maximum acceleration of the arm in rotations per second squared. */
+        public static final double kArmMaxAccelerationRPSSquared = 1;
+
+        /** The angle offset for the motor encoder such that when the encoder returns 0 the arm is parallel to the floor. */
+        public static final Rotation2d kEncoderAngleOffset = Rotation2d.fromDegrees(0);
+
+        /** The P for the arm PID controller. */
+        public static final double kArmP = 2.5;
+        /** The I for the arm PID controller. */
+        public static final double kArmI = 0;
+        /** The D for the arm PID controller. */
+        public static final double kArmD = 0;
+        
+        /** The S gain for the arm feedforward. */
+        public static final double kArmS = 0;
+        /** The gravity gain for the arm feedforward. */
+        public static final double kArmG = 0.02;
+        /** The V gain for the arm feedforward. */
+        public static final double kArmV = 0;
+        /** The A gain for the arm feedforward. */
+        public static final double kArmA = 0;
+
+        /** The speed to move the arm at while intaking. */
+        public static final double kArmIntakingSpeed = 0.1;
+
+        /** The angles of the arm for each reef level. */
+        public static final Rotation2d[] kArmLevelAngles = {
+            Rotation2d.kZero,
+            Rotation2d.fromDegrees(32.4),
+            Rotation2d.fromDegrees(32.4),
+            Rotation2d.fromDegrees(32.4)
+        };
     }
 }
