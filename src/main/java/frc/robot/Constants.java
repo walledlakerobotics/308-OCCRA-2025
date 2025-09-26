@@ -208,7 +208,7 @@ public final class Constants {
     }
 
     /**
-     * Describe how the {@link ArmSubsystem} should rotate the coral arm.
+     * Describe how the {@link Arm} should rotate the coral arm.
      */
     public static final class ArmConstants {
         private ArmConstants() {
@@ -266,22 +266,24 @@ public final class Constants {
         };
     }
 
-    public static final class CubeIntakeConstants {
+    public static final class IntakeConstants {
 
-        private CubeIntakeConstants() {
+        private IntakeConstants() {
             throw new UnsupportedOperationException("This is a constants class!");
         }
 
-        public static final int 
-            kLeaderMotorId = 0, 
-            kFollowerMotorId = 0;
+        //ids of the motors
+        public static final int kLeaderMotorId = 0;
+        public static final int kFollowerMotorId = 0;
 
-        public static final boolean
-            kLeaderMotorInverted = false,
-            kFollowerMotorInverted = false;
-
+        //sets if the motors are inverted
+        public static final boolean kLeaderMotorInverted = false;
+        public static final boolean kFollowerMotorInverted = false;
+        
+        //current limit of the motors
+        public static final int kSmartCurrentLimit = 0;
         /** The idle mode of the motor. */
         public static final IdleMode kIdleMode = IdleMode.kBrake;
-        
+
     }
 }
