@@ -134,6 +134,9 @@ public final class Constants {
     }
 
     public static class ElevatorConstants {
+        private ElevatorConstants() {
+            throw new UnsupportedOperationException("This is a constants class!");
+        }
 
         // ( UwU ) its the id of the elevator motor
         public static final int kElevatorLeaderMotorId = 0;
@@ -195,6 +198,7 @@ public final class Constants {
 
     public static final class NEOMotorConstants {
         private NEOMotorConstants() {
+            throw new UnsupportedOperationException("This is a constants class!");
         }
 
         /** The maximum speed the motors go run at in revolutions per minute. */
@@ -207,7 +211,9 @@ public final class Constants {
      * Describe how the {@link ArmSubsystem} should rotate the coral arm.
      */
     public static final class ArmConstants {
-        private ArmConstants() {}
+        private ArmConstants() {
+            throw new UnsupportedOperationException("This is a constants class!");
+        }
 
         /** The CAN ID of the arm motor. */
         public static final int kArmMotorCanId = 22;
@@ -258,5 +264,24 @@ public final class Constants {
             Rotation2d.fromDegrees(32.4),
             Rotation2d.fromDegrees(32.4)
         };
+    }
+
+    public static final class CubeIntakeConstants {
+
+        private CubeIntakeConstants() {
+            throw new UnsupportedOperationException("This is a constants class!");
+        }
+
+        public static final int 
+            kLeaderMotorId = 0, 
+            kFollowerMotorId = 0;
+
+        public static final boolean
+            kLeaderMotorInverted = false,
+            kFollowerMotorInverted = false;
+
+        /** The idle mode of the motor. */
+        public static final IdleMode kIdleMode = IdleMode.kBrake;
+        
     }
 }
