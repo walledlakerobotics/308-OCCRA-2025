@@ -7,7 +7,6 @@ package frc.robot.utils;
 import java.util.function.Consumer;
 
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -17,7 +16,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-import frc.robot.Constants.FieldConstants;
 
 /**
  * General utilities used throughout the code.
@@ -58,21 +56,6 @@ public class Utils {
      */
     public static double angleConstrain(double degrees){
         return MathUtil.inputModulus(degrees, -180, 180);
-    }
-
-    /**
-     * Restricts a pose's translation to the confines of the field.
-     * This isn't very useful for our practice field where we have no barriers,
-     * but it will increase the accuracy of our odometry on the real field. 
-     * @param pose The pose to be restricted.
-     * @return The same pose but with restrictions applied.
-     */
-    public static Pose2d restrictPose(Pose2d pose){
-        return new Pose2d(
-            MathUtil.clamp(pose.getX(), 0, FieldConstants.kFieldWidthMeters),
-            MathUtil.clamp(pose.getY(), 0, FieldConstants.kFieldHeightMeters),
-            pose.getRotation()
-        );
     }
 
     /**

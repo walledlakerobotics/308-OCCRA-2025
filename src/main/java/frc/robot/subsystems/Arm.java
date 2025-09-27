@@ -24,13 +24,12 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.Constants.ArmConstants;
-import frc.robot.utils.LoggingUtils;
 import frc.robot.utils.Utils;
 
 /**
  * Subsystem that controls the coral arm of the robot.
  */
-public class ArmSubsystem extends SubsystemBase {
+public class Arm extends SubsystemBase {
     /** The motor controller for the coral arm. */
     public final SparkMax m_armMotor = new SparkMax(ArmConstants.kArmMotorCanId, MotorType.kBrushless);
     /** The encoder for measuring the position and velocity of the motor. */
@@ -47,14 +46,6 @@ public class ArmSubsystem extends SubsystemBase {
         )
     );
 
-    /** The {@link ArmFeedforward} for the arm motor. */
-    // private final ArmFeedforward m_armFeedforward = new ArmFeedforward(
-    //     ArmConstants.kArmS,
-    //     ArmConstants.kArmG,
-    //     ArmConstants.kArmV,
-    //     ArmConstants.kArmA
-    // );
-
     /** Whether to use PID or not. */
     private boolean m_isPIDMode = true;
 
@@ -68,7 +59,7 @@ public class ArmSubsystem extends SubsystemBase {
     /**
      * Constructs an {@link ArmSubsystem} that controls the coral arm of the robot.
      */
-    public ArmSubsystem() {
+    public Arm() {
         SparkMaxConfig armMotorConf = new SparkMaxConfig();
         armMotorConf
             .inverted(ArmConstants.kArmMotorInverted)
@@ -94,8 +85,6 @@ public class ArmSubsystem extends SubsystemBase {
             Utils.roundToNearest(Units.rotationsToDegrees(m_angleController.getGoal().position), 2));
         m_armTab.addDouble("Arm Velocity Goal", () -> 
             Utils.roundToNearest(Units.rotationsToDegrees(m_angleController.getGoal().velocity), 2));
-
-        LoggingUtils.logSparkMax(m_armMotor);
 
         Utils.configureSysID(
             m_armTab.getLayout("Arm SysID", BuiltInLayouts.kList), this, 
