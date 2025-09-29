@@ -75,8 +75,8 @@ public final class Constants {
 
         // physical constants
         public static final double kWheelRadiusMeters = Units.inchesToMeters(3);
-        public static final double kWheelDiameterMetes = 2 * kWheelRadiusMeters;
-        public static final double kWheelCircumferenceMeters = kWheelDiameterMetes * Math.PI;
+        public static final double kWheelDiameterMeters = 2 * kWheelRadiusMeters;
+        public static final double kWheelCircumferenceMeters = kWheelDiameterMeters * Math.PI;
         public static final double kGearReduction = 8.45865;
 
         public static final double kTrackWidthMeters = 0.5;
@@ -126,7 +126,7 @@ public final class Constants {
         public static final DCMotor kDriveMotor = DCMotor.getNEO(1);
 
         public static final RobotConfig kRobotConfig = new RobotConfig(kMassKG, kRobotMOI,
-                new ModuleConfig(DriveConstants.kWheelDiameterMetes / 2, DriveConstants.kMaxSpeedMetersPerSecond,
+                new ModuleConfig(DriveConstants.kWheelDiameterMeters / 2, DriveConstants.kMaxSpeedMetersPerSecond,
                         kWheelCOF, kDriveMotor, DriveConstants.kSmartCurrentLimitAmps, 1),
                 DriveConstants.kTrackWidthMeters);
 
