@@ -62,7 +62,7 @@ public final class Constants {
         public static final IdleMode kMotorIdleMode = IdleMode.kBrake;
 
         // smartLimit
-        public static final int kSmartCurrentLimit = 30;
+        public static final int kSmartCurrentLimitAmps = 30;
 
         public static final double kMaxSpeedMetersPerSecond = 5.6;
         public static final double kMaxAccelerationMetersPerSecondSquared = 5.6;
@@ -74,28 +74,28 @@ public final class Constants {
         public static final double kVelocityFF = 1 / 473;
 
         // physical constants
-        public static final double kWheelRadius = Units.inchesToMeters(3);
-        public static final double kWheelDiameter = 2 * kWheelRadius;
-        public static final double kWheelCircumference = kWheelDiameter * Math.PI;
-        public static final double kGearRatio = 8.45865;
+        public static final double kWheelRadiusMeters = Units.inchesToMeters(3);
+        public static final double kWheelDiameterMetes = 2 * kWheelRadiusMeters;
+        public static final double kWheelCircumferenceMeters = kWheelDiameterMetes * Math.PI;
+        public static final double kGearReduction = 8.45865;
 
-        public static final double kTrackWidth = 0.5;
-        public static final double kWheelBase = 0.5;
+        public static final double kTrackWidthMeters = 0.5;
+        public static final double kWheelBaseMeters = 0.5;
 
         // encoder conversion factors
-        public static final double kRotationsToMeters = kWheelCircumference / kGearRatio;
+        public static final double kRotationsToMeters = kWheelCircumferenceMeters / kGearReduction;
         public static final double KRotationsPerMinuteToMetersPerSecond = kRotationsToMeters / 60;
 
         // kinematics
         public static final MecanumDriveKinematics kDriveKinematics = new MecanumDriveKinematics(
                 // Front left
-                new edu.wpi.first.math.geometry.Translation2d(kWheelBase / 2, kTrackWidth / 2),
+                new edu.wpi.first.math.geometry.Translation2d(kWheelBaseMeters / 2, kTrackWidthMeters / 2),
                 // Front right
-                new edu.wpi.first.math.geometry.Translation2d(kWheelBase / 2, -kTrackWidth / 2),
+                new edu.wpi.first.math.geometry.Translation2d(kWheelBaseMeters / 2, -kTrackWidthMeters / 2),
                 // Back left
-                new edu.wpi.first.math.geometry.Translation2d(-kWheelBase / 2, kTrackWidth / 2),
+                new edu.wpi.first.math.geometry.Translation2d(-kWheelBaseMeters / 2, kTrackWidthMeters / 2),
                 // Back right
-                new edu.wpi.first.math.geometry.Translation2d(-kWheelBase / 2, -kTrackWidth / 2));
+                new edu.wpi.first.math.geometry.Translation2d(-kWheelBaseMeters / 2, -kTrackWidthMeters / 2));
 
         // this makes it so if there any stick drift it prevents the robot from move due
         // to the stick drift
@@ -126,9 +126,9 @@ public final class Constants {
         public static final DCMotor kDriveMotor = DCMotor.getNEO(1);
 
         public static final RobotConfig kRobotConfig = new RobotConfig(kMassKG, kRobotMOI,
-                new ModuleConfig(DriveConstants.kWheelDiameter / 2, DriveConstants.kMaxSpeedMetersPerSecond,
-                        kWheelCOF, kDriveMotor, DriveConstants.kSmartCurrentLimit, 1),
-                DriveConstants.kTrackWidth);
+                new ModuleConfig(DriveConstants.kWheelDiameterMetes / 2, DriveConstants.kMaxSpeedMetersPerSecond,
+                        kWheelCOF, kDriveMotor, DriveConstants.kSmartCurrentLimitAmps, 1),
+                DriveConstants.kTrackWidthMeters);
 
         public static final PathFollowingController kAutoController = new PPHolonomicDriveController(
                 kTranslationConstants, kRotationConstants);
@@ -236,7 +236,10 @@ public final class Constants {
         /** The maximum acceleration of the arm in rotations per second squared. */
         public static final double kArmMaxAccelerationRPSSquared = 1;
 
-        /** The angle offset for the motor encoder such that when the encoder returns 0 the arm is parallel to the floor. */
+        /**
+         * The angle offset for the motor encoder such that when the encoder returns 0
+         * the arm is parallel to the floor.
+         */
         public static final Rotation2d kEncoderAngleOffset = Rotation2d.fromDegrees(0);
 
         /** The P for the arm PID controller. */
@@ -245,7 +248,7 @@ public final class Constants {
         public static final double kArmI = 0;
         /** The D for the arm PID controller. */
         public static final double kArmD = 0;
-        
+
         /** The S gain for the arm feedforward. */
         public static final double kArmS = 0;
         /** The gravity gain for the arm feedforward. */
@@ -260,10 +263,10 @@ public final class Constants {
 
         /** The angles of the arm for each reef level. */
         public static final Rotation2d[] kArmLevelAngles = {
-            Rotation2d.kZero,
-            Rotation2d.fromDegrees(32.4),
-            Rotation2d.fromDegrees(32.4),
-            Rotation2d.fromDegrees(32.4)
+                Rotation2d.kZero,
+                Rotation2d.fromDegrees(32.4),
+                Rotation2d.fromDegrees(32.4),
+                Rotation2d.fromDegrees(32.4)
         };
     }
 
@@ -273,15 +276,15 @@ public final class Constants {
             throw new UnsupportedOperationException("This is a constants class!");
         }
 
-        //ids of the motors
+        // ids of the motors
         public static final int kLeaderMotorId = 0;
         public static final int kFollowerMotorId = 0;
 
-        //sets if the motors are inverted
+        // sets if the motors are inverted
         public static final boolean kLeaderMotorInverted = false;
         public static final boolean kFollowerMotorInverted = false;
-        
-        //current limit of the motors
+
+        // current limit of the motors
         public static final int kSmartCurrentLimit = 0;
         /** The idle mode of the motor. */
         public static final IdleMode kIdleMode = IdleMode.kBrake;

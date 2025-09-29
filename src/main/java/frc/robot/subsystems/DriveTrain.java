@@ -78,7 +78,7 @@ public class DriveTrain extends SubsystemBase {
 
         // sets the idle mode, the smart current limit, and the inversion
         config
-                .smartCurrentLimit(DriveConstants.kSmartCurrentLimit)
+                .smartCurrentLimit(DriveConstants.kSmartCurrentLimitAmps)
                 .idleMode(DriveConstants.kMotorIdleMode);
 
         // sets the PID
