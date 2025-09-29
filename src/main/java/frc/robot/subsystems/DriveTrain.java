@@ -201,11 +201,11 @@ public class DriveTrain extends SubsystemBase {
             double ySpeed = -ySpeedSupplier.getAsDouble();
             double zRotation = -zRotationSupplier.getAsDouble();
 
-            xSpeed = ControllerUtils.joystickTransform(xSpeed, DriveConstants.kXAxisSensitvity,
+            xSpeed = ControllerUtils.axisTransform(xSpeed, DriveConstants.kXAxisSensitvity,
                     DriveConstants.kDeadBand, DriveConstants.kXAxisMultiplier);
-            ySpeed = ControllerUtils.joystickTransform(ySpeed, DriveConstants.kYAxisSensitvity,
+            ySpeed = ControllerUtils.axisTransform(ySpeed, DriveConstants.kYAxisSensitvity,
                     DriveConstants.kDeadBand, DriveConstants.kYAxisMultiplier);
-            zRotation = ControllerUtils.joystickTransform(zRotation, DriveConstants.kRotationAxisSensitivity,
+            zRotation = ControllerUtils.axisTransform(zRotation, DriveConstants.kRotationAxisSensitivity,
                     DriveConstants.kDeadBand, DriveConstants.kRotationAxisMultiplier);
 
             drive(xSpeed, ySpeed, zRotation);
