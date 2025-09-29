@@ -86,6 +86,11 @@ public class DriveTrain extends SubsystemBase {
                 .pid(DriveConstants.kVelocityP, DriveConstants.kVelocityI, DriveConstants.kVelocityD)
                 .velocityFF(DriveConstants.kVelocityFF);
 
+        // sets max velocity and acceleration
+        config.closedLoop.maxMotion
+                .maxVelocity(DriveConstants.kMaxSpeedMetersPerSecond)
+                .maxAcceleration(DriveConstants.kMaxAccelerationMetersPerSecondSquared);
+
         // sets encoder conversion factors
         config.encoder
                 .positionConversionFactor(DriveConstants.kRotationsToMeters)
@@ -116,10 +121,10 @@ public class DriveTrain extends SubsystemBase {
         m_backRightClosedLoop = m_backRightMotor.getClosedLoopController();
 
         m_drive = new MecanumDrive(
-                speed -> m_frontLeftClosedLoop.setReference(speed, ControlType.kVelocity),
-                speed -> m_backLeftClosedLoop.setReference(speed, ControlType.kVelocity),
-                speed -> m_frontRightClosedLoop.setReference(speed, ControlType.kVelocity),
-                speed -> m_backRightClosedLoop.setReference(speed, ControlType.kVelocity));
+                speed -> m_frontLeftClosedLoop.setReference(speed, ControlType.kMAXMotionVelocityControl),
+                speed -> m_backLeftClosedLoop.setReference(speed, ControlType.kMAXMotionVelocityControl),
+                speed -> m_frontRightClosedLoop.setReference(speed, ControlType.kMAXMotionVelocityControl),
+                speed -> m_backRightClosedLoop.setReference(speed, ControlType.kMAXMotionVelocityControl));
 
         m_odometry = new MecanumDriveOdometry(DriveConstants.kDriveKinematics, m_gyro.getRotation2d(),
                 getWheelPositions());
