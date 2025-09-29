@@ -24,7 +24,7 @@ public class ControllerUtils {
      *                    output value
      * @return The transformed axis value in the range [-max, max].
      */
-    public static double axisTransform(double raw, double sensitivity, double max) {
+    public static double axisSensitivity(double raw, double sensitivity, double max) {
         return max * Math.signum(raw) * Math.pow(raw, 1 / sensitivity);
     }
 }
