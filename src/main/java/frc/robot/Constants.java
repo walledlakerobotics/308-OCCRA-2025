@@ -123,12 +123,12 @@ public final class Constants {
 
         public static final double kWheelCOF = 1;
 
-        public static final DCMotor kDriveMotor = DCMotor.getNEO(1)
+        public static final DCMotor kDriveMotorGearbox = DCMotor.getNEO(1)
                 .withReduction(DriveConstants.kGearReduction);
 
         public static final RobotConfig kRobotConfig = new RobotConfig(kMassKG, kRobotMOI,
                 new ModuleConfig(DriveConstants.kWheelDiameterMeters / 2, DriveConstants.kMaxSpeedMetersPerSecond,
-                        kWheelCOF, kDriveMotor, DriveConstants.kSmartCurrentLimitAmps, 1),
+                        kWheelCOF, kDriveMotorGearbox, DriveConstants.kSmartCurrentLimitAmps, 1),
                 DriveConstants.kTrackWidthMeters);
 
         public static final PathFollowingController kAutoController = new PPHolonomicDriveController(
