@@ -152,7 +152,7 @@ public class DriveTrain extends SubsystemBase {
      *                  Counterclockwise is positive.
      */
     public void drive(double xSpeed, double ySpeed, double zRotation) {
-        m_drive.driveCartesian(xSpeed, ySpeed, zRotation);
+        m_drive.driveCartesian(xSpeed, ySpeed, zRotation, m_gyro.getRotation2d());
     }
 
     /**
