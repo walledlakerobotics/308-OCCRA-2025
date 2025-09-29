@@ -129,8 +129,8 @@ public class DriveTrain extends SubsystemBase {
         m_odometry = new MecanumDriveOdometry(DriveConstants.kDriveKinematics, m_gyro.getRotation2d(),
                 getWheelPositions());
 
-        // we handle the deadband ourselves
-        m_drive.setDeadband(0);
+        // sets the deadband
+        m_drive.setDeadband(DriveConstants.kDeadBand);
 
         // we want the speeds passed into the set speed functions to be in meters per
         // second
