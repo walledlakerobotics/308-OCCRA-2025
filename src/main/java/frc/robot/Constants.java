@@ -123,7 +123,8 @@ public final class Constants {
 
         public static final double kWheelCOF = 1;
 
-        public static final DCMotor kDriveMotor = DCMotor.getNEO(1);
+        public static final DCMotor kDriveMotor = DCMotor.getNEO(1)
+                .withReduction(DriveConstants.kGearReduction);
 
         public static final RobotConfig kRobotConfig = new RobotConfig(kMassKG, kRobotMOI,
                 new ModuleConfig(DriveConstants.kWheelDiameterMeters / 2, DriveConstants.kMaxSpeedMetersPerSecond,
