@@ -127,7 +127,7 @@ public final class Constants {
                 .withReduction(DriveConstants.kGearReduction);
 
         public static final RobotConfig kRobotConfig = new RobotConfig(kMassKG, kRobotMOI,
-                new ModuleConfig(DriveConstants.kWheelDiameterMeters / 2, DriveConstants.kMaxSpeedMetersPerSecond,
+                new ModuleConfig(DriveConstants.kWheelRadiusMeters, DriveConstants.kMaxSpeedMetersPerSecond,
                         kWheelCOF, kDriveMotorGearbox, DriveConstants.kSmartCurrentLimitAmps, 1),
                 DriveConstants.kTrackWidthMeters);
 
