@@ -8,8 +8,8 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.utils.CommandFlightHotasX;
 
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.pathplanner.lib.auto.AutoBuilder;
-import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -94,7 +94,7 @@ public class RobotContainer {
      * 
      * @param mode The idle mode to set.
      */
-    public void setDriveIdleMode(IdleMode mode) {
+    public void setDriveIdleMode(NeutralMode mode) {
         m_driveTrain.setIdleMode(mode);
     }
 

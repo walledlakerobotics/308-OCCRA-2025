@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.pathplanner.lib.config.ModuleConfig;
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
@@ -59,7 +60,7 @@ public final class Constants {
         public static final boolean kRightMotorsInverted = true;
 
         // idle mode
-        public static final IdleMode kMotorIdleMode = IdleMode.kBrake;
+        public static final NeutralMode kMotorIdleMode = NeutralMode.Brake;
 
         // smartLimit
         public static final int kSmartCurrentLimit = 30;
