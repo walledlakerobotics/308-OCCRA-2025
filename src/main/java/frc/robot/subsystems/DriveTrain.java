@@ -202,11 +202,11 @@ public class DriveTrain extends SubsystemBase {
             double zRotation = -zRotationSupplier.getAsDouble();
 
             xSpeed = ControllerUtils.axisSensitivity(xSpeed, DriveConstants.kXAxisSensitvity,
-                    DriveConstants.kXAxisMultiplier);
+                    DriveConstants.kXAxisMaxOutput);
             ySpeed = ControllerUtils.axisSensitivity(ySpeed, DriveConstants.kYAxisSensitvity,
-                    DriveConstants.kYAxisMultiplier);
+                    DriveConstants.kYAxisMaxOutput);
             zRotation = ControllerUtils.axisSensitivity(zRotation, DriveConstants.kRotationAxisSensitivity,
-                    DriveConstants.kRotationAxisMultiplier);
+                    DriveConstants.kRotationAxisMaxOutput);
 
             drive(xSpeed, ySpeed, zRotation);
         });

@@ -105,9 +105,9 @@ public final class Constants {
         public static final double kYAxisSensitvity = 0.4;
         public static final double kRotationAxisSensitivity = 0.4;
 
-        public static final double kXAxisMultiplier = 1;
-        public static final double kYAxisMultiplier = 1;
-        public static final double kRotationAxisMultiplier = 0.7;
+        public static final double kXAxisMaxOutput = 1;
+        public static final double kYAxisMaxOutput = 1;
+        public static final double kRotationAxisMaxOutput = 0.7;
     }
 
     public static class AutoConstants {
