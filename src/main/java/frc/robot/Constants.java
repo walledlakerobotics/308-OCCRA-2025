@@ -126,8 +126,10 @@ public final class Constants {
         public static final DCMotor kDriveMotorGearbox = DCMotor.getNEO(1)
                 .withReduction(DriveConstants.kGearReduction);
 
+        public static final double kTrueMaxSpeedMetersPerSecond = 7;
+
         public static final RobotConfig kRobotConfig = new RobotConfig(kMassKG, kRobotMOI,
-                new ModuleConfig(DriveConstants.kWheelRadiusMeters, DriveConstants.kMaxSpeedMetersPerSecond,
+                new ModuleConfig(DriveConstants.kWheelRadiusMeters, kTrueMaxSpeedMetersPerSecond,
                         kWheelCOF, kDriveMotorGearbox, DriveConstants.kSmartCurrentLimitAmps, 1),
                 DriveConstants.kTrackWidthMeters);
 
