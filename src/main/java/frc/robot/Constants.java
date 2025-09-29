@@ -65,6 +65,7 @@ public final class Constants {
         public static final int kSmartCurrentLimit = 30;
 
         public static final double kMaxSpeedMetersPerSecond = 5.6;
+        public static final double kMaxAccelerationMetersPerSecondSquared = 5.6;
 
         // PID constants for controlling wheel velocity
         public static final double kVelocityP = 0.1;
