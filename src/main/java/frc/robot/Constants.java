@@ -4,7 +4,6 @@
 
 package frc.robot;
 
-import com.pathplanner.lib.config.ModuleConfig;
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
@@ -13,7 +12,6 @@ import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.MecanumDriveKinematics;
-import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
 
 /**
@@ -118,20 +116,15 @@ public final class Constants {
         public static final PIDConstants kTranslationConstants = new PIDConstants(1, 0, 0);
         public static final PIDConstants kRotationConstants = new PIDConstants(1, 0, 0);
 
-        public static final double kMassKG = 50;
-        public static final double kRobotMOI = 50;
+        public static final RobotConfig kRobotConfig;
 
-        public static final double kWheelCOF = 1;
-
-        public static final DCMotor kDriveMotorGearbox = DCMotor.getNEO(1)
-                .withReduction(DriveConstants.kGearReduction);
-
-        public static final double kTrueMaxSpeedMetersPerSecond = 7;
-
-        public static final RobotConfig kRobotConfig = new RobotConfig(kMassKG, kRobotMOI,
-                new ModuleConfig(DriveConstants.kWheelRadiusMeters, kTrueMaxSpeedMetersPerSecond,
-                        kWheelCOF, kDriveMotorGearbox, DriveConstants.kSmartCurrentLimitAmps, 1),
-                DriveConstants.kTrackWidthMeters);
+        static {
+            try {
+                kRobotConfig = RobotConfig.fromGUISettings();
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
 
         public static final PathFollowingController kAutoController = new PPHolonomicDriveController(
                 kTranslationConstants, kRotationConstants);
