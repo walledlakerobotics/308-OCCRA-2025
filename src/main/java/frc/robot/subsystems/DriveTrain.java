@@ -19,6 +19,7 @@ import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.studica.frc.AHRS;
 import com.studica.frc.AHRS.NavXComType;
 
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.MecanumDriveOdometry;
@@ -56,6 +57,12 @@ public class DriveTrain extends SubsystemBase {
     private final SparkClosedLoopController m_backLeftClosedLoop;
     private final SparkClosedLoopController m_backRightClosedLoop;
 
+    // feedforward for drive
+    private final SimpleMotorFeedforward m_feedforward = new SimpleMotorFeedforward(
+            DriveConstants.kVelocityS,
+            DriveConstants.kVelocityV,
+            DriveConstants.kVelocityA);
+
     // gyro
     private final AHRS m_gyro = new AHRS(NavXComType.kMXP_SPI);
 
@@ -83,8 +90,7 @@ public class DriveTrain extends SubsystemBase {
 
         // sets the PID
         config.closedLoop
-                .pid(DriveConstants.kVelocityP, DriveConstants.kVelocityI, DriveConstants.kVelocityD)
-                .velocityFF(DriveConstants.kVelocityFF);
+                .pid(DriveConstants.kVelocityP, DriveConstants.kVelocityI, DriveConstants.kVelocityD);
 
         // sets max velocity and acceleration
         config.closedLoop.maxMotion
