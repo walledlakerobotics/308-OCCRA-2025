@@ -130,10 +130,13 @@ public class DriveTrain extends SubsystemBase {
         m_drive = new MecanumDrive(
                 speed -> m_frontLeftClosedLoop.setReference(speed, ControlType.kMAXMotionVelocityControl,
                         ClosedLoopSlot.kSlot0, m_feedforward.calculate(speed)),
+
                 speed -> m_rearLeftClosedLoop.setReference(speed, ControlType.kMAXMotionVelocityControl,
                         ClosedLoopSlot.kSlot0, m_feedforward.calculate(speed)),
+
                 speed -> m_frontRightClosedLoop.setReference(speed, ControlType.kMAXMotionVelocityControl,
                         ClosedLoopSlot.kSlot0, m_feedforward.calculate(speed)),
+
                 speed -> m_rearRightClosedLoop.setReference(speed, ControlType.kMAXMotionVelocityControl,
                         ClosedLoopSlot.kSlot0, m_feedforward.calculate(speed)));
 
@@ -181,10 +184,13 @@ public class DriveTrain extends SubsystemBase {
 
         m_frontLeftClosedLoop.setReference(wheelSpeeds.frontLeftMetersPerSecond, ControlType.kVelocity,
                 ClosedLoopSlot.kSlot0, m_feedforward.calculate(wheelSpeeds.frontLeftMetersPerSecond));
+
         m_rearLeftClosedLoop.setReference(wheelSpeeds.rearLeftMetersPerSecond, ControlType.kVelocity,
                 ClosedLoopSlot.kSlot0, m_feedforward.calculate(wheelSpeeds.rearLeftMetersPerSecond));
+
         m_frontRightClosedLoop.setReference(wheelSpeeds.frontRightMetersPerSecond, ControlType.kVelocity,
                 ClosedLoopSlot.kSlot0, m_feedforward.calculate(wheelSpeeds.frontRightMetersPerSecond));
+
         m_rearRightClosedLoop.setReference(wheelSpeeds.rearRightMetersPerSecond, ControlType.kVelocity,
                 ClosedLoopSlot.kSlot0, m_feedforward.calculate(wheelSpeeds.rearRightMetersPerSecond));
     }
