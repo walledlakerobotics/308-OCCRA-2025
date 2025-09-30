@@ -144,7 +144,7 @@ public class DriveTrain extends SubsystemBase {
                 getWheelPositions());
 
         // sets the deadband
-        m_drive.setDeadband(DriveConstants.kDeadBand);
+        m_drive.setDeadband(DriveConstants.kDeadband);
 
         // we want the speeds passed into the set speed functions to be in meters per
         // second

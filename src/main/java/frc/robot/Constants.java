@@ -99,7 +99,7 @@ public final class Constants {
 
         // this makes it so if there any stick drift it prevents the robot from move due
         // to the stick drift
-        public static final double kDeadBand = 0.01;
+        public static final double kDeadband = 0.01;
 
         public static final double kXAxisSensitvity = 0.4;
         public static final double kYAxisSensitvity = 0.4;
