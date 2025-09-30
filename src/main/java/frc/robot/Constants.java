@@ -48,9 +48,9 @@ public final class Constants {
 
         // ids for the motors
         public static final int kFrontLeftMotorId = 3;
+        public static final int kRearLeftMotorId = 2;
         public static final int kFrontRightMotorId = 5;
-        public static final int kBackLeftMotorId = 2;
-        public static final int kBackRightMotorId = 4;
+        public static final int kRearRightMotorId = 4;
 
         // sets if an motor is inverted
         public static final boolean kLeftMotorsInverted = false;

@@ -42,21 +42,21 @@ import frc.robot.utils.ControllerUtils;
 public class DriveTrain extends SubsystemBase {
     // drive train motors
     private final SparkMax m_frontLeftMotor = new SparkMax(DriveConstants.kFrontLeftMotorId, MotorType.kBrushless);
-    private final SparkMax m_backLeftMotor = new SparkMax(DriveConstants.kBackLeftMotorId, MotorType.kBrushless);
+    private final SparkMax m_rearLeftMotor = new SparkMax(DriveConstants.kRearLeftMotorId, MotorType.kBrushless);
     private final SparkMax m_frontRightMotor = new SparkMax(DriveConstants.kFrontRightMotorId, MotorType.kBrushless);
-    private final SparkMax m_backRightMotor = new SparkMax(DriveConstants.kBackRightMotorId, MotorType.kBrushless);
+    private final SparkMax m_rearRightMotor = new SparkMax(DriveConstants.kRearRightMotorId, MotorType.kBrushless);
 
     // encoders
     private final RelativeEncoder m_frontLeftEncoder;
+    private final RelativeEncoder m_rearLeftEncoder;
     private final RelativeEncoder m_frontRightEncoder;
-    private final RelativeEncoder m_backLeftEncoder;
-    private final RelativeEncoder m_backRightEncoder;
+    private final RelativeEncoder m_rearRightEncoder;
 
     // closed loop (pid) controllers
     private final SparkClosedLoopController m_frontLeftClosedLoop;
+    private final SparkClosedLoopController m_rearLeftClosedLoop;
     private final SparkClosedLoopController m_frontRightClosedLoop;
-    private final SparkClosedLoopController m_backLeftClosedLoop;
-    private final SparkClosedLoopController m_backRightClosedLoop;
+    private final SparkClosedLoopController m_rearRightClosedLoop;
 
     // feedforward for drive
     private final SimpleMotorFeedforward m_feedforward = new SimpleMotorFeedforward(
@@ -107,34 +107,34 @@ public class DriveTrain extends SubsystemBase {
         config.inverted(DriveConstants.kLeftMotorsInverted);
 
         m_frontLeftMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-        m_backLeftMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+        m_rearLeftMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
         // right side motors
         config.inverted(DriveConstants.kRightMotorsInverted);
 
         m_frontRightMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-        m_backLeftMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+        m_rearRightMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
         // get encoders
         m_frontLeftEncoder = m_frontLeftMotor.getEncoder();
+        m_rearLeftEncoder = m_rearLeftMotor.getEncoder();
         m_frontRightEncoder = m_frontRightMotor.getEncoder();
-        m_backLeftEncoder = m_backLeftMotor.getEncoder();
-        m_backRightEncoder = m_backRightMotor.getEncoder();
+        m_rearRightEncoder = m_rearRightMotor.getEncoder();
 
         // get closed loop controllers
         m_frontLeftClosedLoop = m_frontLeftMotor.getClosedLoopController();
+        m_rearLeftClosedLoop = m_rearLeftMotor.getClosedLoopController();
         m_frontRightClosedLoop = m_frontRightMotor.getClosedLoopController();
-        m_backLeftClosedLoop = m_backLeftMotor.getClosedLoopController();
-        m_backRightClosedLoop = m_backRightMotor.getClosedLoopController();
+        m_rearRightClosedLoop = m_rearRightMotor.getClosedLoopController();
 
         m_drive = new MecanumDrive(
                 speed -> m_frontLeftClosedLoop.setReference(speed, ControlType.kMAXMotionVelocityControl,
                         ClosedLoopSlot.kSlot0, m_feedforward.calculate(speed)),
-                speed -> m_backLeftClosedLoop.setReference(speed, ControlType.kMAXMotionVelocityControl,
+                speed -> m_rearLeftClosedLoop.setReference(speed, ControlType.kMAXMotionVelocityControl,
                         ClosedLoopSlot.kSlot0, m_feedforward.calculate(speed)),
                 speed -> m_frontRightClosedLoop.setReference(speed, ControlType.kMAXMotionVelocityControl,
                         ClosedLoopSlot.kSlot0, m_feedforward.calculate(speed)),
-                speed -> m_backRightClosedLoop.setReference(speed, ControlType.kMAXMotionVelocityControl,
+                speed -> m_rearRightClosedLoop.setReference(speed, ControlType.kMAXMotionVelocityControl,
                         ClosedLoopSlot.kSlot0, m_feedforward.calculate(speed)));
 
         m_odometry = new MecanumDriveOdometry(DriveConstants.kDriveKinematics, m_gyro.getRotation2d(),
@@ -181,11 +181,11 @@ public class DriveTrain extends SubsystemBase {
 
         m_frontLeftClosedLoop.setReference(wheelSpeeds.frontLeftMetersPerSecond, ControlType.kVelocity,
                 ClosedLoopSlot.kSlot0, m_feedforward.calculate(wheelSpeeds.frontLeftMetersPerSecond));
-        m_backLeftClosedLoop.setReference(wheelSpeeds.rearLeftMetersPerSecond, ControlType.kVelocity,
+        m_rearLeftClosedLoop.setReference(wheelSpeeds.rearLeftMetersPerSecond, ControlType.kVelocity,
                 ClosedLoopSlot.kSlot0, m_feedforward.calculate(wheelSpeeds.rearLeftMetersPerSecond));
         m_frontRightClosedLoop.setReference(wheelSpeeds.frontRightMetersPerSecond, ControlType.kVelocity,
                 ClosedLoopSlot.kSlot0, m_feedforward.calculate(wheelSpeeds.frontRightMetersPerSecond));
-        m_backRightClosedLoop.setReference(wheelSpeeds.rearRightMetersPerSecond, ControlType.kVelocity,
+        m_rearRightClosedLoop.setReference(wheelSpeeds.rearRightMetersPerSecond, ControlType.kVelocity,
                 ClosedLoopSlot.kSlot0, m_feedforward.calculate(wheelSpeeds.rearRightMetersPerSecond));
     }
 
@@ -243,8 +243,8 @@ public class DriveTrain extends SubsystemBase {
         MecanumDriveWheelSpeeds wheelSpeeds = new MecanumDriveWheelSpeeds(
                 m_frontLeftEncoder.getVelocity(),
                 m_frontRightEncoder.getVelocity(),
-                m_backLeftEncoder.getVelocity(),
-                m_backRightEncoder.getVelocity());
+                m_rearLeftEncoder.getVelocity(),
+                m_rearRightEncoder.getVelocity());
 
         ChassisSpeeds speeds = DriveConstants.kDriveKinematics.toChassisSpeeds(wheelSpeeds);
 
@@ -261,8 +261,8 @@ public class DriveTrain extends SubsystemBase {
         return new MecanumDriveWheelPositions(
                 m_frontLeftEncoder.getPosition(),
                 m_frontRightEncoder.getPosition(),
-                m_backLeftEncoder.getPosition(),
-                m_backRightEncoder.getPosition());
+                m_rearLeftEncoder.getPosition(),
+                m_rearRightEncoder.getPosition());
     }
 
     /**
@@ -284,8 +284,8 @@ public class DriveTrain extends SubsystemBase {
         SparkMaxConfig config = new SparkMaxConfig();
         config.idleMode(mode);
 
-        for (SparkMax motor : new SparkMax[] { m_frontLeftMotor, m_backLeftMotor, m_frontRightMotor,
-                m_backLeftMotor }) {
+        for (SparkMax motor : new SparkMax[] { m_frontLeftMotor, m_rearLeftMotor, m_frontRightMotor,
+                m_rearLeftMotor }) {
             motor.configure(config, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
         }
     }
