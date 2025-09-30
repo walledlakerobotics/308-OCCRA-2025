@@ -8,6 +8,7 @@ import java.util.function.DoubleSupplier;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.spark.ClosedLoopSlot;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkBase.ControlType;
@@ -127,10 +128,14 @@ public class DriveTrain extends SubsystemBase {
         m_backRightClosedLoop = m_backRightMotor.getClosedLoopController();
 
         m_drive = new MecanumDrive(
-                speed -> m_frontLeftClosedLoop.setReference(speed, ControlType.kMAXMotionVelocityControl),
-                speed -> m_backLeftClosedLoop.setReference(speed, ControlType.kMAXMotionVelocityControl),
-                speed -> m_frontRightClosedLoop.setReference(speed, ControlType.kMAXMotionVelocityControl),
-                speed -> m_backRightClosedLoop.setReference(speed, ControlType.kMAXMotionVelocityControl));
+                speed -> m_frontLeftClosedLoop.setReference(speed, ControlType.kMAXMotionVelocityControl,
+                        ClosedLoopSlot.kSlot0, m_feedforward.calculate(speed)),
+                speed -> m_backLeftClosedLoop.setReference(speed, ControlType.kMAXMotionVelocityControl,
+                        ClosedLoopSlot.kSlot0, m_feedforward.calculate(speed)),
+                speed -> m_frontRightClosedLoop.setReference(speed, ControlType.kMAXMotionVelocityControl,
+                        ClosedLoopSlot.kSlot0, m_feedforward.calculate(speed)),
+                speed -> m_backRightClosedLoop.setReference(speed, ControlType.kMAXMotionVelocityControl,
+                        ClosedLoopSlot.kSlot0, m_feedforward.calculate(speed)));
 
         m_odometry = new MecanumDriveOdometry(DriveConstants.kDriveKinematics, m_gyro.getRotation2d(),
                 getWheelPositions());
@@ -174,10 +179,14 @@ public class DriveTrain extends SubsystemBase {
     public void driveRobotRelative(ChassisSpeeds speeds) {
         MecanumDriveWheelSpeeds wheelSpeeds = DriveConstants.kDriveKinematics.toWheelSpeeds(speeds);
 
-        m_frontLeftClosedLoop.setReference(wheelSpeeds.frontLeftMetersPerSecond, ControlType.kVelocity);
-        m_backLeftClosedLoop.setReference(wheelSpeeds.rearLeftMetersPerSecond, ControlType.kVelocity);
-        m_frontRightClosedLoop.setReference(wheelSpeeds.frontRightMetersPerSecond, ControlType.kVelocity);
-        m_backRightClosedLoop.setReference(wheelSpeeds.rearRightMetersPerSecond, ControlType.kVelocity);
+        m_frontLeftClosedLoop.setReference(wheelSpeeds.frontLeftMetersPerSecond, ControlType.kVelocity,
+                ClosedLoopSlot.kSlot0, m_feedforward.calculate(wheelSpeeds.frontLeftMetersPerSecond));
+        m_backLeftClosedLoop.setReference(wheelSpeeds.rearLeftMetersPerSecond, ControlType.kVelocity,
+                ClosedLoopSlot.kSlot0, m_feedforward.calculate(wheelSpeeds.rearLeftMetersPerSecond));
+        m_frontRightClosedLoop.setReference(wheelSpeeds.frontRightMetersPerSecond, ControlType.kVelocity,
+                ClosedLoopSlot.kSlot0, m_feedforward.calculate(wheelSpeeds.frontRightMetersPerSecond));
+        m_backRightClosedLoop.setReference(wheelSpeeds.rearRightMetersPerSecond, ControlType.kVelocity,
+                ClosedLoopSlot.kSlot0, m_feedforward.calculate(wheelSpeeds.rearRightMetersPerSecond));
     }
 
     /**
