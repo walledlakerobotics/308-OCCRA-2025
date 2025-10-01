@@ -89,7 +89,7 @@ public final class Constants {
 
         // encoder conversion factors
         public static final double kRotationsToMeters = kWheelCircumference / kGearRatio;
-        public static final double KRotationsPerMinuteToMetersPerSecond = kRotationsToMeters / 60;
+        public static final double kRotationsPerMinuteToMetersPerSecond = kRotationsToMeters / 60;
 
         // kinematics
         public static final MecanumDriveKinematics kDriveKinematics = new MecanumDriveKinematics(
@@ -241,7 +241,10 @@ public final class Constants {
         /** The maximum acceleration of the arm in rotations per second squared. */
         public static final double kArmMaxAccelerationRPSSquared = 1;
 
-        /** The angle offset for the motor encoder such that when the encoder returns 0 the arm is parallel to the floor. */
+        /**
+         * The angle offset for the motor encoder such that when the encoder returns 0
+         * the arm is parallel to the floor.
+         */
         public static final Rotation2d kEncoderAngleOffset = Rotation2d.fromDegrees(0);
 
         /** The P for the arm PID controller. */
@@ -250,7 +253,7 @@ public final class Constants {
         public static final double kArmI = 0;
         /** The D for the arm PID controller. */
         public static final double kArmD = 0;
-        
+
         /** The S gain for the arm feedforward. */
         public static final double kArmS = 0;
         /** The gravity gain for the arm feedforward. */
@@ -265,10 +268,10 @@ public final class Constants {
 
         /** The angles of the arm for each reef level. */
         public static final Rotation2d[] kArmLevelAngles = {
-            Rotation2d.kZero,
-            Rotation2d.fromDegrees(32.4),
-            Rotation2d.fromDegrees(32.4),
-            Rotation2d.fromDegrees(32.4)
+                Rotation2d.kZero,
+                Rotation2d.fromDegrees(32.4),
+                Rotation2d.fromDegrees(32.4),
+                Rotation2d.fromDegrees(32.4)
         };
     }
 
@@ -278,15 +281,15 @@ public final class Constants {
             throw new UnsupportedOperationException("This is a constants class!");
         }
 
-        //ids of the motors
+        // ids of the motors
         public static final int kLeaderMotorId = 0;
         public static final int kFollowerMotorId = 0;
 
-        //sets if the motors are inverted
+        // sets if the motors are inverted
         public static final boolean kLeaderMotorInverted = false;
         public static final boolean kFollowerMotorInverted = false;
-        
-        //current limit of the motors
+
+        // current limit of the motors
         public static final int kSmartCurrentLimit = 0;
         /** The idle mode of the motor. */
         public static final IdleMode kIdleMode = IdleMode.kBrake;
