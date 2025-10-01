@@ -87,8 +87,10 @@ public final class Constants {
         public static final double kWheelBase = 0.5;
 
         // encoder conversion factors
-        public static final double kRotationsToMeters = kWheelCircumference / kGearRatio;
-        public static final double kRotationsPerMinuteToMetersPerSecond = kRotationsToMeters / 60;
+        public static final double kRawPerRevolution = 1;
+
+        public static final double kRawToMeters = kWheelCircumference / kGearRatio / kRawPerRevolution;
+        public static final double kRawPer100msToMetersPerSecond = kRawToMeters * 10;
 
         // kinematics
         public static final MecanumDriveKinematics kDriveKinematics = new MecanumDriveKinematics(
