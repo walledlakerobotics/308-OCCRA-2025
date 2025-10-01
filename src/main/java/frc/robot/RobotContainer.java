@@ -67,7 +67,7 @@ public class RobotContainer {
     }
 
     /**
-     * Sets the idle mode of the drive motors.
+     * Sets the {@link IdleMode} of the drive train motors.
      * 
      * @param mode The idle mode to set.
      */

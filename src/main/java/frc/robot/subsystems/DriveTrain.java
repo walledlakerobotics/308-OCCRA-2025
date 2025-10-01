@@ -272,9 +272,9 @@ public class DriveTrain extends SubsystemBase {
     }
 
     /**
-     * Resets the current tracked robot position to the specified pose.
+     * Resets the current tracked robot position to the specified {@link Pose2d}.
      * 
-     * @param pose The {@link Pose2d} to reset the position to.
+     * @param pose The Pose2d object.
      */
     public void resetOdometry(Pose2d pose) {
         m_odometry.resetPosition(m_gyro.getRotation2d(), getWheelPositions(), pose);
@@ -284,7 +284,7 @@ public class DriveTrain extends SubsystemBase {
      * Sets the {@link IdleMode} for all drivetrain motors. This will not persist
      * through power cycles.
      * 
-     * @param mode The mode to set.
+     * @param mode The idle mode to set.
      */
     public void setIdleMode(IdleMode mode) {
         SparkMaxConfig config = new SparkMaxConfig();
