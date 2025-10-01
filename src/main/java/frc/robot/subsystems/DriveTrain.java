@@ -90,15 +90,15 @@ public class DriveTrain extends SubsystemBase {
         m_frontRightMotorFollower.setInverted(DriveConstants.kRightMotorsInverted);
         m_backRightMotorFollower.setInverted(DriveConstants.kRightMotorsInverted);
 
-        m_frontLeftMotor.setNeutralMode(DriveConstants.kMotorIdleMode);
-        m_backLeftMotor.setNeutralMode(DriveConstants.kMotorIdleMode);
-        m_frontRightMotor.setNeutralMode(DriveConstants.kMotorIdleMode);
-        m_backRightMotor.setNeutralMode(DriveConstants.kMotorIdleMode);
+        m_frontLeftMotor.setNeutralMode(DriveConstants.kMotorNeutralMode);
+        m_backLeftMotor.setNeutralMode(DriveConstants.kMotorNeutralMode);
+        m_frontRightMotor.setNeutralMode(DriveConstants.kMotorNeutralMode);
+        m_backRightMotor.setNeutralMode(DriveConstants.kMotorNeutralMode);
 
-        m_frontLeftMotorFollower.setNeutralMode(DriveConstants.kMotorIdleMode);
-        m_backLeftMotorFollower.setNeutralMode(DriveConstants.kMotorIdleMode);
-        m_frontRightMotorFollower.setNeutralMode(DriveConstants.kMotorIdleMode);
-        m_backRightMotorFollower.setNeutralMode(DriveConstants.kMotorIdleMode);
+        m_frontLeftMotorFollower.setNeutralMode(DriveConstants.kMotorNeutralMode);
+        m_backLeftMotorFollower.setNeutralMode(DriveConstants.kMotorNeutralMode);
+        m_frontRightMotorFollower.setNeutralMode(DriveConstants.kMotorNeutralMode);
+        m_backRightMotorFollower.setNeutralMode(DriveConstants.kMotorNeutralMode);
 
         m_frontLeftMotorFollower.follow(m_frontLeftMotor);
         m_backLeftMotorFollower.follow(m_backLeftMotor);
@@ -255,12 +255,11 @@ public class DriveTrain extends SubsystemBase {
     }
 
     /**
-     * Sets the {@link NeutralMode} for all drivetrain motors. This will not persist
-     * through power cycles.
+     * Sets the {@link NeutralMode} for all drive train motors.
      * 
-     * @param mode The mode to set.
+     * @param mode The neutral mode to set.
      */
-    public void setIdleMode(NeutralMode mode) {
+    public void setNeutralMode(NeutralMode mode) {
         for (TalonSRX motor : new TalonSRX[] { m_frontLeftMotor, m_backLeftMotor, m_frontRightMotor,
                 m_backLeftMotor }) {
             motor.setNeutralMode(mode);

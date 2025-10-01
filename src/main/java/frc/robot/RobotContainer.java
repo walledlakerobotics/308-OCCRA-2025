@@ -63,12 +63,12 @@ public class RobotContainer {
     }
 
     /**
-     * Sets the idle mode of the drive motors.
+     * Sets the {@link NeutralMode} of the drive train motors.
      * 
-     * @param mode The idle mode to set.
+     * @param mode The neutral mode to set.
      */
-    public void setDriveIdleMode(NeutralMode mode) {
-        m_driveTrain.setIdleMode(mode);
+    public void setDriveNeutralMode(NeutralMode mode) {
+        m_driveTrain.setNeutralMode(mode);
     }
 
     /**

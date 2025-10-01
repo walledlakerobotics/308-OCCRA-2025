@@ -63,7 +63,7 @@ public final class Constants {
         public static final boolean kRightMotorsInverted = false;
 
         // idle mode
-        public static final NeutralMode kMotorIdleMode = NeutralMode.Brake;
+        public static final NeutralMode kMotorNeutralMode = NeutralMode.Brake;
 
         // smartLimit
         public static final int kContinuousCurrentLimit = 30;
