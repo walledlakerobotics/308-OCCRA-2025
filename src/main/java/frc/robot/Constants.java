@@ -122,17 +122,15 @@ public final class Constants {
         public static final PIDConstants kTranslationConstants = new PIDConstants(1, 0, 0);
         public static final PIDConstants kRotationConstants = new PIDConstants(1, 0, 0);
 
-        public static final double kMassKG = 50;
-        public static final double kRobotMOI = 50;
+        public static final RobotConfig kRobotConfig;
 
-        public static final double kWheelCOF = 1;
-
-        public static final DCMotor kDriveMotor = DCMotor.getNEO(1);
-
-        public static final RobotConfig kRobotConfig = new RobotConfig(kMassKG, kRobotMOI,
-                new ModuleConfig(DriveConstants.kWheelDiameter / 2, DriveConstants.kMaxSpeedMetersPerSecond,
-                        kWheelCOF, kDriveMotor, DriveConstants.kSmartCurrentLimit, 1),
-                DriveConstants.kTrackWidth);
+        static {
+            try {
+                kRobotConfig = RobotConfig.fromGUISettings();
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
 
         public static final PathFollowingController kAutoController = new PPHolonomicDriveController(
                 kTranslationConstants, kRotationConstants);
