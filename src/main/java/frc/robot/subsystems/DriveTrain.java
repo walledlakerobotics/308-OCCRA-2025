@@ -260,10 +260,15 @@ public class DriveTrain extends SubsystemBase {
      * @param mode The neutral mode to set.
      */
     public void setNeutralMode(NeutralMode mode) {
-        for (TalonSRX motor : new TalonSRX[] { m_frontLeftMotor, m_backLeftMotor, m_frontRightMotor,
-                m_backLeftMotor }) {
-            motor.setNeutralMode(mode);
-        }
+        m_frontLeftMotor.setNeutralMode(DriveConstants.kMotorNeutralMode);
+        m_backLeftMotor.setNeutralMode(DriveConstants.kMotorNeutralMode);
+        m_frontRightMotor.setNeutralMode(DriveConstants.kMotorNeutralMode);
+        m_backRightMotor.setNeutralMode(DriveConstants.kMotorNeutralMode);
+
+        m_frontLeftMotorFollower.setNeutralMode(DriveConstants.kMotorNeutralMode);
+        m_backLeftMotorFollower.setNeutralMode(DriveConstants.kMotorNeutralMode);
+        m_frontRightMotorFollower.setNeutralMode(DriveConstants.kMotorNeutralMode);
+        m_backRightMotorFollower.setNeutralMode(DriveConstants.kMotorNeutralMode);
     }
 
     @Override
