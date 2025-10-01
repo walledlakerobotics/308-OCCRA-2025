@@ -68,7 +68,7 @@ public final class Constants {
         public static final NeutralMode kMotorIdleMode = NeutralMode.Brake;
 
         // smartLimit
-        public static final int kSmartCurrentLimit = 30;
+        public static final int kContinuousCurrentLimit = 30;
 
         public static final double kMaxSpeedMetersPerSecond = 5.6;
 
