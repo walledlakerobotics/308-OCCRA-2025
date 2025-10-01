@@ -6,13 +6,8 @@ package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.subsystems.DriveTrain;
-import frc.robot.utils.CommandFlightHotasX;
-
 import com.ctre.phoenix.motorcontrol.NeutralMode;
-import com.pathplanner.lib.auto.AutoBuilder;
 
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -33,7 +28,7 @@ public class RobotContainer {
     private final DriveTrain m_driveTrain = new DriveTrain();
 
     // controllers
-    private final CommandFlightHotasX m_driverController = new CommandFlightHotasX(
+    private final CommandXboxController m_driverController = new CommandXboxController(
             OperatorConstants.kDriverControllerPort);
     private final CommandXboxController m_coDriverController = new CommandXboxController(
             OperatorConstants.kCoDriverControllerPort);
@@ -46,9 +41,9 @@ public class RobotContainer {
     public RobotContainer() {
         configureBindings();
 
-        m_autoChooser = AutoBuilder.buildAutoChooser();
+        // m_autoChooser = AutoBuilder.buildAutoChooser();
 
-        Shuffleboard.getTab("Autonomous").add("Auto", m_autoChooser);
+        // Shuffleboard.getTab("Autonomous").add("Auto", m_autoChooser);
     }
 
     /**
@@ -63,30 +58,8 @@ public class RobotContainer {
      */
     private void configureBindings() {
         m_driveTrain.setDefaultCommand(
-                m_driveTrain.driveJoysticks(m_driverController::getStickY, m_driverController::getStickX,
-                        m_driverController::getRudder));
-
-        ShuffleboardTab operatorTab = Shuffleboard.getTab("Operator");
-
-        operatorTab.addBoolean("L1", m_driverController.getHID()::getL1Button);
-        operatorTab.addBoolean("L2", m_driverController.getHID()::getL2Button);
-        operatorTab.addBoolean("L3", m_driverController.getHID()::getL3Button);
-        operatorTab.addBoolean("R1", m_driverController.getHID()::getR1Button);
-        operatorTab.addBoolean("R2", m_driverController.getHID()::getR2Button);
-        operatorTab.addBoolean("R3", m_driverController.getHID()::getR3Button);
-        operatorTab.addBoolean("5", m_driverController.getHID()::get5Button);
-        operatorTab.addBoolean("6", m_driverController.getHID()::get6Button);
-        operatorTab.addBoolean("7", m_driverController.getHID()::get7Button);
-        operatorTab.addBoolean("8", m_driverController.getHID()::get8Button);
-        operatorTab.addBoolean("Start", m_driverController.getHID()::getStartButton);
-        operatorTab.addBoolean("Select", m_driverController.getHID()::getSelectButton);
-
-        operatorTab.addDouble("Stick X", m_driverController::getStickX);
-        operatorTab.addDouble("Stick Y", m_driverController::getStickY);
-        operatorTab.addDouble("Throttle", m_driverController::getThrottle);
-        operatorTab.addDouble("Rudder", m_driverController::getRudder);
-        operatorTab.addDouble("Rocker", m_driverController::getRockerAxis);
-        operatorTab.addDouble("POV", m_driverController.getHID()::getPOV);
+                m_driveTrain.driveJoysticks(m_driverController::getLeftY, m_driverController::getLeftX,
+                        m_driverController::getRightX));
     }
 
     /**

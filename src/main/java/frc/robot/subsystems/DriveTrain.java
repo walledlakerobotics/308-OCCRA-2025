@@ -29,6 +29,11 @@ public class DriveTrain extends SubsystemBase {
     private final TalonSRX m_frontRightMotor = new TalonSRX(DriveConstants.kFrontRightMotorId);
     private final TalonSRX m_backRightMotor = new TalonSRX(DriveConstants.kBackRightMotorId);
 
+    private final TalonSRX m_frontLeftMotorFollower = new TalonSRX(DriveConstants.kFrontLeftMotorFollowerId);
+    private final TalonSRX m_backLeftMotorFollower = new TalonSRX(DriveConstants.kBackLeftMotorFollowerId);
+    private final TalonSRX m_frontRightMotorFollower = new TalonSRX(DriveConstants.kFrontRightMotorFollowerId);
+    private final TalonSRX m_backRightMotorFollower = new TalonSRX(DriveConstants.kBackRightMotorFollowerId);
+
     // calculates the wheel speeds based on the inputs
     private final MecanumDrive m_drive;
 
@@ -48,23 +53,40 @@ public class DriveTrain extends SubsystemBase {
 
         config.continuousCurrentLimit = DriveConstants.kSmartCurrentLimit;
 
+        // left side motord
         m_frontLeftMotor.configAllSettings(config);
         m_backLeftMotor.configAllSettings(config);
 
         m_frontLeftMotor.setInverted(DriveConstants.kLeftMotorsInverted);
         m_backLeftMotor.setInverted(DriveConstants.kLeftMotorsInverted);
 
+        m_frontLeftMotorFollower.setInverted(DriveConstants.kLeftMotorsInverted);
+        m_backLeftMotorFollower.setInverted(DriveConstants.kLeftMotorsInverted);
+
         // right side motors=
         m_frontRightMotor.configAllSettings(config);
         m_backRightMotor.configAllSettings(config);
 
-        m_frontLeftMotor.setInverted(DriveConstants.kRightMotorsInverted);
-        m_backLeftMotor.setInverted(DriveConstants.kRightMotorsInverted);
+        m_frontRightMotor.setInverted(DriveConstants.kRightMotorsInverted);
+        m_backRightMotor.setInverted(DriveConstants.kRightMotorsInverted);
+
+        m_frontRightMotorFollower.setInverted(DriveConstants.kRightMotorsInverted);
+        m_backRightMotorFollower.setInverted(DriveConstants.kRightMotorsInverted);
 
         m_frontLeftMotor.setNeutralMode(DriveConstants.kMotorIdleMode);
         m_backLeftMotor.setNeutralMode(DriveConstants.kMotorIdleMode);
         m_frontRightMotor.setNeutralMode(DriveConstants.kMotorIdleMode);
         m_backRightMotor.setNeutralMode(DriveConstants.kMotorIdleMode);
+
+        m_frontLeftMotorFollower.setNeutralMode(DriveConstants.kMotorIdleMode);
+        m_backLeftMotorFollower.setNeutralMode(DriveConstants.kMotorIdleMode);
+        m_frontRightMotorFollower.setNeutralMode(DriveConstants.kMotorIdleMode);
+        m_backRightMotorFollower.setNeutralMode(DriveConstants.kMotorIdleMode);
+
+        m_frontLeftMotorFollower.follow(m_frontLeftMotor);
+        m_backLeftMotorFollower.follow(m_backLeftMotor);
+        m_frontRightMotorFollower.follow(m_frontRightMotor);
+        m_backRightMotorFollower.follow(m_backRightMotor);
 
         m_drive = new MecanumDrive(
                 speed -> m_frontLeftMotor.set(ControlMode.PercentOutput, speed),

@@ -50,14 +50,19 @@ public final class Constants {
         }
 
         // ids for the motors
-        public static final int kFrontLeftMotorId = 3;
-        public static final int kFrontRightMotorId = 5;
+        public static final int kFrontLeftMotorId = 4;
+        public static final int kFrontRightMotorId = 8;
         public static final int kBackLeftMotorId = 2;
-        public static final int kBackRightMotorId = 4;
+        public static final int kBackRightMotorId = 6;
+
+        public static final int kFrontLeftMotorFollowerId = 5;
+        public static final int kFrontRightMotorFollowerId = 9;
+        public static final int kBackLeftMotorFollowerId = 3;
+        public static final int kBackRightMotorFollowerId = 7;
 
         // sets if an motor is inverted
-        public static final boolean kLeftMotorsInverted = false;
-        public static final boolean kRightMotorsInverted = true;
+        public static final boolean kLeftMotorsInverted = true;
+        public static final boolean kRightMotorsInverted = false;
 
         // idle mode
         public static final NeutralMode kMotorIdleMode = NeutralMode.Brake;
@@ -101,13 +106,13 @@ public final class Constants {
         // to the stick drift
         public static final double kDeadBand = 0.01;
 
-        public static final double kXAxisSensitvity = 0.4;
-        public static final double kYAxisSensitvity = 0.4;
-        public static final double kRotationAxisSensitivity = 0.4;
+        public static final double kXAxisSensitvity = 1;
+        public static final double kYAxisSensitvity = 1;
+        public static final double kRotationAxisSensitivity = 1;
 
         public static final double kXAxisMultiplier = 1;
         public static final double kYAxisMultiplier = 1;
-        public static final double kRotationAxisMultiplier = 0.7;
+        public static final double kRotationAxisMultiplier = 1;
     }
 
     public static class AutoConstants {
