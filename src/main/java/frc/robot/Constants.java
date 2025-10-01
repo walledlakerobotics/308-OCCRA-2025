@@ -76,7 +76,6 @@ public final class Constants {
         public static final double kVelocityP = 0.1;
         public static final double kVelocityI = 0.0;
         public static final double kVelocityD = 0.0;
-        public static final double kVelocityFF = 1 / 473;
 
         // physical constants
         public static final double kWheelRadius = Units.inchesToMeters(3);
