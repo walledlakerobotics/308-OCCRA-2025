@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj.event.BooleanEvent;
 import edu.wpi.first.wpilibj.event.EventLoop;
 
 /**
- * Handle input from Xbox controllers connected to the Driver Station.
+ * Handle input from a Thrustmaster T-Flight Hotas X connected to the Driver Station.
  *
  * <p>
  * This class handles Flight Hotas X input that comes from the Driver Station.
@@ -19,7 +19,7 @@ import edu.wpi.first.wpilibj.event.EventLoop;
  * single class instance for each controller and the mapping of ports to
  * hardware buttons depends on the code in the Driver Station.
  */
-public class FlightHotasX extends GenericHID {
+public class TFlightHotasX extends GenericHID {
     /** Represents a digital button on a FlightHotasX. */
     public enum Button {
         /** R1 button. */
@@ -116,7 +116,7 @@ public class FlightHotasX extends GenericHID {
      * @param port The port index on the Driver Station that the controller is
      *             plugged into (0-5).
      */
-    public FlightHotasX(int port) {
+    public TFlightHotasX(int port) {
         super(port);
         HAL.report(tResourceType.kResourceType_Controller, port + 1);
     }

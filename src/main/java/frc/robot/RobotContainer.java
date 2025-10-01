@@ -6,7 +6,7 @@ package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.subsystems.DriveTrain;
-import frc.robot.utils.CommandFlightHotasX;
+import frc.robot.utils.CommandTFlightHotasX;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
@@ -32,7 +32,7 @@ public class RobotContainer {
     private final DriveTrain m_driveTrain = new DriveTrain();
 
     // controllers
-    private final CommandFlightHotasX m_driverController = new CommandFlightHotasX(
+    private final CommandTFlightHotasX m_driverController = new CommandTFlightHotasX(
             OperatorConstants.kDriverControllerPort);
     private final CommandXboxController m_coDriverController = new CommandXboxController(
             OperatorConstants.kCoDriverControllerPort);
