@@ -10,13 +10,13 @@ import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 /**
- * A version of {@link FlightHotasX} with {@link Trigger} factories for
+ * A version of {@link TFlightHotasX} with {@link Trigger} factories for
  * command-based.
  *
- * @see FlightHotasX
+ * @see TFlightHotasX
  */
-public class CommandFlightHotasX extends CommandGenericHID {
-    private final FlightHotasX m_hid;
+public class CommandTFlightHotasX extends CommandGenericHID {
+    private final TFlightHotasX m_hid;
 
     /**
      * Construct an instance of a controller.
@@ -24,9 +24,9 @@ public class CommandFlightHotasX extends CommandGenericHID {
      * @param port The port index on the Driver Station that the controller is
      *             plugged into.
      */
-    public CommandFlightHotasX(int port) {
+    public CommandTFlightHotasX(int port) {
         super(port);
-        m_hid = new FlightHotasX(port);
+        m_hid = new TFlightHotasX(port);
     }
 
     /**
@@ -35,7 +35,7 @@ public class CommandFlightHotasX extends CommandGenericHID {
      * @return the wrapped GenericHID object
      */
     @Override
-    public FlightHotasX getHID() {
+    public TFlightHotasX getHID() {
         return m_hid;
     }
 
@@ -60,7 +60,7 @@ public class CommandFlightHotasX extends CommandGenericHID {
      *         attached to the given loop.
      */
     public Trigger R1(EventLoop loop) {
-        return button(FlightHotasX.Button.kR1.value, loop);
+        return button(TFlightHotasX.Button.kR1.value, loop);
     }
 
     /**
@@ -84,7 +84,7 @@ public class CommandFlightHotasX extends CommandGenericHID {
      *         attached to the given loop.
      */
     public Trigger R2(EventLoop loop) {
-        return button(FlightHotasX.Button.kR2.value, loop);
+        return button(TFlightHotasX.Button.kR2.value, loop);
     }
 
     /**
@@ -108,7 +108,7 @@ public class CommandFlightHotasX extends CommandGenericHID {
      *         attached to the given loop.
      */
     public Trigger R3(EventLoop loop) {
-        return button(FlightHotasX.Button.kR3.value, loop);
+        return button(TFlightHotasX.Button.kR3.value, loop);
     }
 
     /**
@@ -132,7 +132,7 @@ public class CommandFlightHotasX extends CommandGenericHID {
      *         attached to the given loop.
      */
     public Trigger L1(EventLoop loop) {
-        return button(FlightHotasX.Button.kL1.value, loop);
+        return button(TFlightHotasX.Button.kL1.value, loop);
     }
 
     /**
@@ -156,7 +156,7 @@ public class CommandFlightHotasX extends CommandGenericHID {
      *         attached to the given loop.
      */
     public Trigger L2(EventLoop loop) {
-        return button(FlightHotasX.Button.kL2.value, loop);
+        return button(TFlightHotasX.Button.kL2.value, loop);
     }
 
     /**
@@ -180,7 +180,7 @@ public class CommandFlightHotasX extends CommandGenericHID {
      *         attached to the given loop.
      */
     public Trigger L3(EventLoop loop) {
-        return button(FlightHotasX.Button.kL3.value, loop);
+        return button(TFlightHotasX.Button.kL3.value, loop);
     }
 
     /**
@@ -204,7 +204,7 @@ public class CommandFlightHotasX extends CommandGenericHID {
      *         attached to the given loop.
      */
     public Trigger B5(EventLoop loop) {
-        return button(FlightHotasX.Button.k5.value, loop);
+        return button(TFlightHotasX.Button.k5.value, loop);
     }
 
     /**
@@ -228,7 +228,7 @@ public class CommandFlightHotasX extends CommandGenericHID {
      *         attached to the given loop.
      */
     public Trigger B6(EventLoop loop) {
-        return button(FlightHotasX.Button.k6.value, loop);
+        return button(TFlightHotasX.Button.k6.value, loop);
     }
 
     /**
@@ -252,7 +252,7 @@ public class CommandFlightHotasX extends CommandGenericHID {
      *         attached to the given loop.
      */
     public Trigger B7(EventLoop loop) {
-        return button(FlightHotasX.Button.k7.value, loop);
+        return button(TFlightHotasX.Button.k7.value, loop);
     }
 
     /**
@@ -276,7 +276,7 @@ public class CommandFlightHotasX extends CommandGenericHID {
      *         attached to the given loop.
      */
     public Trigger B8(EventLoop loop) {
-        return button(FlightHotasX.Button.k8.value, loop);
+        return button(TFlightHotasX.Button.k8.value, loop);
     }
 
     /**
@@ -300,7 +300,7 @@ public class CommandFlightHotasX extends CommandGenericHID {
      *         attached to the given loop.
      */
     public Trigger select(EventLoop loop) {
-        return button(FlightHotasX.Button.kSelect.value, loop);
+        return button(TFlightHotasX.Button.kSelect.value, loop);
     }
 
     /**
@@ -324,7 +324,7 @@ public class CommandFlightHotasX extends CommandGenericHID {
      *         attached to the given loop.
      */
     public Trigger start(EventLoop loop) {
-        return button(FlightHotasX.Button.kStart.value, loop);
+        return button(TFlightHotasX.Button.kStart.value, loop);
     }
 
     /**
@@ -341,7 +341,7 @@ public class CommandFlightHotasX extends CommandGenericHID {
      *         loop.
      */
     public Trigger getLeftRockerTrigger(double threshold, EventLoop loop) {
-        return axisLessThan(FlightHotasX.Axis.kRocker.value, -threshold, loop);
+        return axisLessThan(TFlightHotasX.Axis.kRocker.value, -threshold, loop);
     }
 
     /**
@@ -388,7 +388,7 @@ public class CommandFlightHotasX extends CommandGenericHID {
      *         the provided threshold, attached to the given event loop.
      */
     public Trigger getRightRockerTrigger(double threshold, EventLoop loop) {
-        return axisGreaterThan(FlightHotasX.Axis.kRocker.value, threshold, loop);
+        return axisGreaterThan(TFlightHotasX.Axis.kRocker.value, threshold, loop);
     }
 
     /**
