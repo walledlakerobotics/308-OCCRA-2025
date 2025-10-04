@@ -59,8 +59,8 @@ public final class Constants {
         public static final int kBackRightMotorFollowerId = 7;
 
         // sets if an motor is inverted
-        public static final boolean kLeftMotorsInverted = true;
-        public static final boolean kRightMotorsInverted = false;
+        public static final boolean kLeftMotorsInverted = false;
+        public static final boolean kRightMotorsInverted = true;
 
         // idle mode
         public static final NeutralMode kMotorNeutralMode = NeutralMode.Brake;
@@ -81,11 +81,11 @@ public final class Constants {
         public static final double kWheelCircumference = kWheelDiameter * Math.PI;
         public static final double kGearRatio = 8.45865;
 
-        public static final double kTrackWidth = 0.5;
-        public static final double kWheelBase = 0.5;
+        public static final double kTrackWidth = Units.feetToMeters(2);
+        public static final double kWheelBase = Units.feetToMeters(2);
 
         // encoder conversion factors
-        public static final double kRawPerRevolution = 1;
+        public static final double kRawPerRevolution = 512;
 
         public static final double kRawToMeters = kWheelCircumference / kGearRatio / kRawPerRevolution;
         public static final double kRawPer100msToMetersPerSecond = kRawToMeters * 10;
