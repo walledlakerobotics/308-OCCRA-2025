@@ -15,6 +15,7 @@ import com.studica.frc.AHRS;
 import com.studica.frc.AHRS.NavXComType;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.MecanumDriveOdometry;
 import edu.wpi.first.math.kinematics.MecanumDriveWheelPositions;
@@ -48,7 +49,7 @@ public class DriveTrain extends SubsystemBase {
     private final MecanumDrive m_drive;
 
     // gyro sensor
-    private final AHRS m_gyro = new AHRS(NavXComType.kMXP_SPI);
+    private final AHRS m_gyro = new AHRS(NavXComType.kUSB1);
 
     // calculates odometry
     private final MecanumDriveOdometry m_odometry;
@@ -57,6 +58,8 @@ public class DriveTrain extends SubsystemBase {
     private final Field2d m_field = new Field2d();
 
     private ShuffleboardTab m_driveTab = Shuffleboard.getTab(getName());
+
+    private Rotation2d m_fieldRelativeOffset = Rotation2d.kZero;
 
     /**
      * Constructs a {@link DriveTrain}.
@@ -106,14 +109,10 @@ public class DriveTrain extends SubsystemBase {
         m_backRightMotorFollower.follow(m_backRightMotor);
 
         m_drive = new MecanumDrive(
-                speed -> m_frontLeftMotor.set(ControlMode.Velocity,
-                        speed / DriveConstants.kRawPer100msToMetersPerSecond),
-                speed -> m_backLeftMotor.set(ControlMode.Velocity,
-                        speed / DriveConstants.kRawPer100msToMetersPerSecond),
-                speed -> m_frontRightMotor.set(ControlMode.Velocity,
-                        speed / DriveConstants.kRawPer100msToMetersPerSecond),
-                speed -> m_backRightMotor.set(ControlMode.Velocity,
-                        speed / DriveConstants.kRawPer100msToMetersPerSecond));
+                speed -> m_frontLeftMotor.set(ControlMode.PercentOutput, speed),
+                speed -> m_backLeftMotor.set(ControlMode.PercentOutput, speed),
+                speed -> m_frontRightMotor.set(ControlMode.PercentOutput, speed),
+                speed -> m_backRightMotor.set(ControlMode.PercentOutput, speed));
 
         m_odometry = new MecanumDriveOdometry(DriveConstants.kDriveKinematics,
                 m_gyro.getRotation2d(),
@@ -148,7 +147,7 @@ public class DriveTrain extends SubsystemBase {
      *                  Counterclockwise is positive.
      */
     public void drive(double xSpeed, double ySpeed, double zRotation) {
-        m_drive.driveCartesian(xSpeed, ySpeed, zRotation, m_gyro.getRotation2d());
+        m_drive.driveCartesian(xSpeed, ySpeed, zRotation, m_gyro.getRotation2d().minus(m_fieldRelativeOffset));
     }
 
     /**
@@ -193,7 +192,7 @@ public class DriveTrain extends SubsystemBase {
             DoubleSupplier zRotationSupplier) {
         return run(() -> {
             double xSpeed = -xSpeedSupplier.getAsDouble();
-            double ySpeed = -ySpeedSupplier.getAsDouble();
+            double ySpeed = ySpeedSupplier.getAsDouble();
             double zRotation = -zRotationSupplier.getAsDouble();
 
             xSpeed = ControllerUtils.joystickTransform(xSpeed, DriveConstants.kXAxisSensitvity,
@@ -269,6 +268,10 @@ public class DriveTrain extends SubsystemBase {
         m_backLeftMotorFollower.setNeutralMode(DriveConstants.kMotorNeutralMode);
         m_frontRightMotorFollower.setNeutralMode(DriveConstants.kMotorNeutralMode);
         m_backRightMotorFollower.setNeutralMode(DriveConstants.kMotorNeutralMode);
+    }
+
+    public void resetFieldRelative() {
+        m_fieldRelativeOffset = m_gyro.getRotation2d();
     }
 
     @Override
