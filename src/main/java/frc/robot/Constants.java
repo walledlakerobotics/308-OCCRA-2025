@@ -79,7 +79,7 @@ public final class Constants {
         public static final double kWheelRadius = Units.inchesToMeters(3);
         public static final double kWheelDiameter = 2 * kWheelRadius;
         public static final double kWheelCircumference = kWheelDiameter * Math.PI;
-        public static final double kGearRatio = 8.45865;
+        public static final double kGearRatio = 3.96875;
 
         public static final double kTrackWidth = Units.feetToMeters(2);
         public static final double kWheelBase = Units.feetToMeters(2);
