@@ -119,8 +119,8 @@ public final class Constants {
             throw new UnsupportedOperationException("This is a constants class!");
         }
 
-        public static final PIDConstants kTranslationConstants = new PIDConstants(1, 0, 0);
-        public static final PIDConstants kRotationConstants = new PIDConstants(1, 0, 0);
+        public static final PIDConstants kTranslationConstants = new PIDConstants(3, 0, 0);
+        public static final PIDConstants kRotationConstants = new PIDConstants(3, 0, 0);
 
         public static final RobotConfig kRobotConfig;
 
