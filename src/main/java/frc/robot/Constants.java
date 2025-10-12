@@ -13,6 +13,7 @@ import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.MecanumDriveKinematics;
 import edu.wpi.first.math.util.Units;
+import frc.robot.subsystems.Arm;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
@@ -60,7 +61,9 @@ public final class Constants {
         // smart current limit
         public static final int kSmartCurrentLimitAmps = 30;
 
-        public static final double kMaxSpeedMetersPerSecond = 5.6;
+        public static final double kMaxForwardSpeedMetersPerSecond = 5.6;
+        public static final double kMaxStrafeSpeedMetersPerSecond = 5.6;
+        public static final double kMaxRotationSpeedRadiansPerSecond = 2 * Math.PI;
         public static final double kMaxAccelerationMetersPerSecondSquared = 5.6;
 
         // PID constants for controlling wheel velocity
@@ -70,6 +73,11 @@ public final class Constants {
         public static final double kVelocityS = 1;
         public static final double kVelocityV = 1;
         public static final double kVelocityA = 1;
+
+        // PID constants for controlling robot rotation
+        public static final double kRotationP = 0.3;
+        public static final double kRotationI = 0.0;
+        public static final double kRotationD = 0.0;
 
         // physical constants
         public static final double kWheelRadiusMeters = Units.inchesToMeters(3);
@@ -102,10 +110,6 @@ public final class Constants {
         public static final double kXAxisSensitvity = 0.4;
         public static final double kYAxisSensitvity = 0.4;
         public static final double kRotationAxisSensitivity = 0.4;
-
-        public static final double kXAxisMaxOutput = 1;
-        public static final double kYAxisMaxOutput = 1;
-        public static final double kRotationAxisMaxOutput = 0.7;
     }
 
     public static class AutoConstants {

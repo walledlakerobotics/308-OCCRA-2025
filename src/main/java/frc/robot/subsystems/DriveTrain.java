@@ -20,16 +20,21 @@ import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.studica.frc.AHRS;
 import com.studica.frc.AHRS.NavXComType;
 
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.MecanumDriveOdometry;
 import edu.wpi.first.math.kinematics.MecanumDriveWheelPositions;
 import edu.wpi.first.math.kinematics.MecanumDriveWheelSpeeds;
-import edu.wpi.first.wpilibj.drive.MecanumDrive;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.AutoConstants;
@@ -67,14 +72,17 @@ public class DriveTrain extends SubsystemBase {
     // gyro
     private final AHRS m_gyro = new AHRS(NavXComType.kMXP_SPI);
 
-    // calculates the wheel speeds based on the inputs
-    private final MecanumDrive m_drive;
-
     // calculates odometry
     private final MecanumDriveOdometry m_odometry;
 
     // displays robot position on field
     private final Field2d m_field = new Field2d();
+
+    private Rotation2d m_fieldRelativeOffset = Rotation2d.kZero;
+
+    private Rotation2d m_rotationSetpoint = Rotation2d.kZero;
+    private PIDController m_rotationController = new PIDController(DriveConstants.kRotationP, DriveConstants.kRotationI,
+            DriveConstants.kRotationD);
 
     private ShuffleboardTab m_driveTab = Shuffleboard.getTab(getName());
 
@@ -95,7 +103,6 @@ public class DriveTrain extends SubsystemBase {
 
         // sets max velocity and acceleration
         config.closedLoop.maxMotion
-                .maxVelocity(DriveConstants.kMaxSpeedMetersPerSecond)
                 .maxAcceleration(DriveConstants.kMaxAccelerationMetersPerSecondSquared);
 
         // sets encoder conversion factors
@@ -127,28 +134,8 @@ public class DriveTrain extends SubsystemBase {
         m_frontRightClosedLoop = m_frontRightMotor.getClosedLoopController();
         m_rearRightClosedLoop = m_rearRightMotor.getClosedLoopController();
 
-        m_drive = new MecanumDrive(
-                speed -> m_frontLeftClosedLoop.setReference(speed, ControlType.kMAXMotionVelocityControl,
-                        ClosedLoopSlot.kSlot0, m_feedforward.calculate(speed)),
-
-                speed -> m_rearLeftClosedLoop.setReference(speed, ControlType.kMAXMotionVelocityControl,
-                        ClosedLoopSlot.kSlot0, m_feedforward.calculate(speed)),
-
-                speed -> m_frontRightClosedLoop.setReference(speed, ControlType.kMAXMotionVelocityControl,
-                        ClosedLoopSlot.kSlot0, m_feedforward.calculate(speed)),
-
-                speed -> m_rearRightClosedLoop.setReference(speed, ControlType.kMAXMotionVelocityControl,
-                        ClosedLoopSlot.kSlot0, m_feedforward.calculate(speed)));
-
         m_odometry = new MecanumDriveOdometry(DriveConstants.kDriveKinematics, m_gyro.getRotation2d(),
                 getWheelPositions());
-
-        // sets the deadband
-        m_drive.setDeadband(DriveConstants.kDeadband);
-
-        // we want the speeds passed into the set speed functions to be in meters per
-        // second
-        m_drive.setMaxOutput(DriveConstants.kMaxSpeedMetersPerSecond);
 
         m_driveTab.addNumber("Robot X (m)", () -> m_odometry.getPoseMeters().getX());
         m_driveTab.addNumber("Robot Y (m)", () -> m_odometry.getPoseMeters().getY());
@@ -157,7 +144,7 @@ public class DriveTrain extends SubsystemBase {
         m_driveTab.add("Field", m_field);
 
         AutoBuilder.configure(m_odometry::getPoseMeters, this::resetOdometry, this::getChassisSpeeds,
-                this::driveRobotRelative, AutoConstants.kAutoController, AutoConstants.kRobotConfig, () -> false, this);
+                this::drive, AutoConstants.kAutoController, AutoConstants.kRobotConfig, () -> false, this);
     }
 
     /**
@@ -171,27 +158,40 @@ public class DriveTrain extends SubsystemBase {
      *                  Counterclockwise is positive.
      */
     public void drive(double xSpeed, double ySpeed, double zRotation) {
-        m_drive.driveCartesian(xSpeed, ySpeed, zRotation, m_gyro.getRotation2d());
+        xSpeed *= DriveConstants.kMaxForwardSpeedMetersPerSecond;
+        ySpeed *= DriveConstants.kMaxStrafeSpeedMetersPerSecond;
+        zRotation *= DriveConstants.kMaxRotationSpeedRadiansPerSecond;
+
+        m_rotationSetpoint = m_rotationSetpoint
+                .plus(Rotation2d.fromRadians(zRotation).times(TimedRobot.kDefaultPeriod));
+
+        // continuously adjust for potential drift
+        zRotation = m_rotationController.calculate(m_gyro.getRotation2d().getRadians(),
+                m_rotationSetpoint.getRadians());
+
+        drive(ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, zRotation,
+                m_gyro.getRotation2d().minus(m_fieldRelativeOffset)));
     }
 
     /**
      * Drives the robot based on raw robot relative {@link ChassisSpeeds}.
      * 
-     * @param speeds
+     * @param speeds The speeds to drive the robot with.
      */
-    public void driveRobotRelative(ChassisSpeeds speeds) {
+    public void drive(ChassisSpeeds speeds) {
         MecanumDriveWheelSpeeds wheelSpeeds = DriveConstants.kDriveKinematics.toWheelSpeeds(speeds);
 
-        m_frontLeftClosedLoop.setReference(wheelSpeeds.frontLeftMetersPerSecond, ControlType.kVelocity,
+        m_frontLeftClosedLoop.setReference(wheelSpeeds.frontLeftMetersPerSecond, ControlType.kMAXMotionVelocityControl,
                 ClosedLoopSlot.kSlot0, m_feedforward.calculate(wheelSpeeds.frontLeftMetersPerSecond));
 
-        m_rearLeftClosedLoop.setReference(wheelSpeeds.rearLeftMetersPerSecond, ControlType.kVelocity,
+        m_rearLeftClosedLoop.setReference(wheelSpeeds.rearLeftMetersPerSecond, ControlType.kMAXMotionVelocityControl,
                 ClosedLoopSlot.kSlot0, m_feedforward.calculate(wheelSpeeds.rearLeftMetersPerSecond));
 
-        m_frontRightClosedLoop.setReference(wheelSpeeds.frontRightMetersPerSecond, ControlType.kVelocity,
+        m_frontRightClosedLoop.setReference(wheelSpeeds.frontRightMetersPerSecond,
+                ControlType.kMAXMotionVelocityControl,
                 ClosedLoopSlot.kSlot0, m_feedforward.calculate(wheelSpeeds.frontRightMetersPerSecond));
 
-        m_rearRightClosedLoop.setReference(wheelSpeeds.rearRightMetersPerSecond, ControlType.kVelocity,
+        m_rearRightClosedLoop.setReference(wheelSpeeds.rearRightMetersPerSecond, ControlType.kMAXMotionVelocityControl,
                 ClosedLoopSlot.kSlot0, m_feedforward.calculate(wheelSpeeds.rearRightMetersPerSecond));
     }
 
@@ -217,27 +217,29 @@ public class DriveTrain extends SubsystemBase {
      */
     public Command driveJoysticks(DoubleSupplier xSpeedSupplier, DoubleSupplier ySpeedSupplier,
             DoubleSupplier zRotationSupplier) {
-        return run(() -> {
+        return runOnce(this::resetRotationSetpoint).andThen(run(() -> {
             double xSpeed = -xSpeedSupplier.getAsDouble();
             double ySpeed = -ySpeedSupplier.getAsDouble();
             double zRotation = -zRotationSupplier.getAsDouble();
 
-            xSpeed = ControllerUtils.axisSensitivity(xSpeed, DriveConstants.kXAxisSensitvity,
-                    DriveConstants.kXAxisMaxOutput);
-            ySpeed = ControllerUtils.axisSensitivity(ySpeed, DriveConstants.kYAxisSensitvity,
-                    DriveConstants.kYAxisMaxOutput);
-            zRotation = ControllerUtils.axisSensitivity(zRotation, DriveConstants.kRotationAxisSensitivity,
-                    DriveConstants.kRotationAxisMaxOutput);
+            xSpeed = MathUtil.applyDeadband(
+                    ControllerUtils.axisSensitivity(xSpeed, DriveConstants.kXAxisSensitvity), DriveConstants.kDeadband);
+            ySpeed = MathUtil.applyDeadband(
+                    ControllerUtils.axisSensitivity(ySpeed, DriveConstants.kYAxisSensitvity), DriveConstants.kDeadband);
+            zRotation = MathUtil.applyDeadband(
+                    ControllerUtils.axisSensitivity(zRotation, DriveConstants.kRotationAxisSensitivity),
+                    DriveConstants.kDeadband);
 
             drive(xSpeed, ySpeed, zRotation);
-        });
+        }));
     }
 
     /**
      * Stops the robot.
      */
     public void stopDrive() {
-        m_drive.stopMotor();
+        resetRotationSetpoint();
+        drive(0, 0, 0);
     }
 
     /**
@@ -281,6 +283,14 @@ public class DriveTrain extends SubsystemBase {
     }
 
     /**
+     * Resets the current rotation setpoint to the current rotation.
+     */
+    private void resetRotationSetpoint() {
+        m_rotationSetpoint = m_gyro.getRotation2d();
+        m_rotationController.reset();
+    }
+
+    /**
      * Sets the {@link IdleMode} for all drivetrain motors. This will not persist
      * through power cycles.
      * 
@@ -294,6 +304,19 @@ public class DriveTrain extends SubsystemBase {
                 m_rearLeftMotor }) {
             motor.configure(config, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
         }
+    }
+
+    /**
+     * Creates a {@link Command} that resets the drive train's field relative controls offset.
+     * @return The command.
+     */
+    public Command resetFieldRelative() {
+        return runOnce(() -> {
+            if (DriverStation.isFMSAttached())
+                return;
+
+            m_fieldRelativeOffset = m_gyro.getRotation2d();
+        }).ignoringDisable(true);
     }
 
     @Override
