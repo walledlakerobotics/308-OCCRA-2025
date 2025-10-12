@@ -222,12 +222,6 @@ public final class Constants {
         /** Whether to invert the direction of the arm motor. */
         public static final boolean kArmMotorInverted = false;
 
-        /** The reduction causes by the gear ratio of the motor. */
-        public static final double kGearReduction = 1;
-        /** The position conversion factor of the arm encoder. */
-        public static final double kPositionEncoderConversionFactor = 1 / kGearReduction;
-        /** The velocity conversion factor of the arm encoder. */
-        public static final double kVelocityEncoderConversionFactor = 1 / kGearReduction / 60;
         /** The maximum speed of the arm in rotations per second. */
         public static final double kArmMaxSpeedRPS = 0.5;
         /** The maximum acceleration of the arm in rotations per second squared. */
@@ -246,24 +240,18 @@ public final class Constants {
         /** The D for the arm PID controller. */
         public static final double kArmD = 0;
 
-        /** The S gain for the arm feedforward. */
-        public static final double kArmS = 0;
         /** The gravity gain for the arm feedforward. */
         public static final double kArmG = 0.02;
-        /** The V gain for the arm feedforward. */
-        public static final double kArmV = 0;
-        /** The A gain for the arm feedforward. */
-        public static final double kArmA = 0;
 
         /** The speed to move the arm at while intaking. */
         public static final double kArmIntakingSpeed = 0.1;
 
-        /** The angles of the arm for each reef level. */
+        /** The angles of the arm for each elevator level. */
         public static final Rotation2d[] kArmLevelAngles = {
-                Rotation2d.kZero,
-                Rotation2d.fromDegrees(32.4),
-                Rotation2d.fromDegrees(32.4),
-                Rotation2d.fromDegrees(32.4)
+                Rotation2d.kCCW_90deg,
+                Rotation2d.kCCW_90deg,
+                Rotation2d.kCCW_90deg,
+                Rotation2d.kCCW_90deg
         };
     }
 

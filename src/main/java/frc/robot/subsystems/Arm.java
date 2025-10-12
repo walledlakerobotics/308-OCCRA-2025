@@ -66,8 +66,7 @@ public class Arm extends SubsystemBase {
             .smartCurrentLimit(ArmConstants.kSmartCurrentLimit)
             .idleMode(ArmConstants.kIdleMode);
         armMotorConf.absoluteEncoder
-            .positionConversionFactor(ArmConstants.kPositionEncoderConversionFactor)
-            .velocityConversionFactor(ArmConstants.kVelocityEncoderConversionFactor);
+            .velocityConversionFactor(1 / 60);
 
         m_armMotor.configure(armMotorConf, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
