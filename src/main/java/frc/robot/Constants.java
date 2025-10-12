@@ -14,6 +14,7 @@ import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.MecanumDriveKinematics;
 import edu.wpi.first.math.util.Units;
+import frc.robot.subsystems.Arm;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
@@ -73,7 +74,7 @@ public final class Constants {
         public static final double kMaxRotationSpeedRadiansPerSecond = 4 * Math.PI;
 
         // PID constants for controlling wheel velocity
-        public static final double kVelocityP = 0.1;
+        public static final double kVelocityP = 0.3;
         public static final double kVelocityI = 0.0;
         public static final double kVelocityD = 0.0;
 
