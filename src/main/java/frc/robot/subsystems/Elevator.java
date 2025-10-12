@@ -17,7 +17,6 @@ import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.Constants.ElevatorConstants;
 
 public class Elevator extends SubsystemBase {
-
     private SparkMax m_elevatorLeader, m_elevatorFollower;
     private RelativeEncoder m_elevatorEncoder;
     private ProfiledPIDController m_elevatorPIDController;
@@ -36,8 +35,8 @@ public class Elevator extends SubsystemBase {
                 ElevatorConstants.kElevatorI,
                 ElevatorConstants.kElevatorD,
                 new Constraints(
-                        ElevatorConstants.kElevatorMaxSpeedInchesPerSecond,
-                        ElevatorConstants.kElevatorMaxAccelerationInchesPerSecondSquared));
+                        ElevatorConstants.kElevatorMaxSpeedMetersPerSecond,
+                        ElevatorConstants.kElevatorMaxAccelerationMetersPerSecondSquared));
 
         // limit switches
         m_bottomLimit = new DigitalInput(ElevatorConstants.kBottomInputChannel);
@@ -52,8 +51,8 @@ public class Elevator extends SubsystemBase {
                 .inverted(ElevatorConstants.kLeaderMotorInverted);
 
         config.encoder
-                .positionConversionFactor(ElevatorConstants.kElevatorEncoderPositionFactor)
-                .velocityConversionFactor(ElevatorConstants.kElevatorEncoderVelocityFactor);
+                .positionConversionFactor(ElevatorConstants.kElevatorRotationsToMeters)
+                .velocityConversionFactor(ElevatorConstants.kElevatorRotationsPerMinuteToMetersPerSecond);
 
         m_elevatorLeader.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
@@ -81,7 +80,7 @@ public class Elevator extends SubsystemBase {
     }
 
     /**
-     * this is presets for the elevator
+     * Moves the elevator to the height of the specified level index.
      * 
      * @param index
      */
