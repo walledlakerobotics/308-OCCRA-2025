@@ -77,6 +77,11 @@ public final class Constants {
         public static final double kVelocityI = 0.0;
         public static final double kVelocityD = 0.0;
 
+        // PID constants for controlling robot rotation
+        public static final double kRotationP = 0.3;
+        public static final double kRotationI = 0.0;
+        public static final double kRotationD = 0.0;
+
         // physical constants
         public static final double kWheelRadius = Units.inchesToMeters(3);
         public static final double kWheelDiameter = 2 * kWheelRadius;
