@@ -26,7 +26,7 @@ public class Elevator extends SubsystemBase {
     private boolean m_isPIDMode = false;
 
     public Elevator() {
-        // sets motor's
+        // sets motors
         m_elevatorLeader = new SparkMax(ElevatorConstants.kElevatorLeaderMotorId, MotorType.kBrushless);
         m_elevatorFollower = new SparkMax(ElevatorConstants.kElevatorFollowerMotorId, MotorType.kBrushless);
 
