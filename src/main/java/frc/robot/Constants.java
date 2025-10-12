@@ -161,7 +161,7 @@ public final class Constants {
         /** The gravity feed forward for the elevator. */
         public static final double kElevatorG = 0;
         // current limit
-        public static final int kSmartCurrentLimit = 60;
+        public static final int kSmartCurrentLimit = 30;
 
         /** The reduction in distance calculated by endcoders due to gear ratio. */
         public static final double kElevatorReduction = 20;
@@ -256,7 +256,6 @@ public final class Constants {
     }
 
     public static final class IntakeConstants {
-
         private IntakeConstants() {
             throw new UnsupportedOperationException("This is a constants class!");
         }
@@ -265,14 +264,19 @@ public final class Constants {
         public static final int kLeaderMotorId = 0;
         public static final int kFollowerMotorId = 0;
 
-        // sets if the motors are inverted
+        // whether to invert the motors
         public static final boolean kLeaderMotorInverted = false;
         public static final boolean kFollowerMotorInverted = false;
 
         // current limit of the motors
-        public static final int kSmartCurrentLimit = 0;
-        /** The idle mode of the motor. */
+        public static final int kSmartCurrentLimit = 30;
+
+        // idle mode of the motors
         public static final IdleMode kIdleMode = IdleMode.kBrake;
+
+        // speeds when intaking and outtaking
+        public static final double kIntakeSpeed = 0.5;
+        public static final double kOuttakeSpeed = 0.5;
 
     }
 }

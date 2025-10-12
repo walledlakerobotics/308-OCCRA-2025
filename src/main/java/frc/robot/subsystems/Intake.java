@@ -43,7 +43,7 @@ public class Intake extends SubsystemBase {
     /**
      * Sets the speed of the two motors.
      * 
-     * @param speed <- passes the speed into the motor.
+     * @param speed The speed to set.
      */
     public void setSpeed(double speed) {
         m_leaderMotor.set(speed);
@@ -55,8 +55,8 @@ public class Intake extends SubsystemBase {
      * @return
      */
     public Command intake() {
-        return runOnce(
-                () -> setSpeed(0))
+        return runOnce(() -> setSpeed(IntakeConstants.kIntakeSpeed))
+                .andThen(run(() -> {}))
                 .finallyDo(() -> setSpeed(0));
     }
 
@@ -65,9 +65,9 @@ public class Intake extends SubsystemBase {
      * 
      * @return
      */
-    public Command deploy() {
-        return runOnce(
-                () -> setSpeed(0))
+    public Command outtake() {
+        return runOnce(() -> setSpeed(-IntakeConstants.kOuttakeSpeed))
+                .andThen(run(() -> {}))
                 .finallyDo(() -> setSpeed(0));
     }
 }
