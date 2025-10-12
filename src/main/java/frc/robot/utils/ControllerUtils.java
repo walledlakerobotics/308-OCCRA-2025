@@ -18,11 +18,9 @@ public class ControllerUtils {
      * @param raw         The raw value from the axis in the range [-1, 1].
      * @param sensitivity The sensitivity factor. 1 does nothing, less than 1 makes
      *                    it less sensitive, greater than 1 makes it more sensitive.
-     * @param max         The raw value will be multiplied by this after applying
-     *                    sensitivity such that it will be the max output value
-     * @return The adjusted axis value in the range [-max, max].
+     * @return The adjusted axis value in the range [-1, 1].
      */
-    public static double axisSensitivity(double raw, double sensitivity, double max) {
-        return max * Math.signum(raw) * Math.pow(raw, 1 / sensitivity);
+    public static double axisSensitivity(double raw, double sensitivity) {
+        return Math.signum(raw) * Math.pow(Math.abs(raw), 1 / sensitivity);
     }
 }
