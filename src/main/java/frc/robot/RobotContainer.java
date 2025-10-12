@@ -12,7 +12,6 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -61,10 +60,10 @@ public class RobotContainer {
      */
     private void configureBindings() {
         m_driveTrain.setDefaultCommand(
-                m_driveTrain.driveJoysticks(m_driverController::getLeftY, m_driverController::getLeftX,
+                m_driveTrain.drive(m_driverController::getLeftY, m_driverController::getLeftX,
                         m_driverController::getRightX));
 
-        m_driverController.a().onTrue(new InstantCommand(m_driveTrain::resetFieldRelative));
+        m_driverController.a().onTrue(m_driveTrain.resetFieldRelative());
     }
 
     /**
