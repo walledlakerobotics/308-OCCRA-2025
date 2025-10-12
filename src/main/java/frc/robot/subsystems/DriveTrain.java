@@ -83,7 +83,7 @@ public class DriveTrain extends SubsystemBase {
         m_frontLeftMotorFollower.setInverted(DriveConstants.kLeftMotorsInverted);
         m_backLeftMotorFollower.setInverted(DriveConstants.kLeftMotorsInverted);
 
-        // right side motors=
+        // right side motors
         m_frontRightMotor.configAllSettings(config);
         m_backRightMotor.configAllSettings(config);
 
