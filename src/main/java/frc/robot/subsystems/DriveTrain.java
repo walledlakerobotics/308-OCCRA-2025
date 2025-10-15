@@ -61,9 +61,10 @@ public class DriveTrain extends SubsystemBase {
 
     private Rotation2d m_fieldRelativeOffset = Rotation2d.kZero;
 
-    private Rotation2d m_rotationSetpoint = Rotation2d.kZero;
+    private Rotation2d m_rotationSetpoint = m_gyro.getRotation2d();
     private PIDController m_rotationController = new PIDController(DriveConstants.kRotationP, DriveConstants.kRotationI,
             DriveConstants.kRotationD);
+    private boolean m_wasZRotationZero = false;
 
     /**
      * Constructs a {@link DriveTrain}.
@@ -96,6 +97,11 @@ public class DriveTrain extends SubsystemBase {
 
         m_frontRightMotorFollower.setInverted(DriveConstants.kRightMotorsInverted);
         m_backRightMotorFollower.setInverted(DriveConstants.kRightMotorsInverted);
+
+        m_frontLeftMotorFollower.configAllSettings(config);
+        m_frontRightMotorFollower.configAllSettings(config);
+        m_backLeftMotorFollower.configAllSettings(config);
+        m_backRightMotorFollower.configAllSettings(config);
 
         m_frontLeftMotor.setNeutralMode(DriveConstants.kMotorNeutralMode);
         m_backLeftMotor.setNeutralMode(DriveConstants.kMotorNeutralMode);
@@ -145,12 +151,17 @@ public class DriveTrain extends SubsystemBase {
         ySpeed *= DriveConstants.kMaxStrafeSpeedMetersPerSecond;
         zRotation *= DriveConstants.kMaxRotationSpeedRadiansPerSecond;
 
-        m_rotationSetpoint = m_rotationSetpoint
-                .plus(Rotation2d.fromRadians(zRotation).times(TimedRobot.kDefaultPeriod));
+        if (Math.abs(zRotation) < 0.05) {
+            if (!m_wasZRotationZero) {
+                m_rotationSetpoint = m_gyro.getRotation2d();
+                m_wasZRotationZero = true;
+            }
 
-        // continuously adjust for potential drift
-        zRotation = m_rotationController.calculate(m_gyro.getRotation2d().getRadians(),
-                m_rotationSetpoint.getRadians());
+            zRotation = m_rotationController.calculate(m_gyro.getRotation2d().getRadians(),
+                    m_rotationSetpoint.getRadians());
+        } else {
+            m_wasZRotationZero = false;
+        }
 
         SmartDashboard.putNumber("Field Relative",
                 m_gyro.getRotation2d().minus(m_fieldRelativeOffset).getDegrees());
@@ -168,12 +179,23 @@ public class DriveTrain extends SubsystemBase {
         SmartDashboard.putNumber("X Speed", speeds.vxMetersPerSecond);
         SmartDashboard.putNumber("Y Speed", speeds.vyMetersPerSecond);
         SmartDashboard.putNumber("R Speed", speeds.omegaRadiansPerSecond);
+        SmartDashboard.putNumber("R Setpoint", m_rotationSetpoint.getRadians());
 
         MecanumDriveWheelSpeeds wheelSpeeds = DriveConstants.kDriveKinematics.toWheelSpeeds(speeds);
 
         SmartDashboard.putNumber("Front Left", wheelSpeeds.frontLeftMetersPerSecond);
         SmartDashboard.putNumber("Front Left Pos", getWheelPositions().frontLeftMeters);
         SmartDashboard.putNumber("Conversion", DriveConstants.kRawPer100msToMetersPerSecond);
+
+        SmartDashboard.putNumber("Front Left Volt", m_frontLeftMotor.getMotorOutputVoltage());
+        SmartDashboard.putNumber("Front Right Volt", m_frontRightMotor.getMotorOutputVoltage());
+        SmartDashboard.putNumber("Rear Left Volt", m_backLeftMotor.getMotorOutputVoltage());
+        SmartDashboard.putNumber("Rear Right Volt", m_backRightMotor.getMotorOutputVoltage());
+
+        SmartDashboard.putNumber("Front Left Follower Volt", m_frontLeftMotorFollower.getMotorOutputVoltage());
+        SmartDashboard.putNumber("Front Right Follower Volt", m_frontRightMotorFollower.getMotorOutputVoltage());
+        SmartDashboard.putNumber("Rear Left Follower Volt", m_backLeftMotorFollower.getMotorOutputVoltage());
+        SmartDashboard.putNumber("Rear Right Follower Volt", m_backRightMotorFollower.getMotorOutputVoltage());
 
         m_frontLeftMotor.set(ControlMode.Velocity, wheelSpeeds.frontLeftMetersPerSecond
                 / DriveConstants.kRawPer100msToMetersPerSecond);
@@ -207,7 +229,7 @@ public class DriveTrain extends SubsystemBase {
      */
     public Command drive(DoubleSupplier xSpeedSupplier, DoubleSupplier ySpeedSupplier,
             DoubleSupplier zRotationSupplier) {
-        return runOnce(this::resetRotationSetpoint).andThen(run(() -> {
+        return runOnce(this::resetRotationCorrection).andThen(run(() -> {
             double xSpeed = -xSpeedSupplier.getAsDouble();
             double ySpeed = -ySpeedSupplier.getAsDouble();
             double zRotation = -zRotationSupplier.getAsDouble();
@@ -227,7 +249,7 @@ public class DriveTrain extends SubsystemBase {
      * Stops the robot.
      */
     public void stopDrive() {
-        resetRotationSetpoint();
+        resetRotationCorrection();
         drive(0, 0, 0);
     }
 
@@ -275,9 +297,10 @@ public class DriveTrain extends SubsystemBase {
         m_odometry.resetPosition(m_gyro.getRotation2d(), getWheelPositions(), pose);
     }
 
-    private void resetRotationSetpoint() {
+    private void resetRotationCorrection() {
         m_rotationSetpoint = m_gyro.getRotation2d();
         m_rotationController.reset();
+        m_wasZRotationZero = false;
     }
 
     /**
