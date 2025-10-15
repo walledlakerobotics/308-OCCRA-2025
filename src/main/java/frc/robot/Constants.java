@@ -74,12 +74,12 @@ public final class Constants {
         public static final double kMaxRotationSpeedRadiansPerSecond = 4 * Math.PI;
 
         // PID constants for controlling wheel velocity
-        public static final double kVelocityP = 0.3;
+        public static final double kVelocityP = 0.2;
         public static final double kVelocityI = 0.0;
-        public static final double kVelocityD = 0.0;
+        public static final double kVelocityD = 0.1;
 
         // PID constants for controlling robot rotation
-        public static final double kRotationP = 0.3;
+        public static final double kRotationP = 3;
         public static final double kRotationI = 0.0;
         public static final double kRotationD = 0.0;
 
