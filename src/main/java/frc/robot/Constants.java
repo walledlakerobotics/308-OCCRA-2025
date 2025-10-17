@@ -208,7 +208,7 @@ public final class Constants {
     }
 
     /**
-     * Describe how the {@link Arm} should rotate the coral arm.
+     * Describe how the {@link Arm} should rotate the arm.
      */
     public static final class ArmConstants {
         private ArmConstants() {

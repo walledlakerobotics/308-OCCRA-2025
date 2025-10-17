@@ -27,10 +27,10 @@ import frc.robot.Constants.ArmConstants;
 import frc.robot.utils.Utils;
 
 /**
- * Subsystem that controls the coral arm of the robot.
+ * Subsystem that controls the arm of the robot.
  */
 public class Arm extends SubsystemBase {
-    /** The motor controller for the coral arm. */
+    /** The motor controller for the arm. */
     public final SparkMax m_armMotor = new SparkMax(ArmConstants.kArmMotorCanId, MotorType.kBrushless);
     /** The encoder for measuring the position and velocity of the motor. */
     private final AbsoluteEncoder m_armEncoder;
@@ -54,7 +54,7 @@ public class Arm extends SubsystemBase {
     private final ShuffleboardTab m_armTab = Shuffleboard.getTab("Arm");
 
     /**
-     * Constructs an {@link ArmSubsystem} that controls the coral arm of the robot.
+     * Constructs an {@link ArmSubsystem} that controls the arm of the robot.
      */
     public Arm() {
         SparkMaxConfig armMotorConf = new SparkMaxConfig();
@@ -155,7 +155,7 @@ public class Arm extends SubsystemBase {
     }
 
     /**
-     * Gets the current angle of the coral arm.
+     * Gets the current angle of the arm.
      * 
      * @return The current angle of the arm.
      */
@@ -195,7 +195,7 @@ public class Arm extends SubsystemBase {
     }
 
     /**
-     * Stops movement of the coral arm.
+     * Stops movement of the arm.
      */
     public void stop() {
         setAngle(getAngle());
