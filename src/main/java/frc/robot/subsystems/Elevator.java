@@ -105,7 +105,7 @@ public class Elevator extends SubsystemBase {
             // by preventing the speed from being negative
             velocity = Math.max(0, velocity);
         } else if (isAtTop() || getHeight() >= ElevatorConstants.kElevatorMaxHeight) {
-            // Prevent the elevator from going doupwn when it reaches the top
+            // Prevent the elevator from going down when it reaches the top
             // by preventing the speed from being positive
             velocity = Math.min(0, velocity);
         }
