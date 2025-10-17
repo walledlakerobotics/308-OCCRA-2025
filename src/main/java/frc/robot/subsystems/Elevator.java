@@ -80,7 +80,7 @@ public class Elevator extends SubsystemBase {
         height = MathUtil.clamp(height, 0, ElevatorConstants.kTopSwitchHeight);
         m_elevatorGoal = height;
 
-        m_elevatorPIDController.setReference(height, ControlType.kPosition, ClosedLoopSlot.kSlot0,
+        m_elevatorPIDController.setReference(height, ControlType.kMAXMotionPositionControl, ClosedLoopSlot.kSlot0,
                 ElevatorConstants.kElevatorG);
     }
 
