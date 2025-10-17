@@ -247,14 +247,6 @@ public final class Constants {
 
         /** The speed to move the arm at while intaking. */
         public static final double kArmIntakingSpeed = 0.1;
-
-        /** The angles of the arm for each elevator level. */
-        public static final Rotation2d[] kArmLevelAngles = {
-                Rotation2d.kCCW_90deg,
-                Rotation2d.kCCW_90deg,
-                Rotation2d.kCCW_90deg,
-                Rotation2d.kCCW_90deg
-        };
     }
 
     public static final class IntakeConstants {
