@@ -54,7 +54,7 @@ public class Elevator extends SubsystemBase {
 
         config.closedLoop.maxMotion
                 .maxVelocity(ElevatorConstants.kElevatorMaxSpeedMetersPerSecond)
-                .maxVelocity(ElevatorConstants.kElevatorMaxAccelerationMetersPerSecondSquared);
+                .maxAcceleration(ElevatorConstants.kElevatorMaxAccelerationMetersPerSecondSquared);
 
         m_elevatorLeader.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
