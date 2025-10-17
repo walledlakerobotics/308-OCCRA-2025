@@ -37,24 +37,21 @@ public class Arm extends SubsystemBase {
 
     /** The {@link ProfiledPIDController} for the arm motor. */
     private final ProfiledPIDController m_angleController = new ProfiledPIDController(
-        ArmConstants.kArmP,
-        ArmConstants.kArmI,
-        ArmConstants.kArmD,
-        new TrapezoidProfile.Constraints(
-            ArmConstants.kArmMaxSpeedRPS,
-            ArmConstants.kArmMaxAccelerationRPSSquared
-        )
-    );
+            ArmConstants.kArmP,
+            ArmConstants.kArmI,
+            ArmConstants.kArmD,
+            new TrapezoidProfile.Constraints(
+                    ArmConstants.kArmMaxSpeedRPS,
+                    ArmConstants.kArmMaxAccelerationRPSSquared));
 
     /** Whether to use PID or not. */
     private boolean m_isPIDMode = true;
 
     /** What speed to set the arm to (when not in PID mode) */
-    private double m_armSpeed = 0;
+    private double m_armPercentOut = 0;
 
     /** A {@link SuffleboardTab} to write arm properties to the dashboard. */
     private final ShuffleboardTab m_armTab = Shuffleboard.getTab("Arm");
-
 
     /**
      * Constructs an {@link ArmSubsystem} that controls the coral arm of the robot.
@@ -62,11 +59,11 @@ public class Arm extends SubsystemBase {
     public Arm() {
         SparkMaxConfig armMotorConf = new SparkMaxConfig();
         armMotorConf
-            .inverted(ArmConstants.kArmMotorInverted)
-            .smartCurrentLimit(ArmConstants.kSmartCurrentLimit)
-            .idleMode(ArmConstants.kIdleMode);
+                .inverted(ArmConstants.kArmMotorInverted)
+                .smartCurrentLimit(ArmConstants.kSmartCurrentLimit)
+                .idleMode(ArmConstants.kIdleMode);
         armMotorConf.absoluteEncoder
-            .velocityConversionFactor(1 / 60);
+                .velocityConversionFactor(1 / 60);
 
         m_armMotor.configure(armMotorConf, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
@@ -75,29 +72,29 @@ public class Arm extends SubsystemBase {
         m_armTab.addDouble("Arm Angle", () -> Utils.roundToNearest(getAngle().getDegrees(), 2));
         m_armTab.addDouble("Arm Velocity", () -> Utils.roundToNearest(getVelocity().getDegrees(), 2));
 
-        m_armTab.addDouble("Arm Angle Setpoint", () -> 
-            Utils.roundToNearest(Units.rotationsToDegrees(m_angleController.getSetpoint().position), 2));
-        m_armTab.addDouble("Arm Velocity Setpoint", () -> 
-            Utils.roundToNearest(Units.rotationsToDegrees(m_angleController.getSetpoint().velocity), 2));
+        m_armTab.addDouble("Arm Angle Setpoint",
+                () -> Utils.roundToNearest(Units.rotationsToDegrees(m_angleController.getSetpoint().position), 2));
+        m_armTab.addDouble("Arm Velocity Setpoint",
+                () -> Utils.roundToNearest(Units.rotationsToDegrees(m_angleController.getSetpoint().velocity), 2));
 
-        m_armTab.addDouble("Arm Angle Goal", () -> 
-            Utils.roundToNearest(Units.rotationsToDegrees(m_angleController.getGoal().position), 2));
-        m_armTab.addDouble("Arm Velocity Goal", () -> 
-            Utils.roundToNearest(Units.rotationsToDegrees(m_angleController.getGoal().velocity), 2));
+        m_armTab.addDouble("Arm Angle Goal",
+                () -> Utils.roundToNearest(Units.rotationsToDegrees(m_angleController.getGoal().position), 2));
+        m_armTab.addDouble("Arm Velocity Goal",
+                () -> Utils.roundToNearest(Units.rotationsToDegrees(m_angleController.getGoal().velocity), 2));
 
         Utils.configureSysID(
-            m_armTab.getLayout("Arm SysID", BuiltInLayouts.kList), this, 
-            () -> m_isPIDMode = false,
-            voltage -> {
-                m_armMotor.setVoltage(voltage);
-            }
-        );
+                m_armTab.getLayout("Arm SysID", BuiltInLayouts.kList), this,
+                () -> m_isPIDMode = false,
+                voltage -> {
+                    m_armMotor.setVoltage(voltage);
+                });
 
         m_angleController.enableContinuousInput(0, 1);
     }
 
     /**
      * Resets and sets the goal of the angle PID controller.
+     * 
      * @param angle The angle to set as a {@link Rotation2d}.
      */
     public void setAngle(Rotation2d angle) {
@@ -105,15 +102,15 @@ public class Arm extends SubsystemBase {
 
         Rotation2d constrainedAngle = Rotation2d.fromDegrees(Utils.angleConstrain(angle.getDegrees()));
         m_angleController.reset(
-            getAngle().getRotations(),
-            getVelocity().getRotations()
-        );
+                getAngle().getRotations(),
+                getVelocity().getRotations());
 
         m_angleController.setGoal(constrainedAngle.getRotations());
     }
 
     /**
      * Creates a command the moves the arm to the specified angle.
+     * 
      * @param angle The angle the arm should move to as a {@link Rotation2d}.
      * @return The runnable command.
      */
@@ -123,17 +120,21 @@ public class Arm extends SubsystemBase {
 
     /**
      * Creates a command the moves the arm to the specified angle.
-     * @param angle The angle the arm should move to as a {@link Rotation2d}.
-     * @param endImmediately Whether the command should end immediately or wait until the elevator has reached the angle.
+     * 
+     * @param angle          The angle the arm should move to as a
+     *                       {@link Rotation2d}.
+     * @param endImmediately Whether the command should end immediately or wait
+     *                       until the elevator has reached the angle.
      * @return The runnable command.
      */
     public Command goToAngle(Rotation2d angle, boolean endImmediately) {
         return runOnce(() -> setAngle(angle))
-            .andThen(new WaitUntilCommand(() -> m_angleController.atGoal() || endImmediately));
+                .andThen(new WaitUntilCommand(() -> m_angleController.atGoal() || endImmediately));
     }
 
     /**
      * Creates a command the moves the arm to the specified angle.
+     * 
      * @param index The index of the level the arm should move to.
      * @return The runnable command.
      */
@@ -143,8 +144,10 @@ public class Arm extends SubsystemBase {
 
     /**
      * Creates a command the moves the arm to the specified angle.
-     * @param index The index of the level the arm should move to.
-     * @param endImmediately Whether the command should end immediately or wait until the elevator has reached the angle.
+     * 
+     * @param index          The index of the level the arm should move to.
+     * @param endImmediately Whether the command should end immediately or wait
+     *                       until the elevator has reached the angle.
      * @return The runnable command.
      */
     public Command goToLevel(int index, boolean endImmediately) {
@@ -153,6 +156,7 @@ public class Arm extends SubsystemBase {
 
     /**
      * Gets the current angle of the coral arm.
+     * 
      * @return The current angle of the arm.
      */
     public Rotation2d getAngle() {
@@ -161,6 +165,7 @@ public class Arm extends SubsystemBase {
 
     /**
      * Gets the current velocity of the arm.
+     * 
      * @return The velocity of the arm as a {@link Rotation2d} object.
      */
     public Rotation2d getVelocity() {
@@ -169,16 +174,20 @@ public class Arm extends SubsystemBase {
 
     /**
      * Sets the velocity of the arm motor.
-     * @param velocity The velocity to set the motor to from <code>-1</code> to <code>1</code>.
+     * 
+     * @param velocity The velocity to set the motor to from <code>-1</code> to
+     *                 <code>1</code>.
      */
     public void setVelocity(double velocity) {
         m_isPIDMode = false;
-        m_armSpeed = velocity;
+        m_armPercentOut = velocity;
     }
 
     /**
      * Creates a {@link Command} that takes the arm motor to the specified velocity.
-     * @param velocity The velocity the <code>Command</code> should take the arm motor to.
+     * 
+     * @param velocity The velocity the <code>Command</code> should take the arm
+     *                 motor to.
      * @return The runnable <code>Command</code>.
      */
     public Command goToVelocity(double velocity) {
@@ -195,19 +204,12 @@ public class Arm extends SubsystemBase {
     @Override
     public void periodic() {
         if (m_isPIDMode) {
-            // State setpoint = m_angleController.getSetpoint();
-            // double velocitySetpoint = Units.rotationsToRadians(setpoint.velocity);
-
             m_armMotor.set(
-                -m_angleController.calculate(getAngle().getRotations()) +
-                getAngle().getSin() * ArmConstants.kArmG
-                // m_armFeedforward.calculateWithVelocities(getAngle().getRadians(), getVelocity().getRadians(), velocitySetpoint)
-            );
-        }
-        else {
+                    -m_angleController.calculate(getAngle().getRotations()) +
+                            getAngle().getSin() * ArmConstants.kArmG);
+        } else {
             m_armMotor.set(
-                m_armSpeed + getAngle().getSin() * ArmConstants.kArmG
-            );
+                    m_armPercentOut + getAngle().getSin() * ArmConstants.kArmG);
         }
     }
 }
