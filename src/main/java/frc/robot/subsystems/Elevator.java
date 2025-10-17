@@ -88,7 +88,7 @@ public class Elevator extends SubsystemBase {
     /**
      * Moves the elevator to the height of the specified level index.
      * 
-     * @param index
+     * @param index The index of the level.
      */
     public void setLevel(int index) {
         setHeight(ElevatorConstants.kElevatorLevelHeights[index]);
