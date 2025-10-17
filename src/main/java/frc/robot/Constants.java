@@ -151,7 +151,7 @@ public final class Constants {
         // idlemode
         public static final IdleMode kElevatorIdleMode = IdleMode.kBrake;
         // max height of elevator
-        public static final double kElevatorMaxHeight = 0.5;
+        public static final double kTopSwitchHeight = 0.5;
         /** The P for the elevator PID. */
         public static final double kElevatorP = 1.3;
         /** The I for the elevator PID. */
@@ -162,6 +162,8 @@ public final class Constants {
         public static final double kElevatorG = 0;
         // current limit
         public static final int kSmartCurrentLimit = 30;
+
+        public static final double kErrorTolerance = 0.05;
 
         /** The reduction in distance calculated by endcoders due to gear ratio. */
         public static final double kElevatorReduction = 20;
