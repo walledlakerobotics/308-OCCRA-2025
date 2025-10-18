@@ -12,6 +12,7 @@ import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.Constants.ElevatorConstants;
@@ -84,7 +85,7 @@ public class Elevator extends SubsystemBase {
      * 
      * @param index The index of the level.
      */
-    public void setElevatorLevel(int index) {
+    public void setLevel(int index) {
         setHeight(ElevatorConstants.kElevatorLevelHeights[index]);
     }
 
@@ -123,15 +124,9 @@ public class Elevator extends SubsystemBase {
      * @return The runnable <code>Command</code>.
      */
     public Command goToHeight(double height, boolean endImmediately) {
-        if (height == 0) {
-            return runOnce(() -> setHeight(height))
-                    .andThen(new WaitUntilCommand(() -> m_elevatorPIDController.atGoal() | endImmediately))
-                    .andThen(zeroElevator())
-                    .withName("Go");
-        }
-
         return runOnce(() -> setHeight(height))
                 .andThen(new WaitUntilCommand(() -> m_elevatorPIDController.atGoal() || endImmediately))
+                .andThen(height == 0 ? zeroElevator() : Commands.none())
                 .withName("Go");
     }
 
@@ -272,11 +267,8 @@ public class Elevator extends SubsystemBase {
         final double currentHeight = getHeight();
 
         if (m_isPIDMode) {
-            // double velocitySetpoint = m_elevatorPIDController.getSetpoint().velocity;
             m_elevatorLeader.set(
                     m_elevatorPIDController.calculate(currentHeight) + ElevatorConstants.kElevatorG
-            // m_elevatorFeedforward.calculateWithVelocities(getElevatorVelocity(),
-            // velocitySetpoint)
             );
         }
 
