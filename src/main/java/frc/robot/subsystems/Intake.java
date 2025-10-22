@@ -7,6 +7,7 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.IntakeConstants;
 
@@ -15,29 +16,21 @@ import frc.robot.Constants.IntakeConstants;
  */
 public class Intake extends SubsystemBase {
 
-    private SparkMax m_leaderMotor, m_followerMotor;
-
+    private SparkMax m_IntakeMotor;
     /*
      * Constructs intake
      */
     public Intake() {
         SparkMaxConfig config = new SparkMaxConfig();
 
-        m_leaderMotor = new SparkMax(IntakeConstants.kLeaderMotorId, MotorType.kBrushless);
-        m_followerMotor = new SparkMax(IntakeConstants.kFollowerMotorId, MotorType.kBrushless);
+        m_IntakeMotor = new SparkMax(IntakeConstants.kLeaderMotorId, MotorType.kBrushless);
 
         config
                 .smartCurrentLimit(IntakeConstants.kSmartCurrentLimit)
                 .idleMode(IntakeConstants.kIdleMode)
                 .inverted(IntakeConstants.kLeaderMotorInverted);
 
-        m_leaderMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-
-        config
-                .inverted(IntakeConstants.kFollowerMotorInverted)
-                .follow(m_leaderMotor);
-
-        m_followerMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+        m_IntakeMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     }
 
     /**
@@ -46,7 +39,7 @@ public class Intake extends SubsystemBase {
      * @param speed The speed to set.
      */
     public void setSpeed(double speed) {
-        m_leaderMotor.set(speed);
+        m_IntakeMotor.set(speed);
     }
 
     /**
@@ -56,7 +49,7 @@ public class Intake extends SubsystemBase {
      */
     public Command intake() {
         return runOnce(() -> setSpeed(IntakeConstants.kIntakeSpeed))
-                .andThen(run(() -> {}))
+                .andThen(Commands.waitSeconds(IntakeConstants.kClawTime))
                 .finallyDo(() -> setSpeed(0));
     }
 
@@ -67,7 +60,8 @@ public class Intake extends SubsystemBase {
      */
     public Command outtake() {
         return runOnce(() -> setSpeed(-IntakeConstants.kOuttakeSpeed))
-                .andThen(run(() -> {}))
+                .andThen(Commands.waitSeconds(IntakeConstants.kClawTime))
                 .finallyDo(() -> setSpeed(0));
     }
+
 }

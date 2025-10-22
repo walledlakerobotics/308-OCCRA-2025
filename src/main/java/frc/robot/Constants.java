@@ -272,5 +272,6 @@ public final class Constants {
         public static final double kIntakeSpeed = 0.5;
         public static final double kOuttakeSpeed = 0.5;
 
+        public static final double kClawTime = 1;
     }
 }
