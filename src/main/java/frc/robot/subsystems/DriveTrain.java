@@ -30,7 +30,6 @@ import edu.wpi.first.math.kinematics.MecanumDriveOdometry;
 import edu.wpi.first.math.kinematics.MecanumDriveWheelPositions;
 import edu.wpi.first.math.kinematics.MecanumDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
@@ -161,12 +160,12 @@ public class DriveTrain extends SubsystemBase {
         ySpeed *= DriveConstants.kMaxStrafeSpeedMetersPerSecond;
         zRotation *= DriveConstants.kMaxRotationSpeedRadiansPerSecond;
 
-        m_rotationSetpoint = m_rotationSetpoint
-                .plus(Rotation2d.fromRadians(zRotation).times(TimedRobot.kDefaultPeriod));
+        // m_rotationSetpoint = m_rotationSetpoint
+        //         .plus(Rotation2d.fromRadians(zRotation).times(TimedRobot.kDefaultPeriod));
 
-        // continuously adjust for potential drift
-        zRotation = m_rotationController.calculate(m_gyro.getRotation2d().getRadians(),
-                m_rotationSetpoint.getRadians());
+        // // continuously adjust for potential drift
+        // zRotation = m_rotationController.calculate(m_gyro.getRotation2d().getRadians(),
+        //         m_rotationSetpoint.getRadians());
 
         drive(ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, zRotation,
                 m_gyro.getRotation2d().minus(m_fieldRelativeOffset)));
