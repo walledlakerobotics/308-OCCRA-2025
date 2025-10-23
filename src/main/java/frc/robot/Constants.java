@@ -249,8 +249,8 @@ public final class Constants {
         public static final double kArmIntakingSpeed = 0.1;
     }
 
-    public static final class IntakeConstants {
-        private IntakeConstants() {
+    public static final class ClawConstants {
+        private ClawConstants() {
             throw new UnsupportedOperationException("This is a constants class!");
         }
 
@@ -273,5 +273,8 @@ public final class Constants {
         public static final double kOuttakeSpeed = 0.5;
 
         public static final double kClawTime = 1;
+
+        public static final int kCloseInputChannel = 0;
+        public static final int kOpenInputChannel = 0;
     }
 }

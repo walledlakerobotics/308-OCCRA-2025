@@ -6,29 +6,34 @@ import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.IntakeConstants;
+import frc.robot.Constants.ClawConstants;
 
 /*
  *  A subsystem that controls the intake motor's
  */
-public class Intake extends SubsystemBase {
+public class Claw extends SubsystemBase {
 
     private SparkMax m_IntakeMotor;
+    private DigitalInput m_CloseSwitch, m_OpenSwitch;
     /*
      * Constructs intake
      */
-    public Intake() {
+    public Claw() {
         SparkMaxConfig config = new SparkMaxConfig();
 
-        m_IntakeMotor = new SparkMax(IntakeConstants.kLeaderMotorId, MotorType.kBrushless);
+        m_CloseSwitch = new DigitalInput(ClawConstants.kCloseInputChannel);
+        m_OpenSwitch = new DigitalInput(ClawConstants.kOpenInputChannel);
+
+        m_IntakeMotor = new SparkMax(ClawConstants.kLeaderMotorId, MotorType.kBrushless);
 
         config
-                .smartCurrentLimit(IntakeConstants.kSmartCurrentLimit)
-                .idleMode(IntakeConstants.kIdleMode)
-                .inverted(IntakeConstants.kLeaderMotorInverted);
+                .smartCurrentLimit(ClawConstants.kSmartCurrentLimit)
+                .idleMode(ClawConstants.kIdleMode)
+                .inverted(ClawConstants.kLeaderMotorInverted);
 
         m_IntakeMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     }
@@ -48,8 +53,8 @@ public class Intake extends SubsystemBase {
      * @return
      */
     public Command intake() {
-        return runOnce(() -> setSpeed(IntakeConstants.kIntakeSpeed))
-                .andThen(Commands.waitSeconds(IntakeConstants.kClawTime))
+        return runOnce(() -> setSpeed(ClawConstants.kIntakeSpeed))
+                .andThen(Commands.waitSeconds(ClawConstants.kClawTime))
                 .finallyDo(() -> setSpeed(0));
     }
 
@@ -59,9 +64,17 @@ public class Intake extends SubsystemBase {
      * @return
      */
     public Command outtake() {
-        return runOnce(() -> setSpeed(-IntakeConstants.kOuttakeSpeed))
-                .andThen(Commands.waitSeconds(IntakeConstants.kClawTime))
+        return runOnce(() -> setSpeed(-ClawConstants.kOuttakeSpeed))
+                .andThen(Commands.waitSeconds(ClawConstants.kClawTime))
                 .finallyDo(() -> setSpeed(0));
+    }
+
+    public boolean isClawClosed() {
+        return m_CloseSwitch.get();
+    }
+
+    public boolean isClawOpen() {
+        return m_OpenSwitch.get();
     }
 
 }
