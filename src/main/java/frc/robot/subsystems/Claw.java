@@ -17,25 +17,25 @@ import frc.robot.Constants.ClawConstants;
  */
 public class Claw extends SubsystemBase {
 
-    private SparkMax m_IntakeMotor;
-    private DigitalInput m_CloseSwitch, m_OpenSwitch;
+    private SparkMax m_intakeMotor;
+    private DigitalInput m_closeSwitch, m_openSwitch;
     /*
      * Constructs intake
      */
     public Claw() {
         SparkMaxConfig config = new SparkMaxConfig();
 
-        m_CloseSwitch = new DigitalInput(ClawConstants.kCloseInputChannel);
-        m_OpenSwitch = new DigitalInput(ClawConstants.kOpenInputChannel);
+        m_closeSwitch = new DigitalInput(ClawConstants.kCloseInputChannel);
+        m_openSwitch = new DigitalInput(ClawConstants.kOpenInputChannel);
 
-        m_IntakeMotor = new SparkMax(ClawConstants.kLeaderMotorId, MotorType.kBrushless);
+        m_intakeMotor = new SparkMax(ClawConstants.kLeaderMotorId, MotorType.kBrushless);
 
         config
                 .smartCurrentLimit(ClawConstants.kSmartCurrentLimit)
                 .idleMode(ClawConstants.kIdleMode)
                 .inverted(ClawConstants.kLeaderMotorInverted);
 
-        m_IntakeMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+        m_intakeMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     }
 
     /**
@@ -44,7 +44,7 @@ public class Claw extends SubsystemBase {
      * @param speed The speed to set.
      */
     public void setSpeed(double speed) {
-        m_IntakeMotor.set(speed);
+        m_intakeMotor.set(speed);
     }
 
     /**
@@ -52,9 +52,9 @@ public class Claw extends SubsystemBase {
      * 
      * @return
      */
-    public Command intake() {
+    public Command open() {
         return runOnce(() -> setSpeed(ClawConstants.kIntakeSpeed))
-                .andThen(Commands.waitSeconds(ClawConstants.kClawTime))
+                .andThen(Commands.waitUntil(this::isClawOpen))
                 .finallyDo(() -> setSpeed(0));
     }
 
@@ -63,18 +63,18 @@ public class Claw extends SubsystemBase {
      * 
      * @return
      */
-    public Command outtake() {
+    public Command close() {
         return runOnce(() -> setSpeed(-ClawConstants.kOuttakeSpeed))
-                .andThen(Commands.waitSeconds(ClawConstants.kClawTime))
+                .andThen(Commands.waitUntil(this::isClawClosed))
                 .finallyDo(() -> setSpeed(0));
     }
 
     public boolean isClawClosed() {
-        return m_CloseSwitch.get();
+        return m_closeSwitch.get();
     }
 
     public boolean isClawOpen() {
-        return m_OpenSwitch.get();
+        return m_openSwitch.get();
     }
 
 }
