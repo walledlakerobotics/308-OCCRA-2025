@@ -14,6 +14,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.MecanumDriveKinematics;
 import edu.wpi.first.math.util.Units;
 import frc.robot.subsystems.Arm;
+import frc.robot.utils.CANIDs;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
@@ -46,10 +47,10 @@ public final class Constants {
         }
 
         // ids for the motors
-        public static final int kFrontLeftMotorId = 4;
-        public static final int kRearLeftMotorId = 3;
-        public static final int kFrontRightMotorId = 2;
-        public static final int kRearRightMotorId = 5;
+        public static final int kFrontLeftMotorId = CANIDs.frontLeft();
+        public static final int kRearLeftMotorId = CANIDs.rearLeft();
+        public static final int kFrontRightMotorId = CANIDs.frontRight();
+        public static final int kRearRightMotorId = CANIDs.rearRight();
 
         // sets if an motor is inverted
         public static final boolean kLeftMotorsInverted = false;
@@ -140,11 +141,11 @@ public final class Constants {
         }
 
         // ( UwU ) its the id of the elevator motor
-        public static final int kElevatorLeaderMotorId = 0;
+        public static final int kElevatorLeaderMotorId = CANIDs.secondaryMotor(0);
         public static final int kElevatorFollowerMotorId = 0;
 
         // sets if motor is inverted
-        public static final boolean kLeaderMotorInverted = false;
+        public static final boolean kLeaderMotorInverted = true;
         public static final boolean kFollowerMotorInverted = false;
         // level heights this will change
         public static final double[] kElevatorLevelHeights = { 0 };
@@ -216,7 +217,7 @@ public final class Constants {
         }
 
         /** The CAN ID of the arm motor. */
-        public static final int kArmMotorCanId = 22;
+        public static final int kArmMotorCanId = CANIDs.secondaryMotor(2);
         /** The smart current limit for the motor */
         public static final int kSmartCurrentLimit = 30;
         /** The idle mode of the motor. */
@@ -255,8 +256,7 @@ public final class Constants {
         }
 
         // ids of the motors
-        public static final int kLeaderMotorId = 0;
-        public static final int kFollowerMotorId = 0;
+        public static final int kClawMotorId = CANIDs.secondaryMotor(1);
 
         // whether to invert the motors
         public static final boolean kLeaderMotorInverted = false;
@@ -269,8 +269,7 @@ public final class Constants {
         public static final IdleMode kIdleMode = IdleMode.kBrake;
 
         // speeds when intaking and outtaking
-        public static final double kIntakeSpeed = 0.5;
-        public static final double kOuttakeSpeed = 0.5;
+        public static final double kClawSpeed = 0.5;
 
         public static final double kClawTime = 1;
 
