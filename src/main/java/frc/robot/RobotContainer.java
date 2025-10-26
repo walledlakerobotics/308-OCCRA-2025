@@ -4,9 +4,6 @@
 
 package frc.robot;
 
-import frc.robot.Constants.OperatorConstants;
-import frc.robot.subsystems.DriveTrain;
-
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
@@ -15,6 +12,13 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.Constants.ClawConstants;
+import frc.robot.Constants.ElevatorConstants;
+import frc.robot.Constants.OperatorConstants;
+import frc.robot.subsystems.Arm;
+import frc.robot.subsystems.Claw;
+import frc.robot.subsystems.DriveTrain;
+import frc.robot.subsystems.Elevator;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -29,6 +33,9 @@ public class RobotContainer {
 
     // The robot's subsystem defined here
     private final DriveTrain m_driveTrain = new DriveTrain();
+    private final Elevator m_elevator = new Elevator();
+    private final Arm m_arm = new Arm();
+    private final Claw m_claw = new Claw();
 
     // controllers
     private final CommandXboxController m_driverController = new CommandXboxController(
@@ -63,6 +70,21 @@ public class RobotContainer {
         m_driveTrain.setDefaultCommand(
                 m_driveTrain.driveJoysticks(m_driverController::getLeftY, m_driverController::getLeftX,
                         m_driverController::getRightX));
+
+        m_coDriverController.povUp()
+            .onTrue(m_elevator.goToVelocity(ElevatorConstants.kElevatorManualSpeed))
+            .onFalse(m_elevator.goToVelocity(0));
+        m_coDriverController.povDown()
+                .onTrue(m_elevator.goToVelocity(-ElevatorConstants.kElevatorManualSpeed))
+                .onFalse(m_elevator.goToVelocity(0));
+
+        m_coDriverController.leftBumper()
+                .onTrue(m_claw.goToVelocity(ClawConstants.kClawSpeed))
+                .onTrue(m_claw.goToVelocity(0));
+
+        m_coDriverController.leftBumper()
+                .onTrue(m_claw.goToVelocity(-ClawConstants.kClawSpeed))
+                .onTrue(m_claw.goToVelocity(0));
     }
 
     /**
