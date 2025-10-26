@@ -185,8 +185,7 @@ public class DriveTrain extends SubsystemBase {
         m_rearLeftClosedLoop.setReference(wheelSpeeds.rearLeftMetersPerSecond, ControlType.kMAXMotionVelocityControl,
                 ClosedLoopSlot.kSlot0, m_feedforward.calculate(wheelSpeeds.rearLeftMetersPerSecond));
 
-        m_frontRightClosedLoop.setReference(wheelSpeeds.frontRightMetersPerSecond,
-                ControlType.kMAXMotionVelocityControl,
+        m_frontRightClosedLoop.setReference(wheelSpeeds.frontRightMetersPerSecond, ControlType.kMAXMotionVelocityControl,
                 ClosedLoopSlot.kSlot0, m_feedforward.calculate(wheelSpeeds.frontRightMetersPerSecond));
 
         m_rearRightClosedLoop.setReference(wheelSpeeds.rearRightMetersPerSecond, ControlType.kMAXMotionVelocityControl,
