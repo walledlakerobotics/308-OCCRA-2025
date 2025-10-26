@@ -1,9 +1,9 @@
 package frc.robot.subsystems;
 
-import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
+import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -17,25 +17,24 @@ import frc.robot.Constants.ClawConstants;
  */
 public class Claw extends SubsystemBase {
 
-    private SparkMax m_intakeMotor;
+    private SparkMax m_clawMotor = new SparkMax(ClawConstants.kClawMotorId, MotorType.kBrushed);
     private DigitalInput m_closeSwitch, m_openSwitch;
+
     /*
      * Constructs intake
      */
     public Claw() {
         SparkMaxConfig config = new SparkMaxConfig();
 
-        m_closeSwitch = new DigitalInput(ClawConstants.kCloseInputChannel);
-        m_openSwitch = new DigitalInput(ClawConstants.kOpenInputChannel);
-
-        m_intakeMotor = new SparkMax(ClawConstants.kLeaderMotorId, MotorType.kBrushless);
+        // m_closeSwitch = new DigitalInput(ClawConstants.kCloseInputChannel);
+        // m_openSwitch = new DigitalInput(ClawConstants.kOpenInputChannel);
 
         config
                 .smartCurrentLimit(ClawConstants.kSmartCurrentLimit)
                 .idleMode(ClawConstants.kIdleMode)
                 .inverted(ClawConstants.kLeaderMotorInverted);
 
-        m_intakeMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+        m_clawMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     }
 
     /**
@@ -44,37 +43,43 @@ public class Claw extends SubsystemBase {
      * @param speed The speed to set.
      */
     public void setSpeed(double speed) {
-        m_intakeMotor.set(speed);
+        m_clawMotor.set(speed);
     }
 
     /**
-     * Returns a command to intake.
+     * Returns a command to open.
      * 
      * @return
      */
     public Command open() {
-        return runOnce(() -> setSpeed(ClawConstants.kIntakeSpeed))
+        return runOnce(() -> setSpeed(ClawConstants.kClawSpeed))
                 .andThen(Commands.waitUntil(this::isClawOpen))
                 .finallyDo(() -> setSpeed(0));
     }
 
     /**
-     * Returns a command to outtake.
+     * Returns a command to close.
      * 
      * @return
      */
     public Command close() {
-        return runOnce(() -> setSpeed(-ClawConstants.kOuttakeSpeed))
+        return runOnce(() -> setSpeed(-ClawConstants.kClawSpeed))
                 .andThen(Commands.waitUntil(this::isClawClosed))
                 .finallyDo(() -> setSpeed(0));
     }
 
+    public Command goToVelocity(double velocity) {
+        return runOnce(() -> setSpeed(velocity));
+    }
+
     public boolean isClawClosed() {
-        return m_closeSwitch.get();
+        return false;
+        // return m_closeSwitch.get();
     }
 
     public boolean isClawOpen() {
-        return m_openSwitch.get();
+        return false;
+        // return m_openSwitch.get();
     }
 
 }
