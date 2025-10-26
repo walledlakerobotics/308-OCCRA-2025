@@ -98,12 +98,11 @@ public class Arm extends SubsystemBase {
     public void setAngle(Rotation2d angle) {
         m_isPIDMode = true;
 
-        Rotation2d constrainedAngle = Rotation2d.fromDegrees(Utils.angleConstrain(angle.getDegrees()));
         m_angleController.reset(
                 getAngle().getRotations(),
                 getVelocity().getRotations());
 
-        m_angleController.setGoal(constrainedAngle.getRotations());
+        m_angleController.setGoal(angle.getRotations());
     }
 
     /**
