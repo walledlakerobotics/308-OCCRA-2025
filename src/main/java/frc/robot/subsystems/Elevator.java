@@ -17,7 +17,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ElevatorConstants;
 
 public class Elevator extends SubsystemBase {
-    private SparkMax m_elevatorLeader, m_elevatorFollower;
+    private SparkMax m_elevatorLeader;
     private RelativeEncoder m_elevatorEncoder;
     private ProfiledPIDController m_elevatorPIDController;
     private DigitalInput m_bottomLimit, m_topLimit;
@@ -27,7 +27,7 @@ public class Elevator extends SubsystemBase {
     public Elevator() {
         // sets motors
         m_elevatorLeader = new SparkMax(ElevatorConstants.kElevatorLeaderMotorId, MotorType.kBrushless);
-        m_elevatorFollower = new SparkMax(ElevatorConstants.kElevatorFollowerMotorId, MotorType.kBrushless);
+        // m_elevatorFollower = new SparkMax(ElevatorConstants.kElevatorFollowerMotorId, MotorType.kBrushless);
 
         // sets PID controller
         m_elevatorPIDController = new ProfiledPIDController(
@@ -39,8 +39,8 @@ public class Elevator extends SubsystemBase {
                         ElevatorConstants.kElevatorMaxAccelerationMetersPerSecondSquared));
 
         // limit switches
-        m_bottomLimit = new DigitalInput(ElevatorConstants.kBottomInputChannel);
-        m_topLimit = new DigitalInput(ElevatorConstants.kTopInputChannel);
+        // m_bottomLimit = new DigitalInput(ElevatorConstants.kBottomInputChannel);
+        // m_topLimit = new DigitalInput(ElevatorConstants.kTopInputChannel);
 
         // configure
         SparkMaxConfig config = new SparkMaxConfig();
@@ -60,7 +60,7 @@ public class Elevator extends SubsystemBase {
                 .follow(m_elevatorLeader)
                 .inverted(ElevatorConstants.kFollowerMotorInverted);
 
-        m_elevatorFollower.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+        // m_elevatorFollower.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
         // gets encoder
         m_elevatorEncoder = m_elevatorLeader.getEncoder();
@@ -214,28 +214,6 @@ public class Elevator extends SubsystemBase {
         return m_elevatorEncoder.getPosition();
     }
 
-    /**
-     * returns the current preset levels in the elevator constants
-     * 
-     * @return
-     */
-    public int getCurrentLevel() {
-        double height = getHeight();
-        Double smallestDifference = null;
-        int index = 0;
-
-        for (int i = 0; i < ElevatorConstants.kElevatorLevelHeights.length; i++) {
-            double difference = Math.abs(ElevatorConstants.kElevatorLevelHeights[i] - height);
-
-            if (smallestDifference == null || difference < smallestDifference) {
-                smallestDifference = difference; // Sets new smallest difference if it is
-                index = i; // Sets level index to i because it has a smaller difference
-            }
-        }
-
-        return index;
-    }
-
     /*
      * stops the elevator
      */
@@ -249,7 +227,8 @@ public class Elevator extends SubsystemBase {
      * @return returns if its false or true
      */
     public boolean isAtBottom() {
-        return m_bottomLimit.get();
+        // return m_bottomLimit.get();
+        return false;
     }
 
     /**
@@ -258,7 +237,8 @@ public class Elevator extends SubsystemBase {
      * @return returns if its false or true
      */
     public boolean isAtTop() {
-        return m_topLimit.get();
+        // return m_topLimit.get();
+        return false;
     }
 
     @Override
