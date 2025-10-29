@@ -56,19 +56,15 @@ public class Robot extends TimedRobot {
 
     /** This function is called once each time the robot enters Disabled mode. */
     @Override
-    public void disabledInit() {
-        m_robotContainer.setDriveIdleMode(IdleMode.kCoast);
-    }
+    public void disabledInit() {}
 
     @Override
     public void disabledPeriodic() {}
 
-    @Override
-    public void disabledExit() {
-        m_robotContainer.setDriveIdleMode(IdleMode.kBrake);
-    }
-
-    /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
+    /**
+     * This autonomous runs the autonomous command selected by your
+     * {@link RobotContainer} class.
+     */
     @Override
     public void autonomousInit() {
         m_autonomousCommand = m_robotContainer.getAutonomousCommand();
