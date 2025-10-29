@@ -86,8 +86,8 @@ public final class Constants {
         public static final double kWheelCircumferenceMeters = kWheelDiameterMeters * Math.PI;
         public static final double kGearReduction = 8.45865;
 
-        public static final double kTrackWidthMeters = 0.5;
-        public static final double kWheelBaseMeters = 0.5;
+        public static final double kTrackWidthMeters = Units.inchesToMeters(23.5);
+        public static final double kWheelBaseMeters = Units.inchesToMeters(20.5);
 
         // encoder conversion factors
         public static final double kRotationsToMeters = kWheelCircumferenceMeters / kGearReduction;
