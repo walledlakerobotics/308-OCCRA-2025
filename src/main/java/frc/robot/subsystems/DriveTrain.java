@@ -68,7 +68,7 @@ public class DriveTrain extends SubsystemBase {
             DriveConstants.kVelocityA);
 
     // gyro
-    private final AHRS m_gyro = new AHRS(NavXComType.kMXP_SPI);
+    private final AHRS m_gyro = new AHRS(NavXComType.kUSB1);
 
     // calculates odometry
     private final MecanumDriveOdometry m_odometry;
