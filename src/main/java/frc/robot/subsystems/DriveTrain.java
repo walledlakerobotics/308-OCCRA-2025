@@ -49,6 +49,8 @@ public class DriveTrain extends SubsystemBase {
     private final SparkMax m_frontRightMotor = new SparkMax(DriveConstants.kFrontRightMotorId, MotorType.kBrushless);
     private final SparkMax m_rearRightMotor = new SparkMax(DriveConstants.kRearRightMotorId, MotorType.kBrushless);
 
+    private final SparkMax[] m_allMotors = { m_frontLeftMotor, m_rearLeftMotor, m_frontRightMotor, m_rearRightMotor };
+
     // encoders
     private final RelativeEncoder m_frontLeftEncoder;
     private final RelativeEncoder m_rearLeftEncoder;
