@@ -328,14 +328,15 @@ public class DriveTrain extends SubsystemBase {
      * 
      * @param mode The idle mode to set.
      */
-    public void setIdleMode(IdleMode mode) {
+    private Command setIdleMode(IdleMode mode) {
         SparkMaxConfig config = new SparkMaxConfig();
         config.idleMode(mode);
 
-        for (SparkMax motor : new SparkMax[] { m_frontLeftMotor, m_rearLeftMotor, m_frontRightMotor,
-                m_rearLeftMotor }) {
-            motor.configure(config, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
-        }
+        return runOnce(() -> {
+            for (SparkMax motor : m_allMotors) {
+                motor.configure(config, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
+            }
+        }).ignoringDisable(true);
     }
 
     /**
