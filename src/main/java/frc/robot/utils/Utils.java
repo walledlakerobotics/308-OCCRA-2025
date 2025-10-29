@@ -9,7 +9,6 @@ import java.util.function.Consumer;
 import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 
@@ -22,56 +21,42 @@ public class Utils {
     }
 
     /**
-     * Configures SysID for a <code>Subsystem</code> on a <code>ShuffleboardLayout</code>.
-     * @param layout The layout to add the <code>Command</code> buttons to.
-     * @param initialize Runs before any SysID <code>Command</code> runs.
+     * Configures SysID for a <code>Subsystem</code> on a
+     * <code>ShuffleboardLayout</code>.
+     * 
+     * @param layout         The layout to add the <code>Command</code> buttons to.
+     * @param config         Configuration object for SysID
      * @param driveAtVoltage Drive the motors being tested at the given voltage.
-     * @param subsystem The <code>Subsystem</code> that controls the motors.
+     * @param subsystem      The <code>Subsystem</code> that controls the motors.
      * @see Subsystem
      * @see ShuffleboardLayout
      * @see Command
      */
-    public static void configureSysID(ShuffleboardLayout layout, Subsystem subsystem, Runnable initialize, Consumer<Voltage> driveAtVoltage) {
-        SysIdRoutine sysIdRoutine = new SysIdRoutine(
-        new SysIdRoutine.Config(),
-            new SysIdRoutine.Mechanism(
-                driveAtVoltage,
-                null, // No log consumer, since data is recorded by URCL
-                subsystem
-            )
-        );
+    public static void configureSysID(ShuffleboardLayout layout, SysIdRoutine.Config config, Subsystem subsystem,
+            Consumer<Voltage> driveAtVoltage) {
+        SysIdRoutine sysIdRoutine = new SysIdRoutine(config,
+                new SysIdRoutine.Mechanism(driveAtVoltage, null, subsystem));
 
-        // The methods below return Command objects
         Command quasistaticForward = sysIdRoutine.quasistatic(SysIdRoutine.Direction.kForward);
         Command quasistaticBackward = sysIdRoutine.quasistatic(SysIdRoutine.Direction.kReverse);
         Command dynamicForward = sysIdRoutine.dynamic(SysIdRoutine.Direction.kForward);
         Command dynamicBackward = sysIdRoutine.dynamic(SysIdRoutine.Direction.kReverse);
 
-        Command all = new InstantCommand(initialize)
-            .andThen(quasistaticForward)
-            .andThen(quasistaticBackward)
-            .andThen(dynamicForward)
-            .andThen(dynamicBackward)
-            .withName("Run All");
+        Command all = quasistaticForward
+                .andThen(quasistaticBackward)
+                .andThen(dynamicForward)
+                .andThen(dynamicBackward)
+                .withName("Run All");
 
-        layout.add("Quasistatic Forward", new InstantCommand(initialize).andThen(sysIdRoutine.quasistatic(SysIdRoutine.Direction.kForward)));
-        layout.add("Quasistatic Backward", new InstantCommand(initialize).andThen(sysIdRoutine.quasistatic(SysIdRoutine.Direction.kReverse)));
-        layout.add("Dynamic Forward", new InstantCommand(initialize).andThen(sysIdRoutine.dynamic(SysIdRoutine.Direction.kForward)));
-        layout.add("Dynamic Backward", new InstantCommand(initialize).andThen(sysIdRoutine.dynamic(SysIdRoutine.Direction.kReverse)));
+        layout.add("Quasistatic Forward",
+                sysIdRoutine.quasistatic(SysIdRoutine.Direction.kForward));
+        layout.add("Quasistatic Backward",
+                sysIdRoutine.quasistatic(SysIdRoutine.Direction.kReverse));
+        layout.add("Dynamic Forward",
+                sysIdRoutine.dynamic(SysIdRoutine.Direction.kForward));
+        layout.add("Dynamic Backward",
+                sysIdRoutine.dynamic(SysIdRoutine.Direction.kReverse));
         layout.add("Run All", all);
-    }
-
-    /**
-     * Configures SysID for a <code>Subsystem</code> on a <code>ShuffleboardLayout</code>.
-     * @param layout The layout to add the <code>Command</code> buttons to.
-     * @param driveAtVoltage Drive the motors being tested at the given voltage.
-     * @param subsystem The <code>Subsystem</code> that controls the motors.
-     * @see Subsystem
-     * @see ShuffleboardLayout
-     * @see Command
-     */
-    public static void configureSysID(ShuffleboardLayout layout, Subsystem subsystem, Consumer<Voltage> driveAtVoltage) {
-        configureSysID(layout, subsystem, () -> {}, driveAtVoltage);
     }
 
     public static double roundToNearest(double value, int place) {
