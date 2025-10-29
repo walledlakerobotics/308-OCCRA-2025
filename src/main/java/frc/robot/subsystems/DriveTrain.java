@@ -244,9 +244,9 @@ public class DriveTrain extends SubsystemBase {
      *                          transformed based on the sensitivity,
      *                          deadband, and multiplier values.
      * 
-     * @return A Command that drives the robot based on joystick inputs.
+     * @return A command that drives the robot based on joystick inputs.
      */
-    public Command driveJoysticks(DoubleSupplier xSpeedSupplier, DoubleSupplier ySpeedSupplier,
+    public Command drive(DoubleSupplier xSpeedSupplier, DoubleSupplier ySpeedSupplier,
             DoubleSupplier zRotationSupplier) {
         return runOnce(this::resetRotationSetpoint).andThen(run(() -> {
             double xSpeed = -xSpeedSupplier.getAsDouble();
