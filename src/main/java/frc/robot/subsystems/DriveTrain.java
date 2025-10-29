@@ -99,9 +99,11 @@ public class DriveTrain extends SubsystemBase {
 
         // sets the PID
         config.closedLoop
-                .pid(DriveConstants.kVelocityP, DriveConstants.kVelocityI, DriveConstants.kVelocityD);
+                .p(DriveConstants.kVelocityP)
+                .i(DriveConstants.kVelocityI)
+                .d(DriveConstants.kVelocityD);
 
-        // sets max velocity and acceleration
+        // sets max acceleration
         config.closedLoop.maxMotion
                 .maxAcceleration(DriveConstants.kMaxAccelerationMetersPerSecondSquared);
 
