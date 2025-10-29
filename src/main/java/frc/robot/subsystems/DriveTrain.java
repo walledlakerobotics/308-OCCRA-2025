@@ -271,7 +271,7 @@ public class DriveTrain extends SubsystemBase {
      */
     public void stopDrive() {
         resetRotationSetpoint();
-        drive(0, 0, 0);
+        drive(0, 0, 0, false);
     }
 
     /**
