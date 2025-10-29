@@ -145,10 +145,10 @@ public final class Constants {
         public static final int kElevatorFollowerMotorId = 0;
 
         // sets if motor is inverted
-        public static final boolean kLeaderMotorInverted = true;
-        public static final boolean kFollowerMotorInverted = false;
+        public static final boolean kLeaderMotorInverted = false;
+        public static final boolean kFollowerMotorInverted = true;
         // level heights this will change
-        public static final double[] kElevatorLevelHeights = { 0 };
+        public static final double[] kElevatorLevelHeights = { 0.762, };
         // idlemode
         public static final IdleMode kElevatorIdleMode = IdleMode.kBrake;
         // max height of elevator
@@ -212,7 +212,7 @@ public final class Constants {
         /** The idle mode of the motor. */
         public static final IdleMode kIdleMode = IdleMode.kBrake;
         /** Whether to invert the direction of the arm motor. */
-        public static final boolean kArmMotorInverted = false;
+        public static final boolean kArmMotorInverted = true;
 
         /** The maximum speed of the arm in rotations per second. */
         public static final double kArmMaxSpeedRPS = 0.5;
@@ -228,6 +228,8 @@ public final class Constants {
 
         /** The gravity gain for the arm feedforward. */
         public static final double kArmG = 0.02;
+
+        public static final Rotation2d kNormalAngle = new Rotation2d(0.1);
     }
 
     public static final class ClawConstants {

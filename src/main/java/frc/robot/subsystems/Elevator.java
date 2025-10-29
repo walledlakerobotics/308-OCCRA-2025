@@ -11,6 +11,8 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -21,6 +23,8 @@ public class Elevator extends SubsystemBase {
     private RelativeEncoder m_elevatorEncoder;
     private ProfiledPIDController m_elevatorPIDController;
     private DigitalInput m_bottomLimit, m_topLimit;
+
+    private final ShuffleboardTab m_elevatorTab = Shuffleboard.getTab("Elevator");
 
     private boolean m_isPIDMode = false;
 
@@ -64,6 +68,8 @@ public class Elevator extends SubsystemBase {
 
         // gets encoder
         m_elevatorEncoder = m_elevatorLeader.getEncoder();
+
+        m_elevatorTab.addDouble("Elevator Height", () -> getHeight());
     }
 
     /**

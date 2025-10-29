@@ -19,7 +19,7 @@ import frc.robot.Constants.ClawConstants;
 public class Claw extends SubsystemBase {
 
     private SparkMax m_clawMotor = new SparkMax(ClawConstants.kClawMotorId, MotorType.kBrushed);
-    private SparkLimitSwitch m_fowardSwitch, m_reverseSwitch;
+    private SparkLimitSwitch m_forwardSwitch, m_reverseSwitch;
 
     /*
      * Constructs intake
@@ -34,7 +34,7 @@ public class Claw extends SubsystemBase {
 
         m_clawMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
-        m_fowardSwitch = m_clawMotor.getForwardLimitSwitch();
+        m_forwardSwitch = m_clawMotor.getForwardLimitSwitch();
         m_reverseSwitch = m_clawMotor.getReverseLimitSwitch();
         
     }
@@ -76,12 +76,9 @@ public class Claw extends SubsystemBase {
 
     public boolean isClawClosed() {
         return m_reverseSwitch.isPressed();
-        // return m_closeSwitch.get();
     }
 
     public boolean isClawOpen() {
-        return m_fowardSwitch.isPressed();
-        // return m_openSwitch.get();
+        return m_forwardSwitch.isPressed();
     }
-
 }

@@ -6,11 +6,14 @@ package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.ClawConstants;
 import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.OperatorConstants;
@@ -65,7 +68,7 @@ public class RobotContainer {
      * controllers or {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick
      * Flight joysticks}.
      */
-    private void configureBindings() {
+private void configureBindings() {
         m_driveTrain.setDefaultCommand(
                 m_driveTrain.drive(m_driverController::getLeftY, m_driverController::getLeftX,
                         m_driverController::getRightX));
@@ -87,6 +90,17 @@ public class RobotContainer {
         m_coDriverController.rightBumper()
                 .onTrue(m_claw.goToVelocity(-ClawConstants.kClawSpeed))
                 .onFalse(m_claw.goToVelocity(0));
+
+
+        int index = MathUtil.clamp(0, 0, ElevatorConstants.kElevatorLevelHeights.length);
+        
+        m_coDriverController.povLeft()
+                .onTrue(m_elevator.goToHeight(0.762));
+
+        m_coDriverController.povRight();
+        
+
+
     }
 
     /**
