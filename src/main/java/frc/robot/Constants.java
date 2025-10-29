@@ -108,9 +108,9 @@ public final class Constants {
         // to the stick drift
         public static final double kDeadband = 0.01;
 
-        public static final double kXAxisSensitvity = 0.4;
-        public static final double kYAxisSensitvity = 0.4;
-        public static final double kRotationAxisSensitivity = 0.4;
+        public static final double kXAxisSensitvity = 0.9;
+        public static final double kYAxisSensitvity = 0.9;
+        public static final double kRotationAxisSensitivity = 0.9;
     }
 
     public static class AutoConstants {
