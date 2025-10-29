@@ -4,10 +4,10 @@
 
 package frc.robot.subsystems;
 
+import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
-import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
@@ -15,7 +15,6 @@ import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -60,8 +59,9 @@ public class Arm extends SubsystemBase {
                 .inverted(ArmConstants.kArmMotorInverted)
                 .smartCurrentLimit(ArmConstants.kSmartCurrentLimit)
                 .idleMode(ArmConstants.kIdleMode);
+
         armMotorConf.absoluteEncoder
-                .velocityConversionFactor(1 / 60);
+                .velocityConversionFactor(1.0 / 60);
 
         m_armMotor.configure(armMotorConf, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
@@ -79,13 +79,6 @@ public class Arm extends SubsystemBase {
                 () -> Utils.roundToNearest(Units.rotationsToDegrees(m_angleController.getGoal().position), 2));
         m_armTab.addDouble("Arm Velocity Goal",
                 () -> Utils.roundToNearest(Units.rotationsToDegrees(m_angleController.getGoal().velocity), 2));
-
-        Utils.configureSysID(
-                m_armTab.getLayout("Arm SysID", BuiltInLayouts.kList), this,
-                () -> m_isPIDMode = false,
-                voltage -> {
-                    m_armMotor.setVoltage(voltage);
-                });
 
         m_angleController.enableContinuousInput(0, 1);
     }
@@ -180,7 +173,7 @@ public class Arm extends SubsystemBase {
     public void periodic() {
         if (m_isPIDMode) {
             m_armMotor.set(
-                    -m_angleController.calculate(getAngle().getRotations()) +
+                    m_angleController.calculate(getAngle().getRotations()) +
                             getAngle().getSin() * ArmConstants.kArmG);
         } else {
             m_armMotor.set(
