@@ -167,6 +167,22 @@ public class DriveTrain extends SubsystemBase {
      *                  Counterclockwise is positive.
      */
     public void drive(double xSpeed, double ySpeed, double zRotation) {
+        drive(xSpeed, ySpeed, zRotation, true);
+    }
+
+    /**
+     * Drives the robot using curvature drive.
+     * 
+     * @param xSpeed        The robot's speed along the X axis [-1, 1].
+     *                      Forward is positive.
+     * @param ySpeed        The robot's speed along the Y axis [-1, 1].
+     *                      Left is positive.
+     * @param zRotation     The normalized curvature [-1, 1].
+     *                      Counterclockwise is positive.
+     * @param fieldRelative Whether or not to use field relative controls. Defaults
+     *                      to true.
+     */
+    public void drive(double xSpeed, double ySpeed, double zRotation, boolean fieldRelative) {
         xSpeed *= DriveConstants.kMaxForwardSpeedMetersPerSecond;
         ySpeed *= DriveConstants.kMaxStrafeSpeedMetersPerSecond;
         zRotation *= DriveConstants.kMaxRotationSpeedRadiansPerSecond;
@@ -178,8 +194,14 @@ public class DriveTrain extends SubsystemBase {
         // zRotation = m_rotationController.calculate(m_gyro.getRotation2d().getRadians(),
         //         m_rotationSetpoint.getRadians());
 
-        drive(ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, zRotation,
-                m_gyro.getRotation2d().minus(m_fieldRelativeOffset)));
+        m_prevZRotation = zRotation;
+
+        ChassisSpeeds chassisSpeeds = new ChassisSpeeds(xSpeed, ySpeed, zRotation);
+
+        if (fieldRelative)
+            chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(chassisSpeeds, getFieldRelativeHeading());
+
+        drive(chassisSpeeds);
     }
 
     /**
