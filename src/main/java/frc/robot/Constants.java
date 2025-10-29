@@ -197,17 +197,6 @@ public final class Constants {
         public static final int kBottomInputChannel = 0;
     }
 
-    public static final class NEOMotorConstants {
-        private NEOMotorConstants() {
-            throw new UnsupportedOperationException("This is a constants class!");
-        }
-
-        /** The maximum speed the motors go run at in revolutions per minute. */
-        public static final double kFreeSpeedRpm = 5676;
-        /** The maximum speed the motors go run at in revolutions per second. */
-        public static final double kFreeSpeedRps = kFreeSpeedRpm / 60;
-    }
-
     /**
      * Describe how the {@link Arm} should rotate the arm.
      */
