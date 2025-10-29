@@ -71,9 +71,9 @@ public final class Constants {
         public static final double kVelocityP = 0.1;
         public static final double kVelocityI = 0.0;
         public static final double kVelocityD = 0.0;
-        public static final double kVelocityS = 0;
-        public static final double kVelocityV = 0;
-        public static final double kVelocityA = 0;
+        public static final double kVelocityS = 0.0;
+        public static final double kVelocityV = 0.0;
+        public static final double kVelocityA = 0.0;
 
         // PID constants for controlling robot rotation
         public static final double kRotationP = 0.3;
