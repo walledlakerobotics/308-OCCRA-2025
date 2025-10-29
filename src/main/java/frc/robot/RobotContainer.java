@@ -68,21 +68,24 @@ public class RobotContainer {
      */
     private void configureBindings() {
         m_driveTrain.setDefaultCommand(
-                m_driveTrain.driveJoysticks(m_driverController::getLeftY, m_driverController::getLeftX,
+                m_driveTrain.drive(m_driverController::getLeftY, m_driverController::getLeftX,
                         m_driverController::getRightX));
 
+        m_driverController.a()
+                .onTrue(m_driveTrain.resetFieldRelative());
+
         m_coDriverController.povUp()
-            .onTrue(m_elevator.goToVelocity(ElevatorConstants.kElevatorManualSpeed))
-            .onFalse(m_elevator.goToVelocity(0));
+                .onTrue(m_elevator.goToVelocity(ElevatorConstants.kElevatorManualSpeed))
+                .onFalse(m_elevator.goToVelocity(0));
         m_coDriverController.povDown()
                 .onTrue(m_elevator.goToVelocity(-ElevatorConstants.kElevatorManualSpeed))
                 .onFalse(m_elevator.goToVelocity(0));
 
         m_coDriverController.leftBumper()
                 .onTrue(m_claw.goToVelocity(ClawConstants.kClawSpeed))
-                .onTrue(m_claw.goToVelocity(0));
+                .onFalse(m_claw.goToVelocity(0));
 
-        m_coDriverController.leftBumper()
+        m_coDriverController.rightBumper()
                 .onTrue(m_claw.goToVelocity(-ClawConstants.kClawSpeed))
                 .onTrue(m_claw.goToVelocity(0));
     }
