@@ -340,16 +340,34 @@ public class DriveTrain extends SubsystemBase {
     }
 
     /**
-     * Creates a {@link Command} that resets the drive train's field relative controls offset.
+     * Creates a {@link Command} that resets the drive train's field relative
+     * controls offset.
+     * 
      * @return The command.
      */
     public Command resetFieldRelative() {
         return runOnce(() -> {
-            if (DriverStation.isFMSAttached())
+            if (DriverStation.isFMSAttached()) {
+                m_fieldRelativeOffset = Rotation2d.kZero;
                 return;
+            }
 
             m_fieldRelativeOffset = m_gyro.getRotation2d();
         }).ignoringDisable(true);
+    }
+
+    /**
+     * Gets the heading to use when calculating field relative drive controls.
+     * 
+     * @return The {@link Rotation2d} heading.
+     */
+    private Rotation2d getFieldRelativeHeading() {
+        if (DriverStation.isFMSAttached()) {
+            m_fieldRelativeOffset = Rotation2d.kZero;
+            return m_odometry.getPoseMeters().getRotation();
+        }
+
+        return m_gyro.getRotation2d().minus(m_fieldRelativeOffset);
     }
 
     @Override
