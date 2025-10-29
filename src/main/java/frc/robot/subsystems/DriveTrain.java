@@ -187,12 +187,15 @@ public class DriveTrain extends SubsystemBase {
         ySpeed *= DriveConstants.kMaxStrafeSpeedMetersPerSecond;
         zRotation *= DriveConstants.kMaxRotationSpeedRadiansPerSecond;
 
-        // m_rotationSetpoint = m_rotationSetpoint
-        //         .plus(Rotation2d.fromRadians(zRotation).times(TimedRobot.kDefaultPeriod));
+        if (zRotation == 0) {
+            if (m_prevZRotation != 0) {
+                m_rotationSetpoint = m_gyro.getRotation2d();
+            }
 
-        // // continuously adjust for potential drift
-        // zRotation = m_rotationController.calculate(m_gyro.getRotation2d().getRadians(),
-        //         m_rotationSetpoint.getRadians());
+            // continuously adjust for potential drift
+            zRotation = m_rotationController.calculate(m_gyro.getRotation2d().getRadians(),
+                    m_rotationSetpoint.getRadians());
+        }
 
         m_prevZRotation = zRotation;
 
