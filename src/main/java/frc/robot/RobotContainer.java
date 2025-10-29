@@ -87,16 +87,7 @@ public class RobotContainer {
 
         m_coDriverController.rightBumper()
                 .onTrue(m_claw.goToVelocity(-ClawConstants.kClawSpeed))
-                .onTrue(m_claw.goToVelocity(0));
-    }
-
-    /**
-     * Sets the {@link IdleMode} of the drive train motors.
-     * 
-     * @param mode The idle mode to set.
-     */
-    public void setDriveIdleMode(IdleMode mode) {
-        m_driveTrain.setIdleMode(mode);
+                .onFalse(m_claw.goToVelocity(0));
     }
 
     /**
