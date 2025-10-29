@@ -323,10 +323,11 @@ public class DriveTrain extends SubsystemBase {
     }
 
     /**
-     * Sets the {@link IdleMode} for all drivetrain motors. This will not persist
-     * through power cycles.
+     * Creates a {@link Command} that sets the {@link IdleMode} for all drivetrain
+     * motors. This will not persist through power cycles.
      * 
      * @param mode The idle mode to set.
+     * @return The command.
      */
     private Command setIdleMode(IdleMode mode) {
         SparkMaxConfig config = new SparkMaxConfig();
