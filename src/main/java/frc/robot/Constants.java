@@ -258,7 +258,7 @@ public final class Constants {
         public static final IdleMode kIdleMode = IdleMode.kBrake;
 
         // speeds when intaking and outtaking
-        public static final double kClawSpeed = 0.5;
+        public static final double kClawSpeed = 1;
 
         public static final double kClawTime = 1;
 
