@@ -147,6 +147,13 @@ public class DriveTrain extends SubsystemBase {
 
         AutoBuilder.configure(m_odometry::getPoseMeters, this::resetOdometry, this::getChassisSpeeds,
                 this::drive, AutoConstants.kAutoController, AutoConstants.kRobotConfig, () -> false, this);
+
+        // put drive motors into coast mode when disabled
+        RobotModeTriggers.disabled()
+                .onTrue(setIdleMode(IdleMode.kCoast))
+                .onFalse(setIdleMode(IdleMode.kBrake));
+
+        m_rotationController.enableContinuousInput(0, 2 * Math.PI);
     }
 
     /**
