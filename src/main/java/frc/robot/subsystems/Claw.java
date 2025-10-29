@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
+import com.revrobotics.spark.SparkLimitSwitch;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
@@ -18,7 +19,7 @@ import frc.robot.Constants.ClawConstants;
 public class Claw extends SubsystemBase {
 
     private SparkMax m_clawMotor = new SparkMax(ClawConstants.kClawMotorId, MotorType.kBrushed);
-    private DigitalInput m_closeSwitch, m_openSwitch;
+    private SparkLimitSwitch m_fowardSwitch, m_reverseSwitch;
 
     /*
      * Constructs intake
@@ -26,15 +27,16 @@ public class Claw extends SubsystemBase {
     public Claw() {
         SparkMaxConfig config = new SparkMaxConfig();
 
-        // m_closeSwitch = new DigitalInput(ClawConstants.kCloseInputChannel);
-        // m_openSwitch = new DigitalInput(ClawConstants.kOpenInputChannel);
-
         config
                 .smartCurrentLimit(ClawConstants.kSmartCurrentLimit)
                 .idleMode(ClawConstants.kIdleMode)
                 .inverted(ClawConstants.kLeaderMotorInverted);
 
         m_clawMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+
+        m_fowardSwitch = m_clawMotor.getForwardLimitSwitch();
+        m_reverseSwitch = m_clawMotor.getReverseLimitSwitch();
+        
     }
 
     /**
@@ -73,12 +75,12 @@ public class Claw extends SubsystemBase {
     }
 
     public boolean isClawClosed() {
-        return false;
+        return m_reverseSwitch.isPressed();
         // return m_closeSwitch.get();
     }
 
     public boolean isClawOpen() {
-        return false;
+        return m_fowardSwitch.isPressed();
         // return m_openSwitch.get();
     }
 
