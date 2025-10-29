@@ -35,6 +35,7 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.utils.ControllerUtils;
@@ -83,6 +84,7 @@ public class DriveTrain extends SubsystemBase {
     private Rotation2d m_rotationSetpoint = Rotation2d.kZero;
     private PIDController m_rotationController = new PIDController(DriveConstants.kRotationP, DriveConstants.kRotationI,
             DriveConstants.kRotationD);
+    private double m_prevZRotation = 1;
 
     private ShuffleboardTab m_driveTab = Shuffleboard.getTab(getName());
 
