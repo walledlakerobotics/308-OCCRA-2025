@@ -21,17 +21,27 @@ public class Robot extends TimedRobot {
     private Command m_autonomousCommand;
 
     private final RobotContainer m_robotContainer;
-    
 
     /**
-     * This function is run when the robot is first started up and should be used for any
-     * initialization code.
+     * This function is run when the robot is first started up and should be used
+     * for any initialization code.
      */
     public Robot() {
-        // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
-        // autonomous chooser on the dashboard.
+        // Instantiate our RobotContainer. This will perform all our button bindings,
+        // and put our autonomous chooser on the dashboard.
         m_robotContainer = new RobotContainer();
 
+        // Start logging data
+        DataLogManager.start();
+
+        // Start logging driver station info to the log
+        DriverStation.startDataLog(DataLogManager.getLog());
+
+        // Start logging SparkMax devices with URCL
+        URCL.start(DataLogManager.getLog());
+
+        // Schedule PathPlanner warmup command to ensure Java loads it by the time
+        // autonomous starts
         PathfindingCommand.warmupCommand().schedule();
     }
 
