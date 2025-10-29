@@ -234,9 +234,6 @@ public final class Constants {
 
         /** The gravity gain for the arm feedforward. */
         public static final double kArmG = 0.02;
-
-        /** The speed to move the arm at while intaking. */
-        public static final double kArmIntakingSpeed = 0.1;
     }
 
     public static final class ClawConstants {
