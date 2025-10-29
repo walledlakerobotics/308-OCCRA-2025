@@ -219,12 +219,6 @@ public final class Constants {
         /** The maximum acceleration of the arm in rotations per second squared. */
         public static final double kArmMaxAccelerationRPSSquared = 1;
 
-        /**
-         * The angle offset for the motor encoder such that when the encoder returns 0
-         * the arm is parallel to the floor.
-         */
-        public static final Rotation2d kEncoderAngleOffset = Rotation2d.fromDegrees(0);
-
         /** The P for the arm PID controller. */
         public static final double kArmP = 2.5;
         /** The I for the arm PID controller. */
