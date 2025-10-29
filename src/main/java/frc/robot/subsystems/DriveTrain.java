@@ -253,13 +253,14 @@ public class DriveTrain extends SubsystemBase {
             double ySpeed = -ySpeedSupplier.getAsDouble();
             double zRotation = -zRotationSupplier.getAsDouble();
 
-            xSpeed = MathUtil.applyDeadband(
-                    ControllerUtils.axisSensitivity(xSpeed, DriveConstants.kXAxisSensitvity), DriveConstants.kDeadband);
-            ySpeed = MathUtil.applyDeadband(
-                    ControllerUtils.axisSensitivity(ySpeed, DriveConstants.kYAxisSensitvity), DriveConstants.kDeadband);
-            zRotation = MathUtil.applyDeadband(
-                    ControllerUtils.axisSensitivity(zRotation, DriveConstants.kRotationAxisSensitivity),
-                    DriveConstants.kDeadband);
+            xSpeed = MathUtil.applyDeadband(xSpeed, DriveConstants.kDeadband);
+            xSpeed = ControllerUtils.axisSensitivity(xSpeed, DriveConstants.kXAxisSensitvity);
+
+            ySpeed = MathUtil.applyDeadband(ySpeed, DriveConstants.kDeadband);
+            ySpeed = ControllerUtils.axisSensitivity(ySpeed, DriveConstants.kYAxisSensitvity);
+
+            zRotation = MathUtil.applyDeadband(zRotation, DriveConstants.kDeadband);
+            zRotation = ControllerUtils.axisSensitivity(zRotation, DriveConstants.kRotationAxisSensitivity);
 
             drive(xSpeed, ySpeed, zRotation);
         }));
