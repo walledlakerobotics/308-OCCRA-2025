@@ -90,17 +90,11 @@ private void configureBindings() {
         m_coDriverController.rightBumper()
                 .onTrue(m_claw.goToVelocity(-ClawConstants.kClawSpeed))
                 .onFalse(m_claw.goToVelocity(0));
-
-
-        int index = MathUtil.clamp(0, 0, ElevatorConstants.kElevatorLevelHeights.length);
         
         m_coDriverController.povLeft()
-                .onTrue(m_elevator.goToHeight(0.762));
+                .onTrue(m_elevator.goToLevel(0));
 
         m_coDriverController.povRight();
-        
-
-
     }
 
     /**
