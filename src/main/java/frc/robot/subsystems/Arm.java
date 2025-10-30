@@ -171,13 +171,12 @@ public class Arm extends SubsystemBase {
 
     @Override
     public void periodic() {
+        double feedforward = getAngle().getSin() * ArmConstants.kArmG;
+
         if (m_isPIDMode) {
-            m_armMotor.set(
-                    m_angleController.calculate(getAngle().getRotations()) +
-                            getAngle().getSin() * ArmConstants.kArmG);
+            m_armMotor.set(m_angleController.calculate(getAngle().getRotations()) + feedforward);
         } else {
-            m_armMotor.set(
-                    m_armPercentOut + getAngle().getSin() * ArmConstants.kArmG);
+            m_armMotor.set(m_armPercentOut + feedforward);
         }
     }
 }
