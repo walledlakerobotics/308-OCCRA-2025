@@ -61,6 +61,7 @@ public class Arm extends SubsystemBase {
                 .idleMode(ArmConstants.kIdleMode);
 
         armMotorConf.absoluteEncoder
+                .inverted(ArmConstants.kArmEncoderInverted)
                 .velocityConversionFactor(1.0 / 60);
 
         m_armMotor.configure(armMotorConf, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
