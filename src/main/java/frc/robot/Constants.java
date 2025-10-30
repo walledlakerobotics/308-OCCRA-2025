@@ -148,7 +148,7 @@ public final class Constants {
         public static final boolean kLeaderMotorInverted = false;
         public static final boolean kFollowerMotorInverted = true;
         // level heights this will change
-        public static final double[] kElevatorLevelHeights = { 0.762, };
+        public static final double[] kElevatorLevelHeights = { 0, 0.762, 1.1938, 1.7018};
         // idlemode
         public static final IdleMode kElevatorIdleMode = IdleMode.kBrake;
         // max height of elevator
