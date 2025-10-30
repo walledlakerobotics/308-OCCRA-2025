@@ -6,14 +6,11 @@ package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 
-import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.ClawConstants;
 import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.OperatorConstants;
@@ -90,17 +87,11 @@ private void configureBindings() {
         m_coDriverController.rightBumper()
                 .onTrue(m_claw.goToVelocity(-ClawConstants.kClawSpeed))
                 .onFalse(m_claw.goToVelocity(0));
-
-
-        int index = MathUtil.clamp(0, 0, ElevatorConstants.kElevatorLevelHeights.length);
         
         m_coDriverController.povLeft()
-                .onTrue(m_elevator.goToHeight(0.762));
+                .onTrue(m_elevator.goToLevel(0));
 
         m_coDriverController.povRight();
-        
-
-
     }
 
     /**

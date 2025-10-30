@@ -54,16 +54,17 @@ public class Arm extends SubsystemBase {
      * Constructs an {@link ArmSubsystem} that controls the arm of the robot.
      */
     public Arm() {
-        SparkMaxConfig armMotorConf = new SparkMaxConfig();
-        armMotorConf
+        SparkMaxConfig config = new SparkMaxConfig();
+        config
                 .inverted(ArmConstants.kArmMotorInverted)
                 .smartCurrentLimit(ArmConstants.kSmartCurrentLimit)
                 .idleMode(ArmConstants.kIdleMode);
 
-        armMotorConf.absoluteEncoder
+        config.absoluteEncoder
+                .inverted(ArmConstants.kArmEncoderInverted)
                 .velocityConversionFactor(1.0 / 60);
 
-        m_armMotor.configure(armMotorConf, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+        m_armMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
         m_armEncoder = m_armMotor.getAbsoluteEncoder();
 
@@ -171,13 +172,12 @@ public class Arm extends SubsystemBase {
 
     @Override
     public void periodic() {
+        double feedforward = getAngle().getSin() * ArmConstants.kArmG;
+
         if (m_isPIDMode) {
-            m_armMotor.set(
-                    m_angleController.calculate(getAngle().getRotations()) +
-                            getAngle().getSin() * ArmConstants.kArmG);
+            m_armMotor.set(m_angleController.calculate(getAngle().getRotations()) + feedforward);
         } else {
-            m_armMotor.set(
-                    m_armPercentOut + getAngle().getSin() * ArmConstants.kArmG);
+            m_armMotor.set(m_armPercentOut + feedforward);
         }
     }
 }

@@ -69,7 +69,7 @@ public class Elevator extends SubsystemBase {
         // gets encoder
         m_elevatorEncoder = m_elevatorLeader.getEncoder();
 
-        m_elevatorTab.addDouble("Elevator Height", () -> getHeight());
+        m_elevatorTab.addDouble("Elevator Height", this::getHeight);
     }
 
     /**

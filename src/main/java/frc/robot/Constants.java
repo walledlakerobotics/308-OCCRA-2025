@@ -213,6 +213,8 @@ public final class Constants {
         public static final IdleMode kIdleMode = IdleMode.kBrake;
         /** Whether to invert the direction of the arm motor. */
         public static final boolean kArmMotorInverted = true;
+        /** Whether to invert the direction of the arm encoder. */
+        public static final boolean kArmEncoderInverted = true;
 
         /** The maximum speed of the arm in rotations per second. */
         public static final double kArmMaxSpeedRPS = 0.5;
