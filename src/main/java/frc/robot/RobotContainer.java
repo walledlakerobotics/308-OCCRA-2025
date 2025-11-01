@@ -110,7 +110,7 @@ public class RobotContainer {
     public Command getAutonomousCommand() {
         // return m_autoChooser.getSelected();
         return m_driveTrain.runOnce(() -> m_driveTrain.drive(0.7, 0, 0))
-            .andThen(Commands.waitSeconds(1))
+            .andThen(Commands.waitSeconds(0.3))
             .andThen(m_driveTrain.runOnce(m_driveTrain::stopDrive));
     }
 }

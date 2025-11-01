@@ -27,6 +27,7 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.MecanumDriveOdometry;
 import edu.wpi.first.math.kinematics.MecanumDriveWheelPositions;
 import edu.wpi.first.math.kinematics.MecanumDriveWheelSpeeds;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -85,6 +86,7 @@ public class DriveTrain extends SubsystemBase {
     private PIDController m_rotationController = new PIDController(DriveConstants.kRotationP, DriveConstants.kRotationI,
             DriveConstants.kRotationD);
     private double m_prevZRotation = 1;
+    private boolean m_zRotationChanged = false;
 
     private ShuffleboardTab m_driveTab = Shuffleboard.getTab(getName());
 
@@ -185,25 +187,33 @@ public class DriveTrain extends SubsystemBase {
      *                      to true.
      */
     public void drive(double xSpeed, double ySpeed, double zRotation, boolean fieldRelative) {
+        System.out.println(m_prevZRotation);
+
         xSpeed *= DriveConstants.kMaxForwardSpeedMetersPerSecond;
         ySpeed *= DriveConstants.kMaxStrafeSpeedMetersPerSecond;
         zRotation *= DriveConstants.kMaxRotationSpeedRadiansPerSecond;
 
+        double newZRotation = zRotation;
+
         if (zRotation == 0) {
             if (m_prevZRotation != 0) {
-                resetRotationSetpoint();
+                m_zRotationChanged = true;
             }
 
+            if (m_zRotationChanged && Math.abs(Units.degreesToRadians(m_gyro.getRate())) < 0.01) {
+                resetRotationSetpoint();
+            }
+   
             // continuously adjust for potential drift
-            zRotation = m_rotationController.calculate(m_gyro.getRotation2d().getRadians(),
+            newZRotation = m_rotationController.calculate(m_gyro.getRotation2d().getRadians(),
                     m_rotationSetpoint.getRadians());
+        } else {
+            m_zRotationChanged = false;
         }
-
-        System.out.println(zRotation);
 
         m_prevZRotation = zRotation;
 
-        ChassisSpeeds chassisSpeeds = new ChassisSpeeds(xSpeed, ySpeed, zRotation);
+        ChassisSpeeds chassisSpeeds = new ChassisSpeeds(xSpeed, ySpeed, newZRotation);
 
         if (fieldRelative)
             chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(chassisSpeeds, getFieldRelativeHeading());
@@ -322,6 +332,8 @@ public class DriveTrain extends SubsystemBase {
      * Resets the current rotation setpoint to the current rotation.
      */
     private void resetRotationSetpoint() {
+        m_zRotationChanged = false;
+
         m_rotationSetpoint = m_gyro.getRotation2d();
         m_rotationController.reset();
     }
@@ -352,10 +364,10 @@ public class DriveTrain extends SubsystemBase {
      */
     public Command resetFieldRelative() {
         return Commands.runOnce(() -> {
-            if (DriverStation.isFMSAttached()) {
-                m_fieldRelativeOffset = Rotation2d.kZero;
-                return;
-            }
+            // if (DriverStation.isFMSAttached()) {
+            //     m_fieldRelativeOffset = Rotation2d.kZero;
+            //     return;
+            // }
 
             m_fieldRelativeOffset = m_gyro.getRotation2d();
         }).ignoringDisable(true);
@@ -364,13 +376,13 @@ public class DriveTrain extends SubsystemBase {
     /**
      * Gets the heading to use when calculating field relative drive controls.
      * 
-     * @return The {@link Rotation2d} heading.
+     * @return The {@link Rotation2d} heading.    
      */
     private Rotation2d getFieldRelativeHeading() {
-        if (DriverStation.isFMSAttached()) {
-            m_fieldRelativeOffset = Rotation2d.kZero;
-            return m_odometry.getPoseMeters().getRotation();
-        }
+        // if (DriverStation.isFMSAttached()) {
+        //     m_fieldRelativeOffset = Rotation2d.kZero;
+        //     return m_odometry.getPoseMeters().getRotation();
+        // }
 
         return m_gyro.getRotation2d().minus(m_fieldRelativeOffset);
     }
