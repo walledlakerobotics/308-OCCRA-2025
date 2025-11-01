@@ -8,21 +8,19 @@ import java.util.function.DoubleSupplier;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.revrobotics.RelativeEncoder;
-import com.revrobotics.spark.ClosedLoopSlot;
-import com.revrobotics.spark.SparkClosedLoopController;
-import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
+import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
-import com.revrobotics.spark.config.SparkMaxConfig;
+import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
+import com.revrobotics.spark.config.SparkMaxConfig;
 import com.studica.frc.AHRS;
 import com.studica.frc.AHRS.NavXComType;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -34,6 +32,7 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import frc.robot.Constants.AutoConstants;
@@ -65,10 +64,11 @@ public class DriveTrain extends SubsystemBase {
     private final SparkClosedLoopController m_rearRightClosedLoop;
 
     // feedforward for drive
-    private final SimpleMotorFeedforward m_feedforward = new SimpleMotorFeedforward(
-            DriveConstants.kVelocityS,
-            DriveConstants.kVelocityV,
-            DriveConstants.kVelocityA);
+    // private final SimpleMotorFeedforward m_feedforward = new
+    // SimpleMotorFeedforward(
+    // DriveConstants.kVelocityS,
+    // DriveConstants.kVelocityV,
+    // DriveConstants.kVelocityA);
 
     // gyro
     private final AHRS m_gyro = new AHRS(NavXComType.kUSB1);
@@ -148,10 +148,10 @@ public class DriveTrain extends SubsystemBase {
         m_driveTab.add("Field", m_field);
 
         AutoBuilder.configure(m_odometry::getPoseMeters, this::resetOdometry, this::getChassisSpeeds,
-                this::drive, AutoConstants.kAutoController, AutoConstants.kRobotConfig, () -> false, this);
+                this::drive, AutoConstants.kAutoController, AutoConstants.kRobotConfig, () -> false);
 
         // put drive motors into coast mode when disabled
-        RobotModeTriggers.disabled()
+        RobotModeTriggers.disabled().and(() -> !DriverStation.isFMSAttached())
                 .onTrue(setIdleMode(IdleMode.kCoast))
                 .onFalse(setIdleMode(IdleMode.kBrake));
 
@@ -159,7 +159,7 @@ public class DriveTrain extends SubsystemBase {
     }
 
     /**
-     * Drives the robot using curvature drive.
+     * Drives the robot using the given speeds.
      * 
      * @param xSpeed    The robot's speed along the X axis [-1, 1].
      *                  Forward is positive.
@@ -173,7 +173,7 @@ public class DriveTrain extends SubsystemBase {
     }
 
     /**
-     * Drives the robot using curvature drive.
+     * Drives the robot using the given speeds.
      * 
      * @param xSpeed        The robot's speed along the X axis [-1, 1].
      *                      Forward is positive.
@@ -189,17 +189,19 @@ public class DriveTrain extends SubsystemBase {
         ySpeed *= DriveConstants.kMaxStrafeSpeedMetersPerSecond;
         zRotation *= DriveConstants.kMaxRotationSpeedRadiansPerSecond;
 
-        // if (zRotation == 0) {
-        //     if (m_prevZRotation != 0) {
-        //         m_rotationSetpoint = m_gyro.getRotation2d();
-        //     }
+        if (zRotation == 0) {
+            if (m_prevZRotation != 0) {
+                resetRotationSetpoint();
+            }
 
-        //     // continuously adjust for potential drift
-        //     zRotation = m_rotationController.calculate(m_gyro.getRotation2d().getRadians(),
-        //             m_rotationSetpoint.getRadians());
-        // }
+            // continuously adjust for potential drift
+            zRotation = m_rotationController.calculate(m_gyro.getRotation2d().getRadians(),
+                    m_rotationSetpoint.getRadians());
+        }
 
-        // m_prevZRotation = zRotation;
+        System.out.println(zRotation);
+
+        m_prevZRotation = zRotation;
 
         ChassisSpeeds chassisSpeeds = new ChassisSpeeds(xSpeed, ySpeed, zRotation);
 
@@ -210,25 +212,21 @@ public class DriveTrain extends SubsystemBase {
     }
 
     /**
-     * Drives the robot based on raw robot relative {@link ChassisSpeeds}.
+     * Drives the robot based on robot relative {@link ChassisSpeeds}.
      * 
-     * @param speeds The speeds to drive the robot with.
+     * @param speeds The ChassisSpeeds object.
      */
     public void drive(ChassisSpeeds speeds) {
         MecanumDriveWheelSpeeds wheelSpeeds = DriveConstants.kDriveKinematics.toWheelSpeeds(speeds);
 
-        m_frontLeftClosedLoop.setReference(wheelSpeeds.frontLeftMetersPerSecond, ControlType.kMAXMotionVelocityControl,
-                ClosedLoopSlot.kSlot0, m_feedforward.calculate(wheelSpeeds.frontLeftMetersPerSecond));
+        m_frontLeftClosedLoop.setReference(wheelSpeeds.frontLeftMetersPerSecond, ControlType.kMAXMotionVelocityControl);
 
-        m_rearLeftClosedLoop.setReference(wheelSpeeds.rearLeftMetersPerSecond, ControlType.kMAXMotionVelocityControl,
-                ClosedLoopSlot.kSlot0, m_feedforward.calculate(wheelSpeeds.rearLeftMetersPerSecond));
+        m_rearLeftClosedLoop.setReference(wheelSpeeds.rearLeftMetersPerSecond, ControlType.kMAXMotionVelocityControl);
 
         m_frontRightClosedLoop.setReference(wheelSpeeds.frontRightMetersPerSecond,
-                ControlType.kMAXMotionVelocityControl,
-                ClosedLoopSlot.kSlot0, m_feedforward.calculate(wheelSpeeds.frontRightMetersPerSecond));
+                ControlType.kMAXMotionVelocityControl);
 
-        m_rearRightClosedLoop.setReference(wheelSpeeds.rearRightMetersPerSecond, ControlType.kMAXMotionVelocityControl,
-                ClosedLoopSlot.kSlot0, m_feedforward.calculate(wheelSpeeds.rearRightMetersPerSecond));
+        m_rearRightClosedLoop.setReference(wheelSpeeds.rearRightMetersPerSecond, ControlType.kMAXMotionVelocityControl);
     }
 
     /**
@@ -316,6 +314,7 @@ public class DriveTrain extends SubsystemBase {
      * @param pose The Pose2d object.
      */
     public void resetOdometry(Pose2d pose) {
+        // throw new RuntimeException();
         m_odometry.resetPosition(m_gyro.getRotation2d(), getWheelPositions(), pose);
     }
 
@@ -338,7 +337,7 @@ public class DriveTrain extends SubsystemBase {
         SparkMaxConfig config = new SparkMaxConfig();
         config.idleMode(mode);
 
-        return runOnce(() -> {
+        return Commands.runOnce(() -> {
             for (SparkMax motor : m_allMotors) {
                 motor.configure(config, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
             }
@@ -352,7 +351,7 @@ public class DriveTrain extends SubsystemBase {
      * @return The command.
      */
     public Command resetFieldRelative() {
-        return runOnce(() -> {
+        return Commands.runOnce(() -> {
             if (DriverStation.isFMSAttached()) {
                 m_fieldRelativeOffset = Rotation2d.kZero;
                 return;
