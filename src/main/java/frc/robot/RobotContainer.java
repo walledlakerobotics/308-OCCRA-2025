@@ -5,12 +5,16 @@
 package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.ClawConstants;
 import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.OperatorConstants;
@@ -65,13 +69,20 @@ public class RobotContainer {
      * controllers or {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick
      * Flight joysticks}.
      */
-private void configureBindings() {
+    private void configureBindings() {
         m_driveTrain.setDefaultCommand(
                 m_driveTrain.drive(m_driverController::getLeftY, m_driverController::getLeftX,
                         m_driverController::getRightX));
 
         m_driverController.a()
                 .onTrue(m_driveTrain.resetFieldRelative());
+
+        m_coDriverController.a()
+                .onTrue(m_arm.goToAngle(ArmConstants.kIntakeAngle));
+        m_coDriverController.b()
+                .onTrue(m_arm.goToAngle(Rotation2d.kZero));
+        m_coDriverController.y()
+                .onTrue(m_arm.goToAngle(ArmConstants.kHighAngle));
 
         m_coDriverController.povUp()
                 .onTrue(m_elevator.goToVelocity(ElevatorConstants.kElevatorManualSpeed))
@@ -87,17 +98,21 @@ private void configureBindings() {
         m_coDriverController.rightBumper()
                 .onTrue(m_claw.goToVelocity(-ClawConstants.kClawSpeed))
                 .onFalse(m_claw.goToVelocity(0));
-        
-        m_coDriverController.povLeft()
-                .onTrue(m_elevator.goToLevel(0));
 
-        m_coDriverController.povRight();
+        // m_coDriverController.leftTrigger()
+        // .onTrue(m_elevator.goToLevel(0));
+
+        // m_coDriverController.rightTrigger()
+        // .onTrue(m_elevator.goToLevel(0));
     }
 
     /**
      * Gets the {@link Command} to run in autonomous.
      */
     public Command getAutonomousCommand() {
-        return m_autoChooser.getSelected();
+        // return m_autoChooser.getSelected();
+        return m_driveTrain.runOnce(() -> m_driveTrain.drive(0.7, 0, 0))
+            .andThen(Commands.waitSeconds(1))
+            .andThen(m_driveTrain.runOnce(m_driveTrain::stopDrive));
     }
 }
