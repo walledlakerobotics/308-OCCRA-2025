@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.spark.SparkLimitSwitch;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
@@ -10,7 +11,6 @@ import com.revrobotics.spark.SparkBase.ResetMode;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
-import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -22,7 +22,7 @@ public class Elevator extends SubsystemBase {
     private SparkMax m_elevatorLeader;
     private RelativeEncoder m_elevatorEncoder;
     private ProfiledPIDController m_elevatorPIDController;
-    private DigitalInput m_bottomLimit, m_topLimit;
+    private SparkLimitSwitch m_bottomLimit;
 
     private final ShuffleboardTab m_elevatorTab = Shuffleboard.getTab("Elevator");
 
@@ -43,7 +43,7 @@ public class Elevator extends SubsystemBase {
                         ElevatorConstants.kElevatorMaxAccelerationMetersPerSecondSquared));
 
         // limit switches
-        // m_bottomLimit = new DigitalInput(ElevatorConstants.kBottomInputChannel);
+        m_bottomLimit = m_elevatorLeader.getReverseLimitSwitch();
         // m_topLimit = new DigitalInput(ElevatorConstants.kTopInputChannel);
 
         // configure
@@ -110,7 +110,7 @@ public class Elevator extends SubsystemBase {
             // Prevent the elevator from going down when it reaches the bottom
             // by preventing the speed from being negative
             velocity = Math.max(0, velocity);
-        } else if (isAtTop() || getHeight() >= ElevatorConstants.kTopSwitchHeight) {
+        } else if (isAtTop()) {
             // Prevent the elevator from going down when it reaches the top
             // by preventing the speed from being positive
             velocity = Math.min(0, velocity);
@@ -233,8 +233,7 @@ public class Elevator extends SubsystemBase {
      * @return returns if its false or true
      */
     public boolean isAtBottom() {
-        // return m_bottomLimit.get();
-        return false;
+        return m_bottomLimit.isPressed();
     }
 
     /**
@@ -253,19 +252,13 @@ public class Elevator extends SubsystemBase {
 
         if (m_isPIDMode) {
             m_elevatorLeader.set(
-                    m_elevatorPIDController.calculate(currentHeight) + ElevatorConstants.kElevatorG
+                    -m_elevatorPIDController.calculate(currentHeight) + ElevatorConstants.kElevatorG
             );
         }
 
         if (isAtBottom()) {
-            // Prevent the elevator from going down when it reaches the bottom
-            // by preventing the speed from being negative
-            m_elevatorLeader.set(Math.max(ElevatorConstants.kElevatorG, m_elevatorLeader.get()));
             m_elevatorEncoder.setPosition(0);
         } else if (isAtTop()) {
-            // Prevent the elevator from going up when it reaches the top
-            // by preventing the speed from being positive
-            m_elevatorLeader.set(Math.min(ElevatorConstants.kElevatorG, m_elevatorLeader.get()));
             m_elevatorEncoder.setPosition(ElevatorConstants.kTopSwitchHeight);
         }
     }
