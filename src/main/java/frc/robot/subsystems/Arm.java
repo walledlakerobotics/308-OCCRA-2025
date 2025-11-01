@@ -129,7 +129,7 @@ public class Arm extends SubsystemBase {
      * @return The current angle of the arm.
      */
     public Rotation2d getAngle() {
-        return Rotation2d.fromRotations(1 - m_armEncoder.getPosition());
+        return Rotation2d.fromRotations(m_armEncoder.getPosition());
     }
 
     /**
