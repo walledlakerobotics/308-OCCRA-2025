@@ -5,21 +5,9 @@
     "data": {
       "commands": [
         {
-          "type": "named",
-          "data": {
-            "name": "Test"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Test"
-          }
-        },
-        {
           "type": "path",
           "data": {
-            "pathName": "Example Path"
+            "pathName": "New Path"
           }
         }
       ]
